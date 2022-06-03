@@ -1,0 +1,16 @@
+*****************
+====Scenario====
+*****************
+1.Create Property Deal Object
+2.Standars Field = AutoNumber _(Deal ID-{000})
+3.Customer Name = Text
+4.Type of Property = PL (Villa, Apartment, Row House)
+5.Actual Price of Property = Currency
+6.Discounted Price = Currency
+
+****Statement****
+****                ****
+Due to less demand of Row House in the market we have decided to give the discount as stated below:
+For Villa = 10%, Row House = 7% & Apartment = 5%
+
+Write a trigger to give the discount on the property before the record is get inserted into the database.
