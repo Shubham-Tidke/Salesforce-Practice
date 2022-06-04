@@ -1,0 +1,2 @@
+Write Trigger on account if Account is inserted created one contact for that  account.
+Suppose I am creating a account name 'srsahoo',then automatically a contact is created associated with srsahoo.
