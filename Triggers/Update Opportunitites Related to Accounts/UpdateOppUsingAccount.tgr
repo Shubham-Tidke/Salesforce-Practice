@@ -1,0 +1,24 @@
+trigger UpdateOppUsingAccount on Account (after update) {
+	//get all the account ids which initiate trigger
+    Set<Id>accIds = new Set<Id>();
+    for(Account acc : Trigger.new){
+        accIds.add(acc.Id);
+    }
+    DateTime day30 = System.now()-30;
+    List<Opportunity>oppListToUpdate = new List<Opportunity>();
+    //get list of opportunities related to triggered accounts
+    List<Opportunity>oppList = [Select Id,AccountId,StageName,CreatedDate,CloseDate from Opportunity where AccountId in :accIds];
+    if(oppList.size()>0){
+        for(Opportunity opp : opplist){
+            //if opportunity is older than 30 days and not yet closed won
+            if(opp.CreatedDate > day30 && opp.StageName!= 'Closed Won'){
+                opp.StageName = 'Closed Lost';
+                opp.CloseDate = system.today();
+                oppListToUpdate.add(opp);
+            }
+    	}
+    }
+    if(oppListToUpdate.size()>0){
+        update oppListToUpdate;
+    }        
+}
