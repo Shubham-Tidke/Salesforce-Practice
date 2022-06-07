@@ -1,0 +1,42 @@
+trigger updateClientContactField on Account (after insert) {
+	List<Account>accList = new List<Account>();
+    List<Contact>contactList = new List<Contact>();
+    Set<Id>AccountIds = new Set<Id>();
+    Map<Id,Account>accountMap = new Map<Id,Account>();
+    
+    //create contacts whenever an account is created and add it to list
+    for(Account acc : Trigger.new){
+        Contact con = new Contact();
+        con.LastName = acc.Name;
+        con.AccountId = acc.Id;
+        contactList.add(con);
+        AccountIds.add(con.AccountId);
+    }
+    //insert the created contacts
+    if(contactList.size() > 0){
+        insert contactList;
+    }
+    //get the list of accounts which got updated with contact in above step
+    //as we need to update a lookup field on account
+    List<Account>accounts = [Select Id,Client_Contact__c from Account where Id =:AccountIds];
+    
+    //add the accounts to map
+    if(accounts.size() > 0){
+        for(Account acc : accounts){
+        	accountMap.put(acc.Id, acc);
+    	}
+    }
+    //check the contact list to get the account ids which got updated and update the lookup field of that accountid
+    if(contactList.size() > 0){
+        for(Contact con : contactList){
+            if(accountMap.containsKey(con.AccountId)){
+                Account accObject = accountMap.get(con.AccountId);
+                accObject.Client_Contact__c =con.Id;
+                accList.add(accObject);
+            }
+        }
+    }
+    if(accList.size()>0){
+        update accList;
+    }
+}
