@@ -1,0 +1,1 @@
+Q. Create a field on Opportunity Line item(Serial No (Text)) and populate increment values once an Opportunity Line Item is added. Let’s say if we add 3 products then the sequence would be “1,2,3”. Now if we delete 2 and again add one more product this must be 4 irrespective of the deleted sequence number.
