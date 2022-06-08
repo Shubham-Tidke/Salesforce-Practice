@@ -1,0 +1,44 @@
+trigger updateSerialNoOnOLI on OpportunityLineItem (before insert) {
+	Set<Id>oppId = new Set<Id>();
+   	for(OpportunityLineItem Oli : Trigger.new){
+        oppId.add(oli.OpportunityId);
+    }
+    List<OpportunityLineItem>OLIlist = new List<OpportunityLineItem>();
+    Map<Id,String> oppIdSerialNoMap =new Map<Id,String>();
+    List<OpportunityLineItem> oppProdList=[Select Id,Serial_No__c,OpportunityId from OpportunityLineItem where OpportunityId=:oppId];
+    if(oppProdList.size()>0){
+		for(OpportunityLineItem oppoPrd:oppProdList){
+			if(oppoPrd.Serial_No__c!=null){
+			//Getting the last number of the SerialNo field
+			String lastword = oppoPrd.Serial_No__c.right(1);
+			//converting String into Integer so that I can increment the lastnumber which is already there in SerialNo field
+			Integer num = Integer.valueOf(lastword);
+				num++;
+			//appending the incremented number
+			oppoPrd.Serial_No__c=oppoPrd.Serial_No__c+','+(num);
+			OLIlist.add(oppoPrd);
+			//adding it to Map so that i can make changes for the OpportunityLineItem which is newly getting inserted
+			oppIdSerialNoMap.put(oppoPrd.OpportunityId,oppoPrd.Serial_No__c);
+			}
+			else{
+			//if the SerialField is null then it means there is no OpportunityLineItem present so by default we are passing 1
+			oppoPrd.Serial_No__c='1';
+			OLIlist.add(oppoPrd);
+			}
+		}
+	}
+    	if(OLIlist.size()>0){
+			update OLIlist;
+		}
+    	for(OpportunityLineItem oppProd:Trigger.new){
+		/*Checking if the OpportunityId of newly inserting OpportunityLineItem is present in the Map
+		If present we are passing that SerialNo to the newly inserting OpportunityLineItem else we are just adding 1 because
+		this is the first OpportunityLineItem getting added*/
+			if(oppIdSerialNoMap.containsKey(oppProd.OpportunityId)){
+			oppProd.Serial_No__c = oppIdSerialNoMap.get(oppProd.OpportunityId);
+			}
+			else{
+				oppProd.Serial_No__c='1';
+			}
+		}
+}
