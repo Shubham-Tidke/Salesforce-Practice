@@ -1,0 +1,1 @@
+Q. Write a trigger on Case. If case Origin is "Email" then set the type of that case as "Other", if case Origin is "Web" and the field Web Name is empty then throw an error message "Web Name cannot be Empty".

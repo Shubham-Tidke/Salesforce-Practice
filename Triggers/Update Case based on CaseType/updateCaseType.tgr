@@ -1,0 +1,10 @@
+trigger updateCaseType on Case (before insert) {
+    for( Case c : Trigger.new){
+        if(c.Origin == 'Email'){
+            c.Type = 'Other';
+        }
+        if(c.Origin == 'Web' && c.SuppliedName == null){
+            c.addError('Web Name cannot be empty');
+        }
+    }
+}
