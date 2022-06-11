@@ -1,0 +1,4 @@
+trigger DiscountBook on Books__c (before insert,before update) {
+	List<Books__c>books = Trigger.new;
+    PriceDiscount.applyDiscount(books);
+}
