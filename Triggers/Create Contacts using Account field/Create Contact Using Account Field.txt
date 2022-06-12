@@ -1,0 +1,3 @@
+The following trigger creates the number of contacts which are equal to the number which we will enter in the Number of Locations field on the Account Object.
+
+Create Custom field called “Number of Locations” on the Account Object (Data Type=Number)
