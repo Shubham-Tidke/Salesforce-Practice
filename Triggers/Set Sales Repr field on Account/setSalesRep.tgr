@@ -1,0 +1,11 @@
+trigger setSalesRep on Account (before insert ,before update) {
+	Set<Id>accId = new Set<Id>();
+    for(Account acc : Trigger.new){
+        accId.add(acc.OwnerId);
+    }
+    Map<Id,User>usrMap = new Map<Id,User>([select name from user where Id in :accId]);
+    for(Account acc : Trigger.new){
+        User usr = usrMap.get(acc.OwnerId);
+        acc.Sales_Repr__c = usr.Name;
+    }
+}
