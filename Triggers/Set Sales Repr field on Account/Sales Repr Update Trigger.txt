@@ -1,0 +1,2 @@
+Create a field called “Sales Repr” with data type (Text) on the account Object
+When we create the Account record, the Account Owner will be automatically added to Sales Rep field. When we update the Account owner of the record, then also the Sales Rep will be automatically updated.
