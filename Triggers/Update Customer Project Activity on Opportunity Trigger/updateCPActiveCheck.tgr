@@ -1,0 +1,13 @@
+trigger updateCPActiveCheck on Customer_Project__c (before insert) {
+    List<Opportunity>opp = new List<Opportunity>();
+    for(Customer_Project__c c : Trigger.new){
+        if(c.Status__c == 'Active'){
+            Opportunity op = new Opportunity(id = c.Opportunity__c);
+            op.Active_Customer_project__c = True;
+            opp.add(op);
+        }
+    }
+    if(opp.size()>0){
+        update opp;
+    }
+}
