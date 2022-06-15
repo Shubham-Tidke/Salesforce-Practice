@@ -1,0 +1,7 @@
+trigger updateAccountAsIndustries on Account (before insert,before update) {
+    for(Account a : Trigger.new){
+        if(a.Industry == 'technology' || a.Industry == 'finance'){
+            a.Rating = 'hot';
+        }
+    }
+}
