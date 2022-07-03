@@ -1,0 +1,5 @@
+Implement a function diff that calculates the absolute difference between two integers.
+
+diff(5, 2) = 3
+
+diff(2, 5) = 3
