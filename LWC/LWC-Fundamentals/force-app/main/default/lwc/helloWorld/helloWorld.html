@@ -1,3 +1,15 @@
+<!-- sldsValidatorIgnore -->
 <template>
-    <div>Hello LWC</div>
+    <lightning-card  title="Two Way Data Binding">  
+        <div class="slds-m-around_medium">
+            <lightning-input type="text"
+                label="Enter some text"
+                onkeyup={changeHandler}>
+            </lightning-input>
+        </div>
+        <div class="slds-m-around_medium">
+            Hello LWC {name}
+        </div>  
+        <p slot="footer">Binding in LWC</p>
+    </lightning-card>
 </template>
