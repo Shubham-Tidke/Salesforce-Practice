@@ -10,6 +10,35 @@
         <div class="slds-m-around_medium">
             Hello LWC {name}
         </div>  
-        <p slot="footer">Binding in LWC</p>
+    </lightning-card>
+
+    <lightning-card  title="Object without @track">  
+        <div class="slds-m-around_medium">
+            <lightning-input type="text"
+                label="Enter some text"
+                onkeyup={nonTrackHandler}>
+            </lightning-input>
+        </div>
+        <div class="slds-m-around_medium">
+            Town Value is {city.town}
+        </div>  
+    </lightning-card>
+
+    <lightning-card  title="Object with @track">  
+        <div class="slds-m-around_medium">
+            <lightning-input type="text"
+                label="Enter some text"
+                onkeyup={trackHandler}>
+            </lightning-input>
+        </div>
+        <div class="slds-m-around_medium">
+            Pincode Value is {address.pincode}
+        </div>  
+    </lightning-card>
+
+    <lightning-card  title="Getter Example">  
+        <div class="slds-m-around_medium">
+            <p>First name in array is {firstUser}</p>
+        </div>  
     </lightning-card>
 </template>
