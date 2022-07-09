@@ -1,0 +1,12 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-card  title="Template Looping">  
+        <div class="slds-m-around_medium">
+            <template for:each={carList} for:item="car">
+                <ul key={car} class="slds-has-dividers_around-space">
+                    <li class="slds-item">{car}</li><br>
+                  </ul>
+            </template>
+        </div> 
+    </lightning-card>  
+</template>
