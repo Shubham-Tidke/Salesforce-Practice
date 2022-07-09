@@ -1,0 +1,30 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-card  title="Conditional Rendenring">  
+        <div class="slds-var-m-around_medium">
+            <lightning-button
+            variant="brand"
+            label="Show data" 
+            title="Show data" 
+            onclick={onClick} 
+            class="slds-m-left_x-small">
+            </lightning-button>
+            <template if:true={isVisible}>
+                <div>Content is visible!!</div>
+            </template>
+            <template if:false={isVisible}>
+                <div>Oops,Content is not visible!!</div>
+            </template>
+            <lightning-input type="text"
+                label="Type the course,"
+                onkeyup={changeHandler}>
+            </lightning-input>
+            <template if:true={checkCourse}>
+                <div>Correct course selected!!</div>
+            </template>
+            <template if:false={checkCourse}>
+                <div>InCorrect course !!</div>
+            </template>
+        </div>  
+    </lightning-card>
+</template>
