@@ -1,0 +1,20 @@
+p{
+    color: green;
+    border: 2px;
+    border-color: black;
+    font-family: 'Gill Sans';
+    background-color: aquamarine;
+}
+.divCSS{
+    color: blue;
+    border: 5px;
+    font-size: large;
+    font-family:'Arial Narrow Bold';
+}
+.divCSS:hover{
+    color: red;
+}
+/* Adding extra CSS to SLDS
+.slds-box{
+    background-color: blue;
+}*/
