@@ -14,7 +14,7 @@ p{
 .divCSS:hover{
     color: red;
 }
-/* Adding extra CSS to SLDS
-.slds-box{
-    background-color: blue;
-}*/
+.designToken{
+    color: var(--lwc-brandAccessibleActive);
+    background: var(--lwc-colorBackgroundHighlight);
+}
