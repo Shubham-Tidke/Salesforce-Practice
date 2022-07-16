@@ -2,7 +2,16 @@
     <lightning-card title="Parent Component">
         <div class="slds-m-around_medium">
             <h1>Parent Component</h1>
-            <c-lifecycle-child></c-lifecycle-child>
+            <lightning-button
+            variant="brand"
+            label="Show Child"
+            title="Show Child"
+            onclick={handleShowChild}
+            class="slds-m-left_x-small">
+            </lightning-button>
+            <template if:true={isChildVisible}>
+                <c-lifecycle-child></c-lifecycle-child>
+            </template>
         </div>
     </lightning-card>
 </template>
