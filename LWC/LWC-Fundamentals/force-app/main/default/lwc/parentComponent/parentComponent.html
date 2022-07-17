@@ -2,8 +2,11 @@
 <template>
     <lightning-card  title="Parent Component">
         <div class="slds-m-around_medium">
-            <h1>Parent Component</h1> 
-        </div>
-        <c-child-component>avc</c-child-component> 
+        <c-child-component 
+        message="Child component Primitive Data Received via attribute"
+        card-heading ="Child Component"
+        carousel-details={carouselData}
+        ></c-child-component>
+    </div>
     </lightning-card>
 </template>

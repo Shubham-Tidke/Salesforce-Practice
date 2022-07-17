@@ -1,8 +1,24 @@
 <!-- sldsValidatorIgnore -->
 <template>
-    <lightning-card  title="Child Component">
+    <lightning-card  title={cardHeading}>
+        <div class="slds-notify_alert slds-theme_error" role="alert">
+          {message}
+        </div>         
+    </lightning-card>
+    <lightning-card title="Carousel Component">
         <div class="slds-m-around_medium">
-            <h2>Child Component</h2> 
-        </div>  
+        <lightning-carousel disable-auto-scroll>
+            <template for:each={carouselDetails} for:item="item">
+                <lightning-carousel-image
+                key={item.header}
+                src = {item.src}
+                header = {item.header}
+                description = {item.description}
+                alternative-text = "card accessible description."
+                href = {item.href}>
+            </lightning-carousel-image>
+            </template>
+        </lightning-carousel>
+    </div>
     </lightning-card>
 </template>
