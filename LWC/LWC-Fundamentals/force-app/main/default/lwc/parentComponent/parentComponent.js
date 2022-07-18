@@ -21,5 +21,9 @@ export default class ParentComponent extends LightningElement {
     href : "https://www.example.com"
    }
 ]
+   percentage = 10
+   changeHandler(event){
+      this.percentage = event.target.value;
+}
    
 }

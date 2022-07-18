@@ -1,10 +1,13 @@
 <!-- sldsValidatorIgnore -->
 <template>
+    <!--Component Communication using Simple property-->
     <lightning-card  title={cardHeading}>
         <div class="slds-notify_alert slds-theme_error" role="alert">
           {message}
         </div>         
     </lightning-card>
+
+    <!--Component Communication using Object property-->
     <lightning-card title="Carousel Component">
         <div class="slds-m-around_medium">
         <lightning-carousel disable-auto-scroll>
@@ -21,4 +24,7 @@
         </lightning-carousel>
     </div>
     </lightning-card>
+
+    <!--Component Communication using Action on Parent Component [button click/Input change etc]-->
+        <lightning-progress-bar value={progressValue} size="large"></lightning-progress-bar>    
 </template>
