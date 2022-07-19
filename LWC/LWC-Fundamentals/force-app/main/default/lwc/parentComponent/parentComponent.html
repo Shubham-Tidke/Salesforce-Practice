@@ -20,8 +20,14 @@
     <!--Component Communication using Action on Parent Component [button click/Input change etc]-->
     <lightning-card title="Parent Component">
         <div class="slds-m-around_medium">
-            <lightning-input type="number" label="Enter Percentage" onkeyup={changeHandler} value={percentage}></lightning-input>
+            <lightning-input type="number" label="Enter Percentage" onkeyup={changeHandler} value={percentage}>
+            </lightning-input>
             <c-child-component progress-value={percentage}></c-child-component>
         </div>
     </lightning-card>
+
+    <!--Component Communication by calling child component method on paerent component-->
+    
+            <lightning-button variant="brand" label="Change Slider value" onclick={handleClick}></lightning-button>
+            <c-slider-component></c-slider-component>
 </template>
