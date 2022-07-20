@@ -1,0 +1,11 @@
+<template>
+    <lightning-card  title="Child to Parent Communication using custom event">  
+        <div class="slds-var-m-around_medium">
+            <lightning-button label="Show Modal" onclick={clickHandler}></lightning-button>
+            <h2>{msg}</h2>
+            <template if:true={showModal}>
+                <c-custom-event-child onclose={closeHandler}></c-custom-event-child>
+            </template>    
+        </div>
+    </lightning-card>
+</template>
