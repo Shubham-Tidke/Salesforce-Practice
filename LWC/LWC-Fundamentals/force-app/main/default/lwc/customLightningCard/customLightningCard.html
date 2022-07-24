@@ -10,21 +10,21 @@
                 </div>
                 <div class="slds-media__body">
                     <h2 class="slds-card__header-title">
-                        <a href="#" class="slds-card__header-link slds-truncate" title="Accounts">
-                            <span>Accounts</span>
-                        </a>
+                        <div class="slds-card__header-link slds-truncate">
+                            <slot name="title"></slot>
+                        </div>
                     </h2>
                 </div>
                 <div class="slds-no-flex">
-                    <button class="slds-button slds-button_neutral">New</button>
+                    <slot name="actions"></slot>
                 </div>
             </header>
         </div>
-        <div class="slds-card__body slds-card__body_inner">Anything can go into the card body</div>
+        <div class="slds-card__body slds-card__body_inner">
+            <slot></slot>
+        </div>
         <footer class="slds-card__footer">
-            <a class="slds-card__footer-action" href="#">View All
-                <span class="slds-assistive-text">Accounts</span>
-            </a>
+            <slot name="footer"></slot>
         </footer>
     </article>
 </template>
