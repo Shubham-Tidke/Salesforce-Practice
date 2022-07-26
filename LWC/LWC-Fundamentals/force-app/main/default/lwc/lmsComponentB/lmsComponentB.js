@@ -1,11 +1,24 @@
 import { LightningElement, wire } from 'lwc';
 import SAMPLELMC from '@salesforce/messageChannel/sampleMsgChannel__c';
-import { MessageContext , subscribe , unsubscribe ,APPLICATION_SCOPE} from 'lightning/messageService';
+import { MessageContext ,publish, subscribe , unsubscribe ,APPLICATION_SCOPE} from 'lightning/messageService';
 export default class LmsComponentB extends LightningElement {
     @wire(MessageContext)
     context
     receivedMessage
     subscription
+    inputValue
+
+    inputHandler(event){
+        this.inputValue = event.target.value
+    }
+    publishMessage(){
+        const msg = {
+            lmsData:{
+                value:this.inputValue
+            }
+        }
+        publish(this.context,SAMPLELMC,msg);
+    }
 
     connectedCallback(){
         this.subscribeMsg();
