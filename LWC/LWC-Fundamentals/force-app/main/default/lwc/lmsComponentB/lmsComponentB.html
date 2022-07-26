@@ -1,9 +1,17 @@
 <template>
     <lightning-card  title="LMS Component B">  
         <div class="slds-m-around_medium">
-          MSG :  {receivedMessage}
+          Received MSG :  {receivedMessage}
+          <lightning-input type="text"
+          label="Send msg"
+          onkeyup={inputHandler}>
+      </lightning-input>
         </div>
+        <lightning-button label="Publish" onclick={publishMessage}>
+        </lightning-button>
         <lightning-button label="Unsubscribe" onclick={unsubscribeMessage}>
+        </lightning-button>
+        <lightning-button label="Subscribe" onclick={subscribeMsg}>
         </lightning-button>
     </lightning-card>
 </template>
