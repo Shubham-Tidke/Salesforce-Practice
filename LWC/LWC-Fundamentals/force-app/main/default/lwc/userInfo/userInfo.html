@@ -2,6 +2,10 @@
     <lightning-card title="User Permission Test">
         <template if:true={hasViewAllDataAvailable}>
             <p>User has access to all Data</p>
+            <div class="slds-m-around_medium">
+                ID : {userId}
+                Is user a guest :{guest}
+            </div>
         </template>
         <template if:false={hasViewAllDataAvailable}>
             <p>User dont have access to all Data</p>
