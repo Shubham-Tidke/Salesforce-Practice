@@ -4,3 +4,60 @@
     align-items: center;
     flex-direction: column;
 }
+.score-panel{
+    text-align: left;
+    margin-bottom: 12px;
+}
+.timer{
+    display: inline-block;
+    margin: 0 1rem;
+}
+.restart{
+    cursor: pointer;
+    float: right;
+    margin: 0px  8px;
+}
+.grid-container{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-template-rows: repeat(4,1fr);
+    grid-row-gap: 8px;
+    grid-column-gap: 8px;
+    padding: 1rem;
+    background: #2d7eaf;
+    border-radius: 4px;
+    box-shadow: 8px 9px 26px 0 rgb(1 2 10 / 50%);
+}
+.grid-container .card{
+    height: 3.7rem;
+    width: 3.7rem;
+    margin: 0.2rem;
+    background: #b23939;
+    font-size: 0px; /* to hide the card*/
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 8px 9px 26px 0 rgb(1 2 10 / 50%);
+}
+
+.grid-container .card.show{
+    font-size: 33px; /* making icon visible*/
+    visibility: visible !important;
+    opacity: 100 !important;
+}
+.grid-container .card.open{
+    transform: rotateY(0);
+    background: #02b3e4;
+    cursor: default;
+   /* animation-name: flipInY;
+    animation-duration: 0.75s;*/
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+}
+.card.disabled{
+    pointer-events: none;
+    opacity: 0.9;
+}
