@@ -60,7 +60,7 @@ export default class MemoryGameComponent extends LightningElement {
         this.openedCards[0].classList.remove("show","open")
         this.openedCards[1].classList.remove("show","open")
         
-        this.matchedCard=[]
+         this.openedCards=[]
     }
     unmatched(){
         this.openedCards[0].classList.add("unmatch")
@@ -70,7 +70,7 @@ export default class MemoryGameComponent extends LightningElement {
             this.openedCards[0].classList.remove("unmatch","show","open")
             this.openedCards[1].classList.remove("unmatch","show","open")
             this.action('ENABLE');
-            this.matchedCard=[]
+            this.openedCards=[]
         },1100)
     }
     action(action){
