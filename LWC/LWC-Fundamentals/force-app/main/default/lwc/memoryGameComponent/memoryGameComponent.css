@@ -42,7 +42,6 @@
     align-items: center;
     box-shadow: 8px 9px 26px 0 rgb(1 2 10 / 50%);
 }
-
 .grid-container .card.show{
     font-size: 33px; /* making icon visible*/
     visibility: visible !important;
@@ -52,12 +51,24 @@
     transform: rotateY(0);
     background: #02b3e4;
     cursor: default;
-   /* animation-name: flipInY;
-    animation-duration: 0.75s;*/
     -webkit-backface-visibility: visible !important;
     backface-visibility: visible !important;
 }
 .card.disabled{
     pointer-events: none;
     opacity: 0.9;
+}
+.grid-container .card.match{
+    cursor: default;
+    background: #acf306;
+    font-size: 33px;
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+}
+.grid-container .card.unmatch{
+    cursor: default;
+    background: #f34106;
+    font-size: 33px;
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
 }
