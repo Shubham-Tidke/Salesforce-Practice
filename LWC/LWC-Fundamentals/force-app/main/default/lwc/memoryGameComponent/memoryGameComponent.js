@@ -7,6 +7,8 @@ export default class MemoryGameComponent extends LightningElement {
     openedCards=[]//to let user open only 2 cards at a time
     moves = 0 //counting no. of moves
     matchedCard=[]//to store matched cards
+    totalTime = '00:00'
+    timerRef
     cards = [
         {id:1, listClass:"card", type:'podcast', icon:'fa fa-podcast'},
         {id:2, listClass:"card", type:'bomb', icon:'fa fa-bomb'},
@@ -46,6 +48,10 @@ export default class MemoryGameComponent extends LightningElement {
         this.openedCards = this.openedCards.concat(event.target)//adding opened cards in array
         if (this.openedCards.length == 2) {
             this.moves = this.moves+1 //updating moves
+            //starting the timer as soon as first move is played
+            if(this.moves === 1){
+                this.timer();
+            }
             if (this.openedCards[0].type === this.openedCards[1].type) {
                 this.matchedCard= this.matchedCard.concat(this.openedCards[0],this.openedCards[1])
                 this.matched()
@@ -59,8 +65,11 @@ export default class MemoryGameComponent extends LightningElement {
         this.openedCards[1].classList.add("match","disabled")
         this.openedCards[0].classList.remove("show","open")
         this.openedCards[1].classList.remove("show","open")
-        
-        this.matchedCard=[]
+        this.openedCards=[]
+        //stopping timer when all cards match
+        if(this.matchedCard.length === 16){
+            window.clearInterval(this.timerRef)
+        }
     }
     unmatched(){
         this.openedCards[0].classList.add("unmatch")
@@ -70,7 +79,7 @@ export default class MemoryGameComponent extends LightningElement {
             this.openedCards[0].classList.remove("unmatch","show","open")
             this.openedCards[1].classList.remove("unmatch","show","open")
             this.action('ENABLE');
-            this.matchedCard=[]
+            this.openedCards=[]
         },1100)
     }
     action(action){
@@ -88,4 +97,41 @@ export default class MemoryGameComponent extends LightningElement {
              }
         })
     }
+    //to update time
+   timer(){
+    let startTime = new Date()
+    //incrementing the timer using setInterval for every 1000ms
+       this.timerRef = setInterval(()=>{
+        let diff = new Date().getTime()-startTime.getTime();
+        let d = Math.floor(diff/1000)
+        const m = Math.floor(d % 3600 / 60)
+        const s = Math.floor(d % 3600 % 60)
+        const mins =  m > 0 ? m+(m===1? "minute, ":"minutes, "):" "
+        const sec =  s > 0 ? s+(s===1? "second":"seconds"):" "
+        this.totalTime = mins + sec
+    },1000)
+   }
+   //resetting the game
+   shuffle(){
+    this.openedCards=[]
+    this.moves = 0 
+    this.matchedCard=[]
+    this.totalTime = '00:00'
+    window.clearInterval(this.timerRef)
+
+    //removing all classes from cards
+    let elem = this.template.querySelectorAll('.card')
+    Array.from(elem).forEach(item=>{
+        item.classList.remove("show","open","match","disabled")
+    })
+
+    //shuffling cards
+    let array = [...this.cards]
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    this.cards = [...array]
+    console.log(this.cards);
+   }
 }
