@@ -56,4 +56,26 @@ export default class NavigationComponent extends NavigationMixin(LightningElemen
             }
         })
     }
+    navigateToViewRecord(){
+        this[NavigationMixin.Navigate]({
+            type:'standard__recordPage',
+            attributes:{
+                recordId:'0015i00000BVjGqAAL',
+                objectApiName:'Account',
+                actionName:'view'
+
+            }
+        })
+    }
+    navigateToEditRecord(){
+        this[NavigationMixin.Navigate]({
+            type:'standard__recordPage',
+            attributes:{
+                recordId:'0015i00000BVjGqAAL',
+                objectApiName:'Account',
+                actionName:'edit'
+
+            }
+        })
+    }
 }
