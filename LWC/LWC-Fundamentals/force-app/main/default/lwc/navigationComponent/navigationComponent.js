@@ -78,4 +78,23 @@ export default class NavigationComponent extends NavigationMixin(LightningElemen
             }
         })
     }
+    navigateToTab(){
+        this[NavigationMixin.Navigate]({
+            type:'standard__navItemPage',
+            attributes:{
+                apiName:'Component_Communication' //tab api name
+            }
+        })
+    }
+    navigateToRelatedContacts(){
+        this[NavigationMixin.Navigate]({
+            type:'standard__recordRelationshipPage',
+            attributes:{
+                recordId:'0015i00000BVjGqAAL',
+                objectApiName:'Account',
+                relationshipApiName:'Contacts',
+                actionName:'view'
+            }
+        })
+    }
 }
