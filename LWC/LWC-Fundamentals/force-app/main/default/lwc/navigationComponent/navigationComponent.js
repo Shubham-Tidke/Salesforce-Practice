@@ -97,4 +97,23 @@ export default class NavigationComponent extends NavigationMixin(LightningElemen
             }
         })
     }
+    navigateToSite(){
+        this[NavigationMixin.Navigate]({
+            type:'standard__webPage',
+            attributes:{
+                url:'https://www.youtube.com'
+            }
+        })
+    }
+    navigateToLWC(){
+        var defination ={
+            componentDef: 'c:memoryGameComponent'
+        }
+        this[NavigationMixin.Navigate]({
+            type:'standard__webPage',
+            attributes:{
+                url:'one/one.app#'+btoa(JSON.stringify(defination))
+            }
+        })
+    }
 }
