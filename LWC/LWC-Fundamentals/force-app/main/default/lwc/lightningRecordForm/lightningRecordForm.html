@@ -7,4 +7,19 @@
         >
         </lightning-record-form>
     </lightning-card>
+    <lightning-card title="Display Record with Lightning Record Form [edit mode]">
+        <lightning-record-form 
+        record-id={recordId}
+        object-api-name={objectName}
+        fields={fieldList}>
+        </lightning-record-form>
+    </lightning-card>
+    <lightning-card title="Display Record with Lightning Record Form [read mode]">
+        <lightning-record-form 
+        record-id={recordId}
+        object-api-name={objectName}
+        fields={fieldList}
+        mode="readonly">
+        </lightning-record-form>
+    </lightning-card>
 </template>
