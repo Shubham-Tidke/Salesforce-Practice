@@ -1,5 +1,5 @@
 
-import { LightningElement } from 'lwc';
+import { api, LightningElement } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account'
@@ -10,15 +10,17 @@ import INDUSTRY_FIELD from '@salesforce/schema/Account.Industry'
 
 export default class LightningRecordForm extends LightningElement {
     objectName = ACCOUNT_OBJECT
-    fieldList =[NAME_FIELD,ANNUAL_REVENUE,TYPE_FIELD,INDUSTRY_FIELD]
+    fieldList =[NAME_FIELD,TYPE_FIELD,ANNUAL_REVENUE,INDUSTRY_FIELD]
+    @api recordId
 
     successHandler(event){
         console.log(event.detail.id);
-        const toastEvent = new ShowToastEvent({
+        this.recordId = event.detail.id
+        this.dispatchEvent(new ShowToastEvent({
             title:"Account Created",
             message:"record ID "+ event.detail.id,
             variant: "success"
-        })
-        this.dispatchEvent(toastEvent)
+            })
+        )
     }
 }
