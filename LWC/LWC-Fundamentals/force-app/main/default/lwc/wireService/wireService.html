@@ -1,8 +1,11 @@
 <template>
     <lightning-card title="Wire Service Demo">
         <div class="slds-p-around_medium">
-           id : {userId}
-            email :{userDetails.email}
+            <template if:true={userDetails}>
+                id : {userId}
+                email :{userDetails.Email.value}
+                name: {userDetails.Name.value}
+            </template>
         </div>
     </lightning-card>
 </template>
