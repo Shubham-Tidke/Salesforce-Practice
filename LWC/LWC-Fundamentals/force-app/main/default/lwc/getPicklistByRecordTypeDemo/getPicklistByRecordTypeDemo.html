@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title="PickList value by record type demo">
+        <div class="slds-var-p-around_medium">
+            <lightning-combobox name="Type" label="Type" value={typeValue} placeholder="Select Type"
+                options={typeList} onchange={handleChange}></lightning-combobox>
+
+            <p>Selected type is: {typeValue}</p>
+        </div>
+        <div class="slds-var-p-around_medium">
+            <lightning-combobox name="Rating" label="Rating" value={ratingValue} placeholder="Select Rating"
+                options={ratingList} onchange={handleChange}></lightning-combobox>
+
+            <p>Selected rating is: {ratingValue}</p>
+        </div>
+    </lightning-card>
+</template>
