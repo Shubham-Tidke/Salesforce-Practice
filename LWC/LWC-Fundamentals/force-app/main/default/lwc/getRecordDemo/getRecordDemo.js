@@ -1,5 +1,6 @@
 import { api, LightningElement, wire } from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
+import { getFieldValue,getFieldDisplayValue } from 'lightning/uiRecordApi';
 import NAME from '@salesforce/schema/Account.Name';
 import OWNER from '@salesforce/schema/Account.Owner.Name';
 import REVENUE from '@salesforce/schema/Account.AnnualRevenue';
@@ -14,9 +15,9 @@ export default class GetRecordDemo extends LightningElement {
     dataHandler({data}){
         if(data){
             console.log(data);
-            this.name = data.fields.Name.value
+            this.name = getFieldValue(data,NAME) //fetching field using getFieldValue Adapter
             this.owner = data.fields.Owner.displayValue
-            this.revenue = data.fields.AnnualRevenue.displayValue
+            this.revenue = getFieldDisplayValue(data,REVENUE) //fetching field display value using getFieldDisplayValue
         }
     }
 
