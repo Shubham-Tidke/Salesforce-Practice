@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title="getRecord Adapter demo">
+        <div class="slds-var-p-around_medium">
+           <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Title</th>
+            </thead>
+            <tbody>
+                <template for:each={contacts} for:item="contact">
+                    <tr key={contact.fields.Id.value}>
+                        <td>{contact.fields.Name.value}</td>
+                        <td>{contact.fields.Email.value}</td>
+                        <td>{contact.fields.Title.value}</td>
+                    </tr>
+                </template>
+            </tbody>
+           </table>
+        </div>
+        <div class="slds-grid">
+            <div class="slds-m-around_medium">
+                <lightning-button label="< Previous " onclick={handlePrevious}></lightning-button>
+            </div>
+            <div class="slds-m-around_medium">
+                <lightning-button label=" Next >" onclick={handleNext}></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>
