@@ -1,0 +1,11 @@
+<template>
+    <lightning-card title="getRecordUi adapter">
+        <div class="slds-var-p-around_medium">
+           <template for:each={formFields} for:item="field">
+            <div key ={field.label}>
+                <p>{field.label} : {field.value}</p>
+            </div>
+           </template>
+         </div>
+    </lightning-card>
+</template>
