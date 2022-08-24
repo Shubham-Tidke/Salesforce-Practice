@@ -1,0 +1,24 @@
+<template>
+    <lightning-card title="Apex Wire">
+        <div class="slds-p-around_medium">
+            <template if:true={accounts.data}>
+                <template for:each={accounts.data} for:item="account">
+                    <div key = {account.Id} class="slds-box">
+                       <p>Name : {account.Name}</p>
+                       <p>Type : {account.Type}</p>
+                    </div>
+                </template>
+            </template>
+        </div>
+        <div class="slds-p-around_medium">
+            <template if:true={accountList}>
+                <template for:each={accountList} for:item="account">
+                    <div key = {account.Id} class="slds-box">
+                       <p>Name : {account.Name}</p>
+                       <p>Type : {account.newType}</p>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

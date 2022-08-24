@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+   <masterLabel>sampleMsgChannel</masterLabel>
+   <isExposed>true</isExposed>
+   <description>This Lightning Message Channel sends information from VF to LWC</description>
+   <lightningMessageFields>
+       <fieldName>lmsData</fieldName>
+       <description>message To Send</description>
+   </lightningMessageFields>
+</LightningMessageChannel>
