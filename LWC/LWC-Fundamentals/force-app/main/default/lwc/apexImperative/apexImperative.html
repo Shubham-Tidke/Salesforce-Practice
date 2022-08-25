@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title="Imperative Apex">
+        <div class="slds-p-around_medium">
+            <lightning-button label="Call apex" variant="brand" onclick={handleClick}>
+            </lightning-button>
+        </div>
+        <template if:true={accounts}>
+            <template for:each={accounts} for:item="account">
+                <div key = {account.Id} class="slds-box">
+                    <p>Name : {account.Name}</p>
+                 </div>
+            </template>
+        </template>
+    </lightning-card>
+</template>
