@@ -1,0 +1,33 @@
+<template>
+    <lightning-card title="Books API">
+        <div class="slds-p-around_medium">
+            <div class="slds-p-around_medium">
+                <lightning-input
+                 type="search"
+                 label="Enter Book Name"
+                 onchange={getBookName}
+                 value={query}>   
+                </lightning-input>
+            </div>
+            <lightning-layout multiple-rows>
+                <template if:true={books}>
+                    <template for:each={books.items} for:item="book">
+                        <lightning-layout-item size="3" key = {book.Id} padding="around-small">
+                            <div class="slds-box slds-p-around_medium slds-text-align_center">
+                                <template if:false={book.volumeInfo.imageLinks}>
+                                    Image Unavailable 
+                                </template>
+                                <template if:true={book.volumeInfo.imageLinks}>
+                                    <img src={book.volumeInfo.imageLinks.smallThumbnail} height="200px"> 
+                                </template>
+                                <div><strong>{book.volumeInfo.title}</strong></div>
+                                <div>Sub-Title : {book.volumeInfo.subtitle}</div>
+                                <div>Rating : {book.volumeInfo.averageRating}</div>
+                            </div>
+                        </lightning-layout-item>
+                    </template>
+                </template>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>
