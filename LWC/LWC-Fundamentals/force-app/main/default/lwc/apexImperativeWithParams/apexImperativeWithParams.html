@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title="Imperative Apex with params">
+        <div class="slds-p-around_medium">
+            <lightning-input 
+            label="Search Accounts" 
+            type="search" 
+            onchange={searchHandler} 
+            value={searchKey}>
+            </lightning-input>
+        </div>
+        <template if:true={accounts}>
+            <template for:each={accounts} for:item="account">
+                <div key={account.Id} class="slds-box">
+                    <p>Name : {account.Name}</p>
+                </div>
+            </template>
+        </template>
+    </lightning-card>
+</template>
