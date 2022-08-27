@@ -22,7 +22,7 @@ export default class BookAppWithREST extends LightningElement {
     }
     getBookName(event){
         this.query = event.target.value
-       // this.fetchBookData()
+       
         //debouncing technique to search efficiently
         window.clearTimeout(this.timer)
         this.timer = setTimeout(() => {
