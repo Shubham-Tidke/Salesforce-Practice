@@ -1,6 +1,7 @@
-import { LightningElement } from 'lwc';
-
+import { api, LightningElement } from 'lwc';
+import generatePDF from '@salesforce/apex/pdfController.generatePDF'
 export default class PdfGeneration extends LightningElement {
+    @api recordId
     imageUrl = 'https://about.gitlab.com/images/press/logo/preview/gitlab-logo-200-preview.png'
     invoiceData={
         invoiceNo:'123',
@@ -25,5 +26,14 @@ export default class PdfGeneration extends LightningElement {
         return this.services.reduce((total,service)=>{
             return total = total+service.amount
         },0)
+    }
+    pdfHandler(){
+        let content = this.template.querySelector('.container')
+        console.log(content.outerHTML);
+        generatePDF({recordId:this.recordId,htmlData:content.outerHTML}).then((result)=>{
+            console.log("AttachmentId : "+result);
+        }).catch((error)=>{
+            console.error(error);
+        })
     }
 }
