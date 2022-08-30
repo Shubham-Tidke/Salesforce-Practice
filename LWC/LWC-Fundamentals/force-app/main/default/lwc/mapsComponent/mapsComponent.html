@@ -1,0 +1,11 @@
+<template>
+    <div class="slds-m-around_medium">
+        <template if:true={mapMarkers.length}>       
+            <lightning-map map-markers={mapMarkers}
+                markers-title="Accounts"
+                onmarkerselect={markerHandler}
+                selected-marker-value={selectedMarker}>
+            </lightning-map>
+    </template>
+    </div>
+</template>
