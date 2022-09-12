@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title="RelatedList info">
+        <div class="slds-p-around_medium">
+            Object : {objectApiName}
+        </div>
+        <template if:true={relatedData}>
+            <template for:each={relatedData} for:item="info">
+                <p key={info.fieldApiName}>
+                    {info.fieldApiName}
+                </p>
+            </template>
+        </template>
+    </lightning-card>
+    
+</template>
