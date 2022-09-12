@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title=" related list count and records adapter">
+        <div class="slds-p-around_medium">
+            <template if:true={notesCount}>
+                Attached Notes : {notesCount.count}
+            </template>
+            <template if:true={list}>
+                <p>Related Opportunities!!</p>
+                <template for:each={list} for:item="record">
+                    <p key={record.id}>{record.fields.Name.value}</p>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
