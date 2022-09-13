@@ -1,0 +1,32 @@
+<template>
+    <lightning-card title="Download Attachments">
+        <div>
+        <div class="slds-p-around_medium">
+            <strong>Total Files - {totalFiles}</strong>
+            <lightning-button class="slds-float_right" label="Download" icon-name="utility:download" onclick={downloadFiles}></lightning-button>
+        </div>
+        <div>
+        <template if:true={filesList}>
+            <template for:each={filesList} for:item="file">
+                <div key={file.value} class="slds-box">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_12-of-12">
+                          <p>{file.label}</p>
+                        </div>
+                        <div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_12-of-12">
+                          <p>fileType</p>
+                        </div>
+                        <div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_12-of-12">
+                          <a href={file.url} download>Download</a>
+                        </div>
+                        <div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_12-of-12">
+                          <lightning-button label="Preview" variant="brand" data-id={file.value} onclick={previewHandler}></lightning-button>
+                        </div>
+                      </div>
+                </div>
+            </template>
+        </template>
+    </div>
+</div>
+    </lightning-card>
+</template>
