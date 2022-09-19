@@ -25,6 +25,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @track filesList
     filesList = []
     columns = COLUMNS
+    allDownload = []
 
     connectedCallback() {
         this.handleSync();
@@ -37,11 +38,14 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             let stringifiedData = JSON.stringify(parsedData);
             //console.log(stringifiedData);
             let finalData = JSON.parse(stringifiedData);
-            console.log(finalData);       
+            //console.log(finalData);       
             finalData.forEach(file=>{
                file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);
+               this.allDownload.push(file.ContentDocumentId);
+               
             })
             this.filesList = finalData 
+            //console.log(this.allDownload);
         })
     }
 
@@ -87,5 +91,21 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             }
         }, false 
     );
+    }
+    singledownload(index){
+       console.log("currentid"+ index);
+        this[NavigationMixin.Navigate]({
+            type: 'standard__webPage',
+            attributes: {
+                url: `/sfc/servlet.shepherd/document/download/${this.allDownload[index]}`
+            }
+        }, false 
+        );
+    } 
+    downloadFiles(){
+        
+        for (let index = 0; index < this.allDownload.length; index++) { 
+             this.singledownload(index);    
+        }  
     }
 }
