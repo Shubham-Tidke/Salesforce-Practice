@@ -26,7 +26,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     filesList = []
     columns = COLUMNS
     allDownload = []
-
     connectedCallback() {
         this.handleSync();
     }
@@ -36,19 +35,13 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }).then(result => {
             let parsedData = JSON.parse(result);
             let stringifiedData = JSON.stringify(parsedData);
-            //console.log(stringifiedData);
-            let finalData = JSON.parse(stringifiedData);
-            //console.log(finalData);       
+            let finalData = JSON.parse(stringifiedData);     
             finalData.forEach(file=>{
-               file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);
-               this.allDownload.push(file.ContentDocumentId);
-               
+               file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);               
             })
-            this.filesList = finalData 
-            //console.log(this.allDownload);
+            this.filesList = finalData     
         })
     }
-
     formatBytes(bytes,decimals){
         if(bytes == 0) return '0 Bytes';
         var k = 1024,
@@ -57,7 +50,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
-
     handleRowAction(event){
         const actionName = event.detail.action.name;
         const row = event.detail.row;
@@ -91,21 +83,31 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             }
         }, false 
     );
+    }  
+    checkboxHandler(){
+        var rows = this.template.querySelector("lightning-datatable").getSelectedRows(); 
+        var rowArray = Array.from(rows)
+        rowArray.forEach(item=>{
+            this.downloadSelected(item.ContentDocumentId); 
+            this.allDownload.push(item.ContentDocumentId);       
+        })  
     }
-    singledownload(index){
-       console.log("currentid"+ index);
+    downloadSelected(id){
         this[NavigationMixin.Navigate]({
             type: 'standard__webPage',
             attributes: {
-                url: `/sfc/servlet.shepherd/document/download/${this.allDownload[index]}`
+                url: `/sfc/servlet.shepherd/document/download/${id}`
             }
         }, false 
-        );
-    } 
-    downloadFiles(){
-        
-        for (let index = 0; index < this.allDownload.length; index++) { 
-             this.singledownload(index);    
-        }  
+    );
+    }
+    getZip(){
+        this[NavigationMixin.Navigate]({
+            type: 'standard__webPage',
+            attributes: {
+                url: `/sfc/servlet.shepherd/document/download/${this.allDownload[0]}/${this.allDownload[1]}`
+            }
+        }, false 
+    );
     }
 }
