@@ -1,5 +1,6 @@
 import { api, LightningElement, track, wire } from 'lwc';
-import {NavigationMixin} from 'lightning/navigation'
+import {NavigationMixin} from 'lightning/navigation';
+import {ShowToastEvent} from'lightning/platformShowToastEvent';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 const COLUMNS = [
     { label: 'File Name', fieldName : 'Title'},
@@ -25,7 +26,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @track filesList
     filesList = []
     columns = COLUMNS
-    allDownload = []
+    zip = ''
     connectedCallback() {
         this.handleSync();
     }
@@ -60,8 +61,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             case 'Download':
                 this.downloadFile(row);
                 break;
-            default:
-                
+            default:     
         }
     }
     previewFile(file){
@@ -88,26 +88,37 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         var rows = this.template.querySelector("lightning-datatable").getSelectedRows(); 
         var rowArray = Array.from(rows)
         rowArray.forEach(item=>{
-            this.downloadSelected(item.ContentDocumentId); 
-            this.allDownload.push(item.ContentDocumentId);       
-        })  
-    }
-    downloadSelected(id){
-        this[NavigationMixin.Navigate]({
-            type: 'standard__webPage',
-            attributes: {
-                url: `/sfc/servlet.shepherd/document/download/${id}`
-            }
-        }, false 
-    );
+            this.zip += '/'+ item.ContentDocumentId ;        
+        })
+        if(this.zip.length == 0){
+            const event = new ShowToastEvent({
+                title: 'Error',
+                message:'Please select atleast one file!',
+                variant: 'error'
+            });
+            this.dispatchEvent(event);
+        }
+        else{
+            this.getZip();  
+        }   
     }
     getZip(){
         this[NavigationMixin.Navigate]({
             type: 'standard__webPage',
             attributes: {
-                url: `/sfc/servlet.shepherd/document/download/${this.allDownload[0]}/${this.allDownload[1]}`
+                url: `/sfc/servlet.shepherd/document/download/${this.zip}`
             }
         }, false 
     );
+    this.showToast();
+    this.zip = ''
+    }
+    showToast(){
+        const event = new ShowToastEvent({
+            title: 'Success',
+            message:'Files downloaded successfully!!',
+            variant: 'success'
+        });
+        this.dispatchEvent(event);  
     }
 }
