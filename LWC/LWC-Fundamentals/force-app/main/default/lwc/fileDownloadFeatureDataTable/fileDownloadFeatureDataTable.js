@@ -110,7 +110,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             }
         }, false 
     );
-    this.showToast();
+    setTimeout(()=>{this.showToast()},3000)
     this.zip = ''
     }
     showToast(){
