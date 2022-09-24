@@ -1,5 +1,6 @@
 import { api, LightningElement, track, wire } from 'lwc';
 import {NavigationMixin} from 'lightning/navigation';
+import { getRelatedListCount } from 'lightning/uiRelatedListApi';
 import {ShowToastEvent} from'lightning/platformShowToastEvent';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 const COLUMNS = [
@@ -27,6 +28,15 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     filesList = []
     columns = COLUMNS
     zip = ''
+   count = false
+    // @wire(getRelatedListCount,{
+    //     parentRecordId: '$recordId',
+    //     relatedListId:'CombinedAttachments'
+    // })filesCount({data,error}){
+    //     if(data.count > 0)
+    //     this.count = true
+    // }
+
     connectedCallback() {
         this.handleSync();
     }
@@ -40,7 +50,11 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             finalData.forEach(file=>{
                file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);               
             })
-            this.filesList = finalData     
+            this.filesList = finalData    
+            if((this.filesList.length) > 0){
+                this.count = true
+            } 
+          //  console.log(JSON.stringify(this.filesList.length));
         })
     }
     formatBytes(bytes,decimals){
