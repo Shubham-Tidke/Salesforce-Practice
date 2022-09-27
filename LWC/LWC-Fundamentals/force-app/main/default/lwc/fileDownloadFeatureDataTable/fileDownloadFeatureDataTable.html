@@ -9,6 +9,7 @@
         <template if:true={count}>
             <div class="slds-m-around_medium">
                 <lightning-button  label="Download Files" icon-name="utility:download" onclick={checkboxHandler}></lightning-button>
+                <lightning-button-icon  label="Refresh" icon-name="utility:refresh" class="slds-p-around_xx-small" onclick={refreshHandler}></lightning-button-icon>
             </div>
             <div class="slds-box" style="height:275px;">
                 <lightning-datatable  
