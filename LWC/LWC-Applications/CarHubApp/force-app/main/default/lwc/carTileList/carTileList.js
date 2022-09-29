@@ -3,7 +3,8 @@ import getCars from '@salesforce/apex/CarController.getCars'
 export default class CarTileList extends LightningElement {
     cars
     error
-    @wire(getCars)
+    filters = {};
+    @wire(getCars,{filters:'$filters'})
     carsHandler({data,error}){
         if(data){
             //console.log(data);
