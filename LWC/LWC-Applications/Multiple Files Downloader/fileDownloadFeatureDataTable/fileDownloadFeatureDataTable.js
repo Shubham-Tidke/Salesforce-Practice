@@ -1,3 +1,7 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @lwc/lwc/no-async-operation */
+/* eslint-disable vars-on-top */
+/* eslint-disable no-dupe-class-members */
 import { api, LightningElement, track, wire } from 'lwc';
 import {NavigationMixin} from 'lightning/navigation';
 import { refreshApex } from '@salesforce/apex';
@@ -8,7 +12,6 @@ const COLUMNS = [
     { label:'Download', type : 'button', typeAttributes:{
         label: 'Download',  
         name: 'Download',  
-        variant: 'brand',
         iconName: 'action:download',     
         iconPosition: 'right'
     }}
@@ -65,7 +68,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         console.log("connected Callback action");
     }
     formatBytes(bytes,decimals){
-        if(bytes == 0) return '0 Bytes';
+        if(bytes === 0) return '0 Bytes';
         var k = 1024,
             dm = decimals || 2,
             sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
@@ -111,7 +114,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         rowArray.forEach(item=>{
             this.zip += '/'+ item.ContentDocumentId ;        
         })
-        if(this.zip.length == 0){
+        if(this.zip.length === 0){
             const event = new ShowToastEvent({
                 title: 'Error',
                 message:'Please select atleast one file!',
