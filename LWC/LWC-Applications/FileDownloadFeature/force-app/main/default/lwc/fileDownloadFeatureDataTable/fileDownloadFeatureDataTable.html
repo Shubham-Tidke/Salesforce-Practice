@@ -8,6 +8,13 @@
         </template>
         <template if:true={count}> 
             <div class="slds-m-around_small">
+                <lightning-input
+                    class = "slds-float_right" 
+                    type="search" 
+                    placeholder="Search Attachments" 
+                    style="width: 300px;" 
+                    onchange={handleSearch}>
+                </lightning-input><br>
                 <lightning-button-icon  
                     label="Refresh" 
                     icon-name="utility:refresh" 
