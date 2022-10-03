@@ -3,13 +3,13 @@
 /* eslint-disable vars-on-top */
 /* eslint-disable no-dupe-class-members */
 import { api, LightningElement, track, wire } from 'lwc';
-import {NavigationMixin} from 'lightning/navigation';
+import { NavigationMixin } from 'lightning/navigation';
 import { refreshApex } from '@salesforce/apex';
-import {ShowToastEvent} from'lightning/platformShowToastEvent';
+import { ShowToastEvent } from'lightning/platformShowToastEvent';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 const COLUMNS = [
     { label: 'File Name', fieldName : 'Title'},   
-    { label:'Download', type : 'button', typeAttributes:{
+    { label:'Download', type : 'button-icon', typeAttributes:{
         label: 'Download',  
         name: 'Download',  
         iconName: 'action:download',     
@@ -21,11 +21,10 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showFileType = false
     @api showFileSize = false
     @api showPreview = false
-    @track filesList
     @track wiredList = [];
     filesList = []
     columns = COLUMNS
-    
+    initialRecords;
     zip = ''
     count = false
     
@@ -34,10 +33,11 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.wiredList = result
         if(result.data){
             //Parsing List data to JSON Object
-            let parsedData = JSON.parse(result.data);
+            let parsedData = JSON.parse(result.data);            
             parsedData.forEach(file=>{
                 file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);               
              })
+             this.initialRecords = JSON.parse(result.data);
              this.filesList = parsedData    
              if((this.filesList.length) > 0){
                  this.count = true
@@ -47,7 +47,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         {
             console.log(result.error);
         }
-        console.log("wire action");
+       // console.log("wire action");
     }
     connectedCallback(){
         if(this.showFileType === true){
@@ -65,7 +65,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 iconPosition: 'right'
             }}]
         }
-        console.log("connected Callback action");
+       // console.log("connected Callback action");
     }
     formatBytes(bytes,decimals){
         if(bytes === 0) return '0 Bytes';
@@ -107,7 +107,39 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             }
         }, false 
     );
-    }  
+    }
+
+    handleSearch( event ) {
+        const searchKey = event.target.value.toLowerCase();
+        console.log( 'Search String is ' + searchKey );
+        if ( searchKey ) {
+            this.filesList = this.initialRecords;            
+            if ( this.filesList ) {
+                let recs = [];
+                for ( let rec of this.filesList ) {
+                    let valuesArray = Object.values( rec );                    
+                    for ( let val of valuesArray ) {
+                        console.log( 'val is ' + val );
+                        let strVal = String( val );
+                        if ( strVal ) {
+                            if ( strVal.toLowerCase().includes( searchKey ) ) {
+                                recs.push( rec );
+                                break;
+                            }
+                        }
+                    }  
+                }
+                recs.forEach(file=>{
+                    file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);               
+                 })
+                this.filesList = recs;
+             } 
+        }  else {
+            this.filesList = this.initialRecords;
+        }        
+    }
+
+      
     checkboxHandler(){
         var rows = this.template.querySelector("lightning-datatable").getSelectedRows(); 
         var rowArray = Array.from(rows)
