@@ -1,18 +1,8 @@
-# Salesforce DX Project: Next Steps
-
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
-
-## How Do You Plan to Deploy Your Changes?
-
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
-
-## Configure Your Salesforce DX Project
-
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
-
-## Read All About It
-
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+# Files Downloader
+## A Lightning Web Component to download notes & attachments in a Zip.
+### The component can be used on record page to display all the attachments ,preview the files, and download them.
+#### Component displays the file size,file type,file name and option to preview and download [FYI screenshot below].
+![downloader](https://user-images.githubusercontent.com/30626268/191736388-accc7c97-e944-4254-ae0a-e97841c489d5.png)
+### When you click 'Download Files' button Post selecting checkboxes,it will download the files in a zip
+![image](https://user-images.githubusercontent.com/30626268/191737414-91ac7650-c5e0-4030-a895-84fe998271fa.png)
+![image](https://user-images.githubusercontent.com/30626268/191737643-560ddc1b-d3cd-4e7a-8003-33731e9755ee.png)
