@@ -1,0 +1,38 @@
+<!-- sldsValidatorIgnore -->
+<template>   
+    <lightning-card title="Download Attachments Component"> 
+        <template if:false={count}>
+            <div class="slds-m-around_medium">
+                <h2>No files to downlaod!!</h2>
+            </div>
+        </template>
+        <template if:true={count}> 
+            <div class="slds-m-around_small">
+                <lightning-button-icon  
+                    label="Refresh" 
+                    icon-name="utility:refresh" 
+                    alternative-text="Refresh table" 
+                    class="slds-m-around_xx-small" 
+                    onclick={refreshHandler}>
+                </lightning-button-icon>           
+                <lightning-button  
+                    label="Download Files"  
+                    variant="brand" 
+                    icon-name="utility:download" 
+                    alternative-text="Download selected files"  
+                    onclick={checkboxHandler}>
+                </lightning-button>  
+            </div>     
+            <div class="slds-box" style="height:275px;">
+                <lightning-datatable  
+                    key-field="Id"  
+                    data={filesList}  
+                    columns={columns}                                      
+                    onrowaction={handleRowAction}
+                    enable-infinite-loading
+                    show-row-number-column>  
+                </lightning-datatable>  
+              </div>
+        </template>
+    </lightning-card>
+</template>
