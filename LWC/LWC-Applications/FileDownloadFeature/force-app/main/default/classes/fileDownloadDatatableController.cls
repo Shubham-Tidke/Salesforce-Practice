@@ -8,10 +8,10 @@ public with sharing class fileDownloadDatatableController {
             contentDocumentId.add(cdl.ContentDocumentId);
         }
      
-            List<ContentVersion> docs = [SELECT Id, VersionData, FileType, Title, FileExtension, ContentDocument.ContentSize,
-            CreatedDate, ContentDocumentId, ContentDocument.FileType
+            List<ContentVersion> docs = [SELECT Id, VersionData, FileType,  FileExtension, ContentDocument.ContentSize,
+            CreatedDate, ContentDocumentId, ContentDocument.FileType,Title
             FROM   ContentVersion 
-            WHERE  ContentDocumentId IN : contentDocumentId];
+            WHERE  ContentDocumentId IN : contentDocumentId LIMIT 50000];
             
             return JSON.serialize(docs);
     }
