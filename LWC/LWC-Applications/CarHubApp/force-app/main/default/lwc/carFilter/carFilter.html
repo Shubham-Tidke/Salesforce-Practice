@@ -2,16 +2,35 @@
     <lightning-card
     title="Filters" icon-name="standard:calibration">
     <div class="slds-m-around_medium">
-        <lightning-input label="Search Key" type="search" value={filters.searchKey} onchange={handleSearchKeyChnage}></lightning-input>
+        <lightning-input 
+            label="Search Key" 
+            type="search" 
+            value={filters.searchKey} 
+            onchange={handleSearchKeyChnage}>
+        </lightning-input>
         <section class="slider_section">
-            <lightning-slider label="Max Price" step="100" min="0" max="999999"
-            value={filters.maxPrice} onchange={handleMaxPriceChange}></lightning-slider>
+            <lightning-slider 
+                label="Max Price" 
+                step="100" 
+                min="0" 
+                max="999999"
+                value={filters.maxPrice} 
+                onchange={handleMaxPriceChange}>
+            </lightning-slider>
         </section>
         <section>
             <h2>Category</h2>
             <template if:true={categories.data}>
                     <template for:each={categories.data.values} for:item="item">
-                        <lightning-input key={item.value} label={item.label} data-name="category" data-value={item.value} type="checkbox" checked onchange={handleCheckbox}></lightning-input>
+                        <lightning-input 
+                            key={item.value} 
+                            label={item.label} 
+                            data-name="categories" 
+                            data-value={item.value} 
+                            type="checkbox" 
+                            checked 
+                            onchange={handleCheckbox}>
+                        </lightning-input>
                     </template>
             </template>
             <template if:true={categories.error}>
@@ -22,7 +41,15 @@
             <h2>Make</h2>
             <template if:true={makeType.data}>
                 <template for:each={makeType.data.values} for:item="item">
-                    <lightning-input key={item.value} label={item.label} data-name="makeType" data-value={item.value} type="checkbox" checked onchange={handleCheckbox}></lightning-input>
+                    <lightning-input 
+                        key={item.value} 
+                        label={item.label} 
+                        data-name="makeType" 
+                        data-value={item.value} 
+                        type="checkbox" 
+                        checked 
+                        onchange={handleCheckbox}>
+                    </lightning-input>
                 </template>
         </template>
         <template if:true={makeType.error}>

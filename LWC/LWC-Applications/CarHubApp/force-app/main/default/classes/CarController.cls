@@ -39,7 +39,7 @@ public class Filters{
                 whereClaus = 'WHERE ' +String.join(criteria, ' AND ');
             }
         }
-        String query = 'SELECT Id,Name,	MSRP__c,Picture_URL__c,Description__c,Category__c  FROM Car__c '+ whereClaus +' WITH SECURITY_ENFORCED'+' ORDER BY Name';
+        String query = 'SELECT Id,Name,	MSRP__c,Picture_URL__c,Description__c,Category__c  FROM Car__c '+ whereClaus +' WITH SECURITY_ENFORCED ORDER BY Name';
         return Database.query(query);
     }
 }
