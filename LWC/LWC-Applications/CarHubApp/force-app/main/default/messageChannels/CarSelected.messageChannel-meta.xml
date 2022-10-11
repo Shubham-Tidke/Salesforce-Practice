@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+   
+   <isExposed>false</isExposed>
+   <description>LMS to display car description </description>
+   <lightningMessageFields>
+       <fieldName>carId</fieldName>
+       <description>Selected Car Id</description>
+   </lightningMessageFields>
+   <masterLabel>CarSelected</masterLabel>
+</LightningMessageChannel>
