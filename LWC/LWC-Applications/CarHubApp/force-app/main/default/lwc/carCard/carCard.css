@@ -1,0 +1,9 @@
+section{
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-top: 0.75rem;
+    text-transform: uppercase;
+    border-radius: 5px;
+    padding: 0.25rem;
+    background: #c7ab8d;
+}
