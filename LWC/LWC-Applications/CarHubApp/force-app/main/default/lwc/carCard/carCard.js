@@ -10,8 +10,10 @@ import CONTROL_FIELD from '@salesforce/schema/Car__c.Control__c'
 import { getFieldValue } from 'lightning/uiRecordApi';
 import CARS_SELECTED_MESSAGE from '@salesforce/messageChannel/carSelected__c'
 import { subscribe,MessageContext,unsubscribe } from 'lightning/messageService';
+import CAR_OBJECT from '@salesforce/schema/Car__c'
+import {NavigationMixin} from 'lightning/navigation'
 
-export default class CarCard extends LightningElement {
+export default class CarCard extends NavigationMixin (LightningElement) {
     
     categoryField = CATEGORY_FIELD
     makeField = MAKE_FIELD
@@ -46,5 +48,15 @@ export default class CarCard extends LightningElement {
     disconnectedCallback(){
         unsubscribe(this.carSelectedSubscription)
         this.carSelectedSubscription = null
+    }
+    handleNavigateToRecord(){
+        this[NavigationMixin.Navigate]({
+            type:'standard__recordPage',
+            attributes:{
+                recordId:this.recordId,
+                objectApiName : CAR_OBJECT.objectApiName,
+                actionName : 'view'
+            }
+        })
     }
 }

@@ -3,6 +3,7 @@
         title={carName} 
         icon-name="standard:apex_plugin">
        <template if:true={recordId}>
+        <lightning-button-icon icon-name="utility:expand_alt" slot="actions" title="Check Details" onclick={handleNavigateToRecord}></lightning-button-icon>
         <div class="slds-m-around_medium">
             <img src={carImage} alt="Car Image"/>
             <lightning-record-view-form record-id={recordId} onload={handleLoadedRecord} object-api-name="Car__c" density="compact">
@@ -17,7 +18,7 @@
         </div>
        </template>
        <template if:false={recordId}>
-        <p>Please Select a Car to see details</p>
+        <c-placeholder message="Select a car to see details"></c-placeholder>
        </template>
     </lightning-card>
 </template>
