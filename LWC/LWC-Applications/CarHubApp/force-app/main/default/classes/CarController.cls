@@ -42,4 +42,8 @@ public class Filters{
         String query = 'SELECT Id,Name,	MSRP__c,Picture_URL__c,Description__c,Category__c  FROM Car__c '+ whereClaus +' WITH SECURITY_ENFORCED ORDER BY Name';
         return Database.query(query);
     }
+    @AuraEnabled(cacheable=true)
+    public static Car__c[] getSimilarCars(Id carId,String[]makeType){
+        return [SELECT Id,Name,	MSRP__c,Picture_URL__c,Description__c,Category__c  FROM Car__c WHERE Make__c IN :makeType AND Id != :carId];
+    }
 }
