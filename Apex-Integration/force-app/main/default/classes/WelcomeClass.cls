@@ -4,6 +4,7 @@ global with sharing class WelcomeClass {
 
     @httpGet
     global static String getMessage(){
+       
         return WELCOME_MSG;
     }
 
