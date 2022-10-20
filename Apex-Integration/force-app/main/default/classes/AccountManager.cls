@@ -1,6 +1,44 @@
 @RestResource(urlmapping='/v1/Account/*')
 global with sharing class AccountManager {
 
+    @httpPost
+    global static Id createAccount(String accName,String accNumber,String industry,String description){
+        Account acc = new Account(Name = accName, Industry = industry, Description = description, AccountNumber = accNumber);
+        insert acc;
+        return acc.Id;
+    }
+
+    @httpPatch
+    global static String updateAccount(String accNumber,String description){
+        RestRequest request = RestContext.request;
+        String requestURI = request.requestURI;
+        String accId = requestURI.subStringAfterLast('/');
+        List<Account>accList = [SELECT Id FROM Account WHERE Id =:accId];
+        if(accList.size()>0){
+            Account acc = new Account(Id = accId, AccountNumber = accNumber , Description = description);
+            update acc;
+            return 'Account Updated!';
+        }
+        else{
+            return 'Failed to update!';
+        }
+    }
+
+    @httpDelete //we cannot pass parameters to delete http method
+    global static String deleteAccount(){
+        RestRequest request = RestContext.request;
+        String requestURI = request.requestURI;
+        String accId = requestURI.subStringAfterLast('/');
+        List<Account>accList = [SELECT Id FROM Account WHERE Id =:accId];
+        if(accList.size()>0){
+            delete accList;
+            return 'Account Deleted!';
+        }
+        else {
+            return 'Failed to delete!';
+        } 
+    }
+
     @httpGet
     global static AccountWrapper getAccount(){
 
