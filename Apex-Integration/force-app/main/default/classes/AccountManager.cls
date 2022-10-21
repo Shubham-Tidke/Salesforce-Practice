@@ -2,12 +2,12 @@
 global with sharing class AccountManager {
 
     @httpPost
-    global static Id createAccount(String accName,String accNumber,String industry,String description){
-        Account acc = new Account(Name = accName, Industry = industry, Description = description, AccountNumber = accNumber);
+    global static Id createAccount(postAccountWrapper record){
+        Account acc = record.accountRecord;
         insert acc;
         return acc.Id;
     }
-
+   
     @httpPatch
     global static String updateAccount(String accNumber,String description){
         RestRequest request = RestContext.request;
@@ -41,7 +41,6 @@ global with sharing class AccountManager {
 
     @httpGet
     global static AccountWrapper getAccount(){
-
         RestRequest request = RestContext.request;
         String requestURI = request.requestURI;
         String accId = requestURI.subStringAfterLast('/');
@@ -62,4 +61,22 @@ global with sharing class AccountManager {
         global List<Contact> contactList;
         global List<Case> caseList;
     }
+     //using wrapper class to have best practice
+     global class postAccountWrapper{
+        Account accountRecord { get; set; }
+    }
+    
 }
+/*
+{
+  "record" : {
+    "accountRecord" : {
+      "Name" : "Wrapper Test",
+      "Rating" : "Hot",
+      "Description" : "This is a simple description",
+      "Phone" : "987-988-2342",
+      "Industry" : "Education"
+    }
+  }
+}
+*/
