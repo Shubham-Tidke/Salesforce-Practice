@@ -2,10 +2,10 @@
 global with sharing class AccountManager {
 
     @httpPost
-    global static Id createAccount(postAccountWrapper record){
+    global static postAccountWrapper createAccount(postAccountWrapper record){
         Account acc = record.accountRecord;
         insert acc;
-        return acc.Id;
+        return record;
     }
    
     @httpPatch
@@ -63,7 +63,7 @@ global with sharing class AccountManager {
     }
      //using wrapper class to have best practice
      global class postAccountWrapper{
-        Account accountRecord { get; set; }
+        global  Account accountRecord { get; set; }
     }
     
 }
