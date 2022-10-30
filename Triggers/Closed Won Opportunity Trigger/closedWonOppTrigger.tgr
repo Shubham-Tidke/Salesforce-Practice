@@ -1,0 +1,14 @@
+trigger closedWonOppTrigger on Opportunity (after insert,after update) {
+	set<id>ids = new set<id>();
+    list<account>acc = new list<account>();
+    for(Opportunity op : trigger.new){
+        ids.add(op.AccountId);
+        acc=[select id,name,rating from account where id=:ids];
+        if(op.StageName == 'Closed won'){
+            for(account a:acc){
+                a.rating = 'hot';
+            }
+            update acc;
+        }
+    }
+}
