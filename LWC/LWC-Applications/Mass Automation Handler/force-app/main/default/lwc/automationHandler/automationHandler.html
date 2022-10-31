@@ -1,0 +1,29 @@
+<template>
+    <lightning-card  variant="Narrow"  title="Enabler/Disabler" class="slds-p-around_small">
+       <lightning-tabset variant="standard" >
+        <lightning-tab label="Triggers">
+           <template if:true={triggerData}>
+                <template  for:each={items} for:item="data" >
+                    <lightning-accordion allow-multiple-sections-open key={data}>
+                        <lightning-accordion-section name="A" label={data.Object}>
+                            <template for:each={data.TriggerName} for:item="item">
+                                <lightning-layout multiple-rows key={item}>
+                                    <lightning-layout-item size="6" padding="around-small">
+                                        <div class="custom-box">{item.Name}</div>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="6" padding="around-small">
+                                        <lightning-input type="toggle" variant="standard"  label="Enable/Disable" checked={toggleHandler}></lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </template>
+                        </lightning-accordion-section>
+                    </lightning-accordion>
+                </template>        
+           </template>
+        </lightning-tab>
+        <lightning-tab label="Flow">
+            Two Content !
+        </lightning-tab>
+       </lightning-tabset>
+    </lightning-card>
+</template>
