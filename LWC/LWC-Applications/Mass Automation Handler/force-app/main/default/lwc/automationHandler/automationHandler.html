@@ -8,11 +8,11 @@
                         <lightning-accordion-section name="A" label={data.Object}>
                             <template for:each={data.TriggerName} for:item="item">
                                 <lightning-layout multiple-rows key={item}>
-                                    <lightning-layout-item size="6" padding="around-small">
-                                        <div class="custom-box">{item.Name}</div>
+                                    <lightning-layout-item  size="6" padding="around-small">
+                                        <div class="custom-box">{item.apx.Name}</div>
                                     </lightning-layout-item>
                                     <lightning-layout-item size="6" padding="around-small">
-                                        <lightning-input type="toggle" variant="standard"  label="Enable/Disable" checked={toggleHandler}></lightning-input>
+                                        <lightning-input type="toggle" variant="standard" onclick={handleClick} label="Enable/Disable" checked={item.activeStatus} onchange={toggleHandler}></lightning-input>
                                     </lightning-layout-item>
                                 </lightning-layout>
                             </template>
