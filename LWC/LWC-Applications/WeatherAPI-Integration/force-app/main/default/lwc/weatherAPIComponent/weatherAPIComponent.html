@@ -1,12 +1,27 @@
 <template>
     <lightning-card title="Get Weather by location" >
-        <div class="slds-p-around_small">
-            <lightning-input 
-                type="text" 
-                variant="standard" 
-                placeholder="Enter location to get weather report..." 
-                onchange={getLocation}>
-            </lightning-input>
+        <div>
+            <div class="slds-p-around_small">
+                <lightning-input 
+                    type="text" 
+                    variant="standard" 
+                    placeholder="Enter location to get weather report..." 
+                    onchange={getLocation}>
+                </lightning-input>
+            </div>
+            <div class ="slds-p-around_medium">
+                <template if:true={weather}>
+                    <span>
+                        <p>Weather Forecast at : {location}, date : {date}</p>
+                        <p>Average Temperature is : {avgTemp} °C</p>
+                        <p>Maximum Temperature Expected : {maxTemp} °C</p>
+                        <p>Minimum Temperature Expected : {minTemp} °C</p>
+                        <p>Humidity : {humidity}g.m-3</p>
+                        <p>Wind Speed and Direction : {windSpeed} ,{windDir}</p>
+                        <p>Overall Weather will be {primaryWeather}</p>
+                    </span>
+                </template>
+            </div>
         </div>
     </lightning-card>
 </template>

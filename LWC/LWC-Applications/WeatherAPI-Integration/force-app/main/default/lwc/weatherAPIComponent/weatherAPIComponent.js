@@ -19,6 +19,7 @@ export default class WeatherAPIComponent extends LightningElement {
     primaryWeather
     windDir
     windSpeed
+    date
     connectedCallback(){
         this.fetchWeather();
     }
@@ -27,15 +28,15 @@ export default class WeatherAPIComponent extends LightningElement {
 	.then(response => response.json())
 	.then(data => {
         this.weather = data.response[0].periods[0];
-       // console.log(this.weather);
-        console.log("Weather Forecast at "+this.location);
-        console.log("Average Temperature is :"+this.weather.avgTempC+"°C");
-        console.log("Maximum Temperature Expected : "+this.weather.maxTempC+"°C");
-        console.log("Minimum Temperature Expected : "+this.weather.minTempC+"°C");
-        console.log("Humidity : "+this.weather.humidity+" g.m-3 ");
-        console.log("Wind Speed & Direction :"+this.weather.windSpeedKPH+" KMPH,"+this.weather.windDir);
-        console.log("Overall Weather will be "+this.weather.weather);
-        
+        this.avgTemp = this.weather.avgTempC;
+        this.humidity = this.weather.humidity;
+        this.maxTemp = this.weather.maxTempC;
+        this.minTemp = this.weather.minTempC;
+        this.windSpeed = this.weather.windSpeedKPH;
+        this.windDir = this.weather.windDir;
+        this.primaryWeather = this.weather.weather;
+        this.date = this.weather.validTime.substring(0,10);
+        //console.log(this.date);        
     })
 	.catch(err => console.error(err));
     }
