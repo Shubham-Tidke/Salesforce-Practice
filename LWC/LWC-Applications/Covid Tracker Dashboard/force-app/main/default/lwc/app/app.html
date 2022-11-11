@@ -1,4 +1,48 @@
+
 <template>
     <header>COVID-19 Global Cases Tracker</header>
+    <div class="slds-m-top_large slds-p-left_small slds-p-right_small slds-grid slds-gutters slds-wrap space">
+        <div class="slds-col bg-primary slds-p-around_small slds-m-around_small">
+            <div class="slds-text-align_center slds-text-heading_medium white-color">Total Confirmed</div>
+            <div class="slds-text-align_center slds-text-heading_large white-color">{totalConfirmed}</div>
+        </div>
+        <div class="slds-col bg-warning slds-p-around_small slds-m-around_small">
+             <div class="slds-text-align_center slds-text-heading_medium white-color">Total Active</div>
+             <div class="slds-text-align_center slds-text-heading_large white-color">{totalActive}</div>
+        </div>
+        <div class="slds-col bg-danger slds-p-around_small slds-m-around_small">
+            <div class="slds-text-align_center slds-text-heading_medium white-color">Total Deaths</div>
+            <div class="slds-text-align_center slds-text-heading_large white-color">{totalDeaths}</div>
+        </div>
+        <div class="slds-col bg-info slds-p-around_small slds-m-around_small">
+            <div class="slds-text-align_center slds-text-heading_medium white-color">Fatality Rate</div>
+            <div class="slds-text-align_center slds-text-heading_large white-color">{totalFatalityRate}</div>
+        </div>
+    </div>
+    <div class="slds-m-left_medium slds-m-right_medium slds-m-left_medium slds-m-bottom_medium">
+        <div class="slds-p-around_medium lgc-bg">
+          <label class="label-text">Enter Your country Name</label>
+          <lightning-input  type="text" autocomplete="off" label="Enter Your country Name" variant="label-hidden" onkeyup={searchHandler}></lightning-input>
+      </div>
+      <table class="table table-bordered ">
+        <thead>
+          <tr>					
+            <th>Country Name</th>
+            <th>Confirmed</th>
+            <th>Active</th>
+            <th>Deaths</th>
+            <th>Fatality Rate</th>
+            <th>Last Updated</th>
+          </tr>
+        </thead>
+       
+        <tbody id="myTable">
+          
+         
+        </tbody>
+      </table>
     
+    
+    
+</div>
 </template>
