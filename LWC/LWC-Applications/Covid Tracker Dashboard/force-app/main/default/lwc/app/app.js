@@ -37,7 +37,7 @@ export default class App extends LightningElement {
     }
     async fetchCountryData(){
         let response = await fetch('https://covid-19-statistics.p.rapidapi.com/reports',options)
-        let responseJSON = await response.json();
+        let responseJSON = await response.json();//fetch return data in 'datastream',converting it in JSON
         let result = responseJSON.data;
         console.log(result);
     }
