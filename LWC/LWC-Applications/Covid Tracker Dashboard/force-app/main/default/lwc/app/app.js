@@ -15,6 +15,7 @@ export default class App extends LightningElement {
     totalActive
     totalRecovered
     totalFatalityRate
+    countryData
     
     connectedCallback(){
         this.fetchData();
@@ -39,6 +40,8 @@ export default class App extends LightningElement {
         let response = await fetch('https://covid-19-statistics.p.rapidapi.com/reports',options)
         let responseJSON = await response.json();
         let result = responseJSON.data;
+        this.countryData = result;
         console.log(result);
+        console.log(this.countryData[1].region.name);
     }
 }
