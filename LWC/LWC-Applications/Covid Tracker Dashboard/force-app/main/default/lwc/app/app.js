@@ -27,21 +27,27 @@ export default class App extends LightningElement {
         let responseJson = await response.json()//fetch return data in 'datastream',converting it in JSON
         let result = responseJson.data;
         console.log(result);
-        this.formatData(result);
+        this.totalActive = result.active
+        this.totalConfirmed = result.confirmed
+        this.totalDeaths = result.deaths
+        this.totalFatalityRate = result.fatality_rate
     }
-    formatData(data){
-       this.totalActive = data.active
-       this.totalConfirmed = data.confirmed
-       this.totalDeaths = data.deaths
-       this.totalFatalityRate = data.fatality_rate
     
-    }
     async fetchCountryData(){
         let response = await fetch('https://covid-19-statistics.p.rapidapi.com/reports',options)
         let responseJSON = await response.json();//fetch return data in 'datastream',converting it in JSON
         let result = responseJSON.data;
         this.countryData = result;
         console.log(result);
-        console.log(this.countryData[1].region.name);
+        this.formatData(result);
+    }
+    formatData(result){
+       let finalData = {
+        
+       }
+       result.forEach(data => {
+       // console.log(data.confirmed);
+       });
+      
     }
 }
