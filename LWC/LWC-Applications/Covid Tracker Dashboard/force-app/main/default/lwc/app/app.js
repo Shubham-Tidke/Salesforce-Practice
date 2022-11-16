@@ -15,7 +15,7 @@ export default class App extends LightningElement {
     totalActive
     totalRecovered
     totalFatalityRate
-    countryData 
+    newData = {}
     
     connectedCallback(){
         this.fetchData();
@@ -37,21 +37,32 @@ export default class App extends LightningElement {
         let response = await fetch('https://covid-19-statistics.p.rapidapi.com/reports',options)
         let responseJSON = await response.json();//fetch return data in 'datastream',converting it in JSON
         let result = responseJSON.data;
-         result.map(item => {
-            console.log(item.region.name);
-            
-            
-        });
+         
        // console.log(result);
         this.formatData(result);
     }
     formatData(result){
-       let finalData = {
         
-       }
        result.forEach(data => {
-       // console.log(data.confirmed);
+        let obj = {
+            Confirmed : data.confirmed,
+            Active : data.active,
+            Deaths : data.deaths,
+            Fatality_Rate : data.fatality_rate,
+            LastUpdate : data.last_update
+        }
+        if(data.region.name in this.newData){
+            this.newData[data.region.name].Confirmed += obj.Confirmed;
+            this.newData[data.region.name].Active += obj.Active;
+            this.newData[data.region.name].Fatality_Rate += obj.Fatality_Rate;
+            this.newData[data.region.name].Deaths += obj.Deaths;
+            this.newData[data.region.name].LastUpdate += obj.LastUpdate;
+           }
+           else{
+            this.newData[data.region.name] = obj
+           }
        });
       
+       console.log(this.newData);
     }
 }

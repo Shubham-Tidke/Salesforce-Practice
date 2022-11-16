@@ -37,11 +37,11 @@
         </thead>
        
         <tbody id="myTable">
-          <template for:each={countryData} for:item="item">
-            <tr key={item.region.name}>
-              <td class="countryName">{item.region.name} {item.region.province}</td>
+          <template for:each={country} for:item="item">
+            <tr key={item}>
+              <td class="countryName">{item.key} </td>
               <td>{item.confirmed}</td>
-              <td class={item.activeColumnClass}>{item.active}</td>
+              <td class={item.activeColumnClass}>{item.value}</td>
               <td>{item.deaths}</td>
               <td class={item.fatalityColumnClass}>{item.fatality_rate}</td>
               <td>{item.last_update}</td>
