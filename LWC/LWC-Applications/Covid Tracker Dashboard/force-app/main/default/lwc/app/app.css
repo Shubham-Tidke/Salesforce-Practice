@@ -162,3 +162,7 @@ background-color:#ffac41;
     align-items: baseline;
     
 }
+.infinite-table {
+    height: 300px;
+    overflow: auto;
+  }

@@ -1,4 +1,4 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import APIKEY from '@salesforce/label/c.covid_data_api_key';
 import ENDPOINT from '@salesforce/label/c.covid_data_endpoint';
 const options = {
@@ -15,7 +15,9 @@ export default class App extends LightningElement {
     totalActive
     totalRecovered
     totalFatalityRate
+    isLoading = true
     newData = {}
+    @track finalData = []
     
     connectedCallback(){
         this.fetchData();
@@ -42,24 +44,28 @@ export default class App extends LightningElement {
         this.formatData(result);
     }
     formatData(result){
-        
+        this.isLoading = false
        result.forEach(data => {
         let obj = {
+            Country : data.region.name,
             Confirmed : data.confirmed,
             Active : data.active,
             Deaths : data.deaths,
             Fatality_Rate : data.fatality_rate,
             LastUpdate : data.last_update
+           
         }
         if(data.region.name in this.newData){
             this.newData[data.region.name].Confirmed += obj.Confirmed;
             this.newData[data.region.name].Active += obj.Active;
             this.newData[data.region.name].Fatality_Rate += obj.Fatality_Rate;
             this.newData[data.region.name].Deaths += obj.Deaths;
-            this.newData[data.region.name].LastUpdate += obj.LastUpdate;
+            this.newData[data.region.name].LastUpdate += obj.LastUpdate; 
+            //this.finalData.push(this.newData[data.region.name]);
            }
            else{
             this.newData[data.region.name] = obj
+            this.finalData.push(obj)
            }
        });
       

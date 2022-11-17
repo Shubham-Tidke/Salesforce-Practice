@@ -1,5 +1,8 @@
 
 <template>
+  <lightning-card class="slds-m-around_medium">
+   
+  
     <header>COVID-19 Global Cases Tracker</header>
     <div class="slds-m-top_large slds-p-left_small slds-p-right_small slds-grid slds-gutters slds-wrap space">
         <div class="slds-col bg-primary slds-p-around_small slds-m-around_small">
@@ -24,6 +27,13 @@
           <label class="label-text">Enter Your country Name</label>
           <lightning-input  type="text" autocomplete="off" label="Enter Your country Name" variant="label-hidden" onkeyup={searchHandler}></lightning-input>
       </div>
+      <template if:true={isLoading}>
+        <lightning-spinner
+          alternative-text="Loading..." variant="brand">
+        </lightning-spinner>
+      </template>
+      <template if:false={isLoading}>
+      <div class="infinite-table">
       <table class="table table-bordered ">
         <thead>
           <tr>					
@@ -31,28 +41,26 @@
             <th>Confirmed</th>
             <th>Active</th>
             <th>Deaths</th>
-            <th>Fatality Rate</th>
-            <th>Last Updated</th>
+            <th>Fatality Rate</th> 
           </tr>
-        </thead>
-       
-        <tbody id="myTable">
-          <template for:each={country} for:item="item">
-            <tr key={item}>
-              <td class="countryName">{item.key} </td>
-              <td>{item.confirmed}</td>
-              <td class={item.activeColumnClass}>{item.value}</td>
-              <td>{item.deaths}</td>
-              <td class={item.fatalityColumnClass}>{item.fatality_rate}</td>
-              <td>{item.last_update}</td>
-            </tr>
-
-          </template>
-         
-        </tbody>
+        </thead> 
+        <tbody>          
+          <template for:each={finalData} for:item="item">
+            <tr key={item.Country}>
+              <td class="countryName">{item.Country} </td>
+              <td>{item.Confirmed}</td>
+              <td class="activeColumnClass">{item.Active}</td>
+              <td>{item.Deaths}</td>
+              <td class="fatalityColumnClass">{item.Fatality_Rate}</td> 
+            </tr>      
+        </template>
+        
+      </tbody>
       </table>
-    
+    </div>
+    </template>
     
     
 </div>
+</lightning-card>
 </template>
