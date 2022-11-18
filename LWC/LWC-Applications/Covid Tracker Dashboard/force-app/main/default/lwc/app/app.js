@@ -17,7 +17,11 @@ export default class App extends LightningElement {
     totalFatalityRate
     isLoading = true
     newData = {}
-    @track finalData = []
+    countryName
+    finalData = []
+    copyData=[]
+    searchedCountryData = []
+    timer
     
     connectedCallback(){
         this.fetchData();
@@ -43,6 +47,35 @@ export default class App extends LightningElement {
        // console.log(result);
         this.formatData(result);
     }
+    searchHandler(event){
+        this.countryName = event.target.value
+        console.log(this.countryName);
+        if(this.countryName){
+        window.clearTimeout(this.timer);
+        this.timer = setTimeout(()=>{
+            //this.searchedCountryData=[]
+            this.copyData.forEach(element => {  
+                if(element.Country.includes(this.countryName)){
+                    //console.log(element.Country);
+                    this.searchedCountryData.push(element)   
+                }
+            });
+            console.log(this.searchedCountryData);
+            this.finalData = this.searchedCountryData
+            this.searchedCountryData=[]
+        },1000)
+        }
+        else{
+            this.finalData = this.copyData;
+        }
+       
+        
+       
+        
+       
+        
+
+    }
     formatData(result){
         this.isLoading = false
        result.forEach(data => {
@@ -67,8 +100,9 @@ export default class App extends LightningElement {
             this.newData[data.region.name] = obj
             this.finalData.push(obj)
            }
+           this.copyData = this.finalData
        });
       
-       console.log(this.newData);
+       //console.log(this.finalData);
     }
 }
