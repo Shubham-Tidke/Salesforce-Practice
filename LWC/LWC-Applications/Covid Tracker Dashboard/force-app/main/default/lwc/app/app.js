@@ -13,7 +13,6 @@ export default class App extends LightningElement {
     totalDeaths
     totalConfirmed
     totalActive
-    totalRecovered
     totalFatalityRate
     isLoading = true
     newData = {}
@@ -67,14 +66,7 @@ export default class App extends LightningElement {
         }
         else{
             this.finalData = this.copyData;
-        }
-       
-        
-       
-        
-       
-        
-
+        }      
     }
     formatData(result){
         this.isLoading = false
