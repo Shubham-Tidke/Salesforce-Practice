@@ -1,12 +1,3 @@
-.app-container {
-    min-height: 100vh;
-    background:#fff;
-    color:#9d9d9d;
-    padding-bottom: 1rem;
-}
-*, ::after, ::before {
-    box-sizing: border-box;
-}
 header, footer{
     grid-area: header;
     text-align: center;
@@ -22,27 +13,18 @@ header, footer{
 .bg-warning {
     background-color: #dd9105;
 }
-.bg-success {
-    background-color: #28a745;
-}
+
 .bg-danger {
     background-color: #dc3545;
 }
 .bg-info {
     background-color: #17a2b8;
 }
-.bg-secondary {
-    background-color: #413b7f;
-}
-.bg-light {
-    background-color: #2664a2!important;
-}
+
 .white-color{
     color:white;
 }
-.space{
-        justify-content: space-between;
-}
+
 .table-bordered {
     border: 1px solid #dee2e6;
 }
@@ -114,54 +96,12 @@ lightning-input.label-text.slds-form-element label {
     background-color:#fe346e;
     color:#fff;
 }
-.recoveredColumnClass{
-    background-color:#5b8c5a;
-    color:#fff;
-}
-.fatalityColumnClass-success{
-    background-color:#1eb2a6;
-    color:#fff;
-}
-.fatalityColumnClass-danger{
-    background-color:#d63447;
-    color:#fff;
-}
-.recoveryColumnClass-warning{
-background-color:#ffac41;
-    color:#fff;
-}
-.recoveryColumnClass-success{
-    background-color:#48c774;
-    color:#fff;
 
-}
 .countryName{
     font-size: 1.5rem;
     font-weight: 700;
 }
-/**toggle switch**/
-.toggle-container{
-    display: flex;
-    justify-content: flex-end;
-  
-    color:#fff;
-}
-.toggle-container>div{
-    padding: 0.5rem 1rem;
-    background: #fff;
-    border:1px solid #212529;
-      color: #000;
-}
-.toggle-container>div.active{
-    background: #28a745;
-    color:#fff;
-}
-.box-container{
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    
-}
+
 .infinite-table {
     height: 300px;
     overflow: auto;
