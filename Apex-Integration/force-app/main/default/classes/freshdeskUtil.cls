@@ -42,8 +42,8 @@ public class freshdeskUtil {
         String requestBody ='{'+
             				'"subject": "'+subject+'",'+
             				'"description": "'+description+'",'+
-            				'"priority": "'+priority+'",'+
-            				'"status": "'+status+'",'+
+            				'"priority": '+priority+','+
+            				'"status": '+status+','+
             				'"email": "'+email+'"'+
             				'}';
         String creds = System.Label.freshdeskUsername;
