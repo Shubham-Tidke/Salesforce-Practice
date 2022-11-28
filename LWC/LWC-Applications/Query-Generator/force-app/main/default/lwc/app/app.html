@@ -1,0 +1,31 @@
+<template>
+    <lightning-card variant="Narrow" title="Query Generator" class="slds-m-around_small ">
+        <div class="slds-p-around_small">
+            <lightning-combobox name="progress" label="Select Object" value={objValue} placeholder="Select Object"
+                options={objOptions} onchange={handleObjectChange}>
+            </lightning-combobox>
+        </div>
+        <div class="slds-p-around_small">
+            <lightning-combobox name="progress" label="Query Type" value={queryTypeValue} placeholder="Select Query Type"
+                options={queryTypeOptions} onchange={handleQueryTypeChange}>
+            </lightning-combobox>
+        </div>
+        <div class="slds-p-around_small" if:true={showFields}>
+            <lightning-dual-listbox name="languages" label="Select Fields" source-label="Available"
+                selected-label="Selected" field-level-help="This is a dual listbox" options={fieldsOptions}
+                onchange={handleFieldChange} value={fieldValue}>
+            </lightning-dual-listbox>
+        </div>
+        <div class="slds-p-around_small" if:true={showFields}>
+            <lightning-input type="number" variant="standard" class="limitInput" label="LIMIT Value" placeholder="add limit value...." max="50000" onchange={handleLimitChange}></lightning-input>
+        </div>
+        <div class="slds-p-around_small">
+            <lightning-button variant="brand" label="Generate Query" title="titleName" onclick={handleClick}
+                if:true={showButton}></lightning-button>
+
+            <lightning-textarea name="inputname" value={finalQuery} read-only="true" if:true={showQuery}>
+            </lightning-textarea>
+        </div>
+    </lightning-card>
+
+</template>
