@@ -5,20 +5,42 @@
                 options={objOptions} onchange={handleObjectChange}>
             </lightning-combobox>
         </div>
-        <div class="slds-p-around_small">
-            <lightning-combobox name="progress" label="Query Type" value={queryTypeValue} placeholder="Select Query Type"
-                options={queryTypeOptions} onchange={handleQueryTypeChange}>
+        <div class="slds-p-around_small" if:true={showFields}>
+            <lightning-combobox name="progress" label="Query Type" value={queryTypeValue}
+                placeholder="Select Query Type" options={queryTypeOptions} onchange={handleQueryTypeChange}>
             </lightning-combobox>
         </div>
-        <div class="slds-p-around_small" if:true={showFields}>
-            <lightning-dual-listbox name="languages" label="Select Fields" source-label="Available"
-                selected-label="Selected" field-level-help="This is a dual listbox" options={fieldsOptions}
-                onchange={handleFieldChange} value={fieldValue}>
-            </lightning-dual-listbox>
+        <div if:true={isValueInQueryType}>
+            <div class="slds-p-around_small" if:false={showAggrFunc}>
+                <lightning-dual-listbox name="languages" label="Select Fields" source-label="Available"
+                    selected-label="Selected" field-level-help="This is a dual listbox" options={fieldsOptions}
+                    onchange={handleFieldChange} value={fieldValue}>
+                </lightning-dual-listbox>
+                <lightning-input type="number" variant="standard" class="limitInput" label="LIMIT Value"
+                placeholder="add limit value...." max="50000" onchange={handleLimitChange}></lightning-input>
+            </div>
+
+            <div class="slds-p-around_small" if:true={showAggrFunc}>
+                <lightning-combobox name="progress" label="Aggregate Functions" value={aggrValue}
+                    placeholder="Select Function" options={aggrFuncOptions} onchange={handleAggrChange}>
+                </lightning-combobox>
+                <lightning-combobox if:true={showAggrFields} name="progress" label="Aggregate Field" value={aggrFieldValue}
+                    placeholder="Select Field" options={fieldsOptions} onchange={handleAggrFieldChange}>
+                </lightning-combobox>
+                <lightning-dual-listbox name="languages" label="Add More Fields To Query" source-label="Available"
+                    selected-label="Selected" field-level-help="This is a dual listbox" options={fieldsOptions}
+                    onchange={handleAdditionalFieldChange} value={fieldValue}>
+                </lightning-dual-listbox>
+                <lightning-input type="number" variant="standard" class="limitInput" label="LIMIT Value"
+                placeholder="add limit value...." max="50000" onchange={handleLimitChange}></lightning-input>
+                
+                
+            </div>
         </div>
-        <div class="slds-p-around_small" if:true={showFields}>
-            <lightning-input type="number" variant="standard" class="limitInput" label="LIMIT Value" placeholder="add limit value...." max="50000" onchange={handleLimitChange}></lightning-input>
-        </div>
+        <!-- <div class="slds-p-around_small" if:true={isValueInQueryType}>
+            <lightning-input type="number" variant="standard" class="limitInput" label="LIMIT Value"
+                placeholder="add limit value...." max="50000" onchange={handleLimitChange}></lightning-input>
+        </div> -->
         <div class="slds-p-around_small">
             <lightning-button variant="brand" label="Generate Query" title="titleName" onclick={handleClick}
                 if:true={showButton}></lightning-button>

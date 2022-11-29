@@ -1,25 +1,44 @@
 import { LightningElement, wire } from 'lwc';
 import getAllObjects from '@salesforce/apex/AppController.getAllObjects';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import LightningAlert from 'lightning/alert'
 
 export default class App extends LightningElement {
 
     objValue;
-    fieldValue;   
+    fieldValue;  
+    queryTypeValue;
+    aggrFunc;
+    aggrField; 
+    additionalFields=[];
     objOptions = [];
     fieldsOptions = [];
     showFields = false;
     objectsSelected = false;
     showButton = false;
     showQuery = false;
+    showAggrFunc = false;
+    isValueInQueryType = false;
+    showAggrFields = false;
     finalQuery = '';
     limitValue = '';
+    
+
 
     get queryTypeOptions() {
         return [
             {label:"Normal Query", value:"Normal Query"},
             {label:"Aggregate Query", value:"Aggregate Query"}
+        ];
+    }
+
+    get aggrFuncOptions() {
+        return [
+            {label:"Count", value:"COUNT"},
+            {label:"Average", value:"AVG"},
+            {label:"Minimum", value:"MIN"},
+            {label:"Maximum", value:"MAX"},
+            {label:"Sum", value:"SUM"},
+            {label:"Count Distinct", value:"COUNT_DISTINCT"}
         ];
     }
 
@@ -45,7 +64,7 @@ export default class App extends LightningElement {
             //console.log('Item is :' + JSON.stringify(data.fields[i]));
             this.fieldsOptions = [...this.fieldsOptions, {label: data.fields[i].label, value: data.fields[i].apiName}]
         }
-        console.log('Field Options is :' + JSON.stringify(this.fieldsOptions));
+      //  console.log('Field Options is :' + JSON.stringify(this.fieldsOptions));
       } else if (error) {
          console.error('Error:', error);
       }
@@ -62,7 +81,30 @@ export default class App extends LightningElement {
     }
 
     handleQueryTypeChange(event){
+        this.isValueInQueryType = true;
+        this.fieldValue = '';
+        this.finalQuery = '';
+        this.limitValue='';
+        this.showQuery = false;
+        this.showButton = false;
         this.queryTypeValue = event.target.value;
+        this.showAggrFunc = this.queryTypeValue === 'Normal Query' ? false : true;
+    }
+
+    handleAggrChange(event){
+        this.showAggrFields = true;
+        this.aggrFunc = event.target.value;
+    }
+
+    handleAggrFieldChange(event){
+        this.aggrField = event.target.value;
+        this.showButton = this.aggrField != '' ? true : false; 
+        this.finalQuery = '';
+    }
+
+    handleAdditionalFieldChange(event){
+        this.additionalFields = event.target.value; 
+        this.finalQuery = '';
     }
 
     handleFieldChange(event){
@@ -85,13 +127,26 @@ export default class App extends LightningElement {
 
     handleClick(){
         this.showQuery = true;
-        this.finalQuery = 'SELECT '+this.fieldValue+ ' FROM '+this.objValue;
-        
+        if(this.queryTypeValue === 'Normal Query'){
+            this.finalQuery = 'SELECT '+this.fieldValue+ ' FROM '+this.objValue;
+        }
+        else{
+            if(this.aggrFunc){
+                this.finalQuery = 'SELECT '+this.aggrFunc;
+            }
+            if(this.aggrField ){
+                this.finalQuery += '('+ this.aggrField + ')';
+            }else if(this.aggrFunc === 'COUNT'){
+                 this.finalQuery += '()';
+            }
+            if(this.additionalFields.length > 0 ){ 
+                this.finalQuery += ' ,'+ this.additionalFields +' FROM ' + this.objValue+' GROUP BY '+ this.additionalFields;
+            }else{
+                this.finalQuery += ' FROM ' + this.objValue;
+            }                      
+        }    
         if(this.limitValue && this.limitValue !== '0'){
             this.finalQuery += ' LIMIT '+ this.limitValue;
         }
-    }
-
-
-    
+    }   
 }
