@@ -137,11 +137,12 @@ public class freshdeskUtil {
                    fr_Ticket__c tkt = new fr_Ticket__c();
                    tkt.Source__c = t.source;
                    tkt.Priority__c = t.priority;
-                   //tkt.due_by__c = t.due_by;
+                  // tkt.due_by__c = t.due_by;
                    tkt.id__c = t.id;
                    tkt.description__c = t.subject;
                    tkt.Status__c = t.status;
                    tkt.Type__c = t.type;
+                   tickt.add(tkt);
                 }
                 insert tickt;
             }else{
