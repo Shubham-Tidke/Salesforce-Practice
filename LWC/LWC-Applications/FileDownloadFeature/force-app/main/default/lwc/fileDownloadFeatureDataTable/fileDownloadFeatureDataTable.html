@@ -3,7 +3,7 @@
     <lightning-card title="Download Attachments Component"> 
         <template if:false={count}>
             <div class="slds-m-around_medium">
-                <h2>No files to downlaod!!</h2>
+                <h2>No files to download!!</h2>
             </div>
         </template>
         <template if:true={count}> 
@@ -14,7 +14,16 @@
                     placeholder="Search Attachments" 
                     style="width: 300px;" 
                     onchange={handleSearch}>
-                </lightning-input><br>
+                </lightning-input>
+                <lightning-file-upload
+                    name="fileUploader"
+                    class = "slds-float_left" 
+                    accept={acceptedFormats}
+                    record-id={recordId}
+                    onuploadfinished={handleUploadFinished}
+                    multiple
+                >
+                </lightning-file-upload><br>
                 <lightning-button-icon  
                     label="Refresh" 
                     icon-name="utility:refresh" 
@@ -28,7 +37,8 @@
                     icon-name="utility:download" 
                     alternative-text="Download selected files"  
                     onclick={checkboxHandler}>
-                </lightning-button>  
+                </lightning-button> 
+                
             </div>     
             <div class="slds-box" style="height:275px;">
                 <lightning-datatable  
