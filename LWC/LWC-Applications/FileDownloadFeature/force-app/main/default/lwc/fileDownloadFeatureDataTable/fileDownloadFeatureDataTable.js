@@ -33,6 +33,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.wiredList = result
         if(result.data){
             //Parsing List data to JSON Object
+            console.log(result.data);
             let parsedData = JSON.parse(result.data);            
             parsedData.forEach(file=>{
                 file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);               
