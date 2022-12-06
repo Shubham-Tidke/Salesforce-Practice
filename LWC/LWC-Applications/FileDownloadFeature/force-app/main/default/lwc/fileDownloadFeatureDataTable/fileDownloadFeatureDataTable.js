@@ -33,7 +33,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.wiredList = result
         if(result.data){
             //Parsing List data to JSON Object
-            console.log(result.data);
+           // console.log(result.data);
             let parsedData = JSON.parse(result.data);            
             parsedData.forEach(file=>{
                 file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);               
@@ -112,7 +112,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
 
     handleSearch( event ) {
         const searchKey = event.target.value.toLowerCase();
-        console.log( 'Search String is ' + searchKey );
+        //console.log( 'Search String is ' + searchKey );
         if ( searchKey ) {
             this.filesList = this.initialRecords;            
             if ( this.filesList ) {
@@ -120,7 +120,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 for ( let rec of this.filesList ) {
                     let valuesArray = Object.values( rec );                    
                     for ( let val of valuesArray ) {
-                        console.log( 'val is ' + val );
+                        //console.log( 'val is ' + val );
                         let strVal = String( val );
                         if ( strVal ) {
                             if ( strVal.toLowerCase().includes( searchKey ) ) {
@@ -182,4 +182,15 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         refreshApex(this.wiredList);
         //console.log("refresh");
     }
+    handleUploadFinished(event){
+        const uploadedFiles = event.detail.files.length;
+        const evt = new ShowToastEvent({
+            title: 'SUCCESS',
+            message: uploadedFiles + ' File(s) uploaded  successfully',
+            variant: 'success',
+        });
+        this.dispatchEvent(evt);
+        refreshApex(this.wiredList);
+    }
+    
 }
