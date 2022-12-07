@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @lwc/lwc/no-async-operation */
 /* eslint-disable vars-on-top */
-/* eslint-disable no-dupe-class-members */
-import { api, LightningElement, track, wire } from 'lwc';
+
+import { api, LightningElement, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from'lightning/platformShowToastEvent';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 const COLUMNS = [
@@ -21,25 +19,40 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showFileType = false
     @api showFileSize = false
     @api showPreview = false
-    @track wiredList = [];
+     wiredList = [];
     filesList = []
     columns = COLUMNS
     initialRecords;
     zip = ''
     count = false
-    
+    receivedData = []
+    formattedData = []
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
         this.wiredList = result
         if(result.data){
-            //Parsing List data to JSON Object
-           // console.log(result.data);
-            let parsedData = JSON.parse(result.data);            
-            parsedData.forEach(file=>{
-                file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);               
+            
+            let parsedData = result.data;    
+            parsedData = Object.assign({}, parsedData);  
+            this.receivedData=Object.entries(parsedData);
+            for (let index = 0; index < this.receivedData.length; index++) {
+                this.receivedData[index] = this.receivedData[index][1];
+            }
+            this.receivedData.forEach(file=>{
+            const test = this.formatBytes(file.ContentDocument.ContentSize, 2);
+               let obj = {
+                Title : file.Title,
+                Size : test,
+                FileType:file.FileType,
+                ContentDocumentId:file.ContentDocumentId
+               }
+               this.formattedData.push(obj);
              })
-             this.initialRecords = JSON.parse(result.data);
-             this.filesList = parsedData    
+             //console.log('formatted : '+JSON.stringify(this.receivedData) );
+             this.receivedData = this.formattedData;
+             this.initialRecords = this.receivedData;
+             this.filesList = this.receivedData    
+             
              if((this.filesList.length) > 0){
                  this.count = true
              }
@@ -48,14 +61,13 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         {
             console.log(result.error);
         }
-       // console.log("wire action");
     }
     connectedCallback(){
         if(this.showFileType === true){
             this.columns = [...this.columns,{ label: 'File Type', fieldName:'FileType'}]
         }
         if(this.showFileSize === true){
-            this.columns = [...this.columns,{ label: 'File Size', fieldName:'Size'}]
+            this.columns = [...this.columns,{ label: 'File Size', fieldName:'Size',type:'String'}]
         }
         if(this.showPreview === true){
             this.columns = [...this.columns,{ label:'Preview', type : 'button', typeAttributes:{
@@ -66,7 +78,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 iconPosition: 'right'
             }}]
         }
-       // console.log("connected Callback action");
     }
     formatBytes(bytes,decimals){
         if(bytes === 0) return '0 Bytes';
@@ -114,7 +125,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         const searchKey = event.target.value.toLowerCase();
         //console.log( 'Search String is ' + searchKey );
         if ( searchKey ) {
-            this.filesList = this.initialRecords;            
+            this.filesList = this.receivedData;            
             if ( this.filesList ) {
                 let recs = [];
                 for ( let rec of this.filesList ) {
@@ -130,9 +141,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                         }
                     }  
                 }
-                recs.forEach(file=>{
-                    file.Size = this.formatBytes(file.ContentDocument.ContentSize, 2);               
-                 })
                 this.filesList = recs;
              } 
         }  else {
@@ -178,9 +186,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         });
         this.dispatchEvent(event);  
     }
-    refreshHandler(event){
-        refreshApex(this.wiredList);
-        //console.log("refresh");
+    refreshHandler(){
+        window.location.reload();   
     }
     handleUploadFinished(event){
         const uploadedFiles = event.detail.files.length;
@@ -190,7 +197,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             variant: 'success',
         });
         this.dispatchEvent(evt);
-        refreshApex(this.wiredList);
-    }
-    
+        window.location.reload();
+    }   
 }
