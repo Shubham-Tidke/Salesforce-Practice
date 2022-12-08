@@ -4,6 +4,7 @@
 import { api, LightningElement, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from'lightning/platformShowToastEvent';
+import { refreshApex } from '@salesforce/apex';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 const COLUMNS = [
     { label: 'File Name', fieldName : 'Title'},   
@@ -19,7 +20,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showFileType = false
     @api showFileSize = false
     @api showPreview = false
-     wiredList = [];
+    wiredList = [];
     filesList = []
     columns = COLUMNS
     initialRecords;
@@ -27,11 +28,11 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     count = false
     receivedData = []
     formattedData = []
+    isSpinner = false
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
         this.wiredList = result
-        if(result.data){
-            
+        if(result.data){ 
             let parsedData = result.data;    
             parsedData = Object.assign({}, parsedData);  
             this.receivedData=Object.entries(parsedData);
@@ -48,11 +49,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                }
                this.formattedData.push(obj);
              })
-             //console.log('formatted : '+JSON.stringify(this.receivedData) );
              this.receivedData = this.formattedData;
              this.initialRecords = this.receivedData;
              this.filesList = this.receivedData    
-             
              if((this.filesList.length) > 0){
                  this.count = true
              }
@@ -120,10 +119,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }, false 
     );
     }
-
     handleSearch( event ) {
         const searchKey = event.target.value.toLowerCase();
-        //console.log( 'Search String is ' + searchKey );
         if ( searchKey ) {
             this.filesList = this.receivedData;            
             if ( this.filesList ) {
@@ -131,7 +128,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 for ( let rec of this.filesList ) {
                     let valuesArray = Object.values( rec );                    
                     for ( let val of valuesArray ) {
-                        //console.log( 'val is ' + val );
                         let strVal = String( val );
                         if ( strVal ) {
                             if ( strVal.toLowerCase().includes( searchKey ) ) {
@@ -146,9 +142,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }  else {
             this.filesList = this.initialRecords;
         }        
-    }
-
-      
+    }      
     checkboxHandler(){
         var rows = this.template.querySelector("lightning-datatable").getSelectedRows(); 
         var rowArray = Array.from(rows)
@@ -187,7 +181,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.dispatchEvent(event);  
     }
     refreshHandler(){
-        window.location.reload();   
+       this.formattedData=[] ;
+        refreshApex(this.wiredList); 
+       // console.log('received data :'+this.wiredList);
     }
     handleUploadFinished(event){
         const uploadedFiles = event.detail.files.length;
@@ -197,6 +193,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             variant: 'success',
         });
         this.dispatchEvent(evt);
-        window.location.reload();
+        this.formattedData=[] ;
+        refreshApex(this.wiredList); 
     }   
 }
