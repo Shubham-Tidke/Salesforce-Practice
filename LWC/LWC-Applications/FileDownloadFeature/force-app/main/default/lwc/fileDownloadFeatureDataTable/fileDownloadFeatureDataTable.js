@@ -181,7 +181,11 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.dispatchEvent(event);  
     }
     refreshHandler(){
-       this.formattedData=[] ;
+        this.isSpinner = true;
+        this.formattedData=[] ;
+        setTimeout(() => {
+            this.isSpinner = false;
+        }, 2000);
         refreshApex(this.wiredList); 
        // console.log('received data :'+this.wiredList);
     }
@@ -193,7 +197,12 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             variant: 'success',
         });
         this.dispatchEvent(evt);
+        this.isSpinner = true;
         this.formattedData=[] ;
+        setTimeout(() => {
+            this.isSpinner = false;
+        }, 2000);
+
         refreshApex(this.wiredList); 
     }   
 }

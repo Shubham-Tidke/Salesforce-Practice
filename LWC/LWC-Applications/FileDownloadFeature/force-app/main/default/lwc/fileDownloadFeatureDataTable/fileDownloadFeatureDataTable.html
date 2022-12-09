@@ -18,11 +18,9 @@
                 <lightning-file-upload
                     name="fileUploader"
                     class = "slds-float_left" 
-                    
                     record-id={recordId}
                     onuploadfinished={handleUploadFinished}
-                    multiple
-                >
+                    multiple>
                 </lightning-file-upload><br>
                 <lightning-button-icon  
                     label="Refresh" 
@@ -37,9 +35,9 @@
                     icon-name="utility:download" 
                     alternative-text="Download selected files"  
                     onclick={checkboxHandler}>
-                </lightning-button> 
-                
-            </div>     
+                </lightning-button>                 
+            </div> 
+            <template if:false={isSpinner}>              
             <div class="slds-box" style="height:275px;">
                 <lightning-datatable  
                     key-field="Id"  
@@ -50,6 +48,12 @@
                     show-row-number-column>  
                 </lightning-datatable>  
               </div>
+            </template>
+            <template if:true={isSpinner}>
+                <lightning-spinner alternative-text="Loading" size="medium">
+
+                </lightning-spinner>
+            </template> 
         </template>
     </lightning-card>
 </template>
