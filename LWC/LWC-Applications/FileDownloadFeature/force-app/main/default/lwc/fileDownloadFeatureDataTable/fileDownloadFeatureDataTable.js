@@ -5,10 +5,13 @@ import { api, LightningElement, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
+import { deleteRecord } from 'lightning/uiRecordApi';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 const COLUMNS = [
-    { label: 'File Name', fieldName : 'Title'},   
-    { label:'Download', type : 'button-icon', typeAttributes:{
+    { label: 'File Name', fieldName : 'Title',wrapText: true},   
+    { label:'Download', type : 'button-icon',initialWidth: 100,
+     typeAttributes:{
+        title:'Download file',
         label: 'Download',  
         name: 'Download',  
         iconName: 'action:download',     
@@ -20,6 +23,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showFileType = false
     @api showFileSize = false
     @api showPreview = false
+    @api showDelete = false
     wiredList = [];
     filesList = []
     columns = COLUMNS
@@ -69,13 +73,22 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             this.columns = [...this.columns,{ label: 'File Size', fieldName:'Size',type:'String'}]
         }
         if(this.showPreview === true){
-            this.columns = [...this.columns,{ label:'Preview', type : 'button', typeAttributes:{
+            this.columns = [...this.columns,{ label:'Preview', type : 'button',initialWidth: 150, typeAttributes:{
                 label: 'view',  
                 name: 'Preview',  
                 variant: 'brand-outline',
                 iconName: 'utility:preview',     
                 iconPosition: 'right'
             }}]
+        }
+        if(this.showDelete === true){
+            this.columns = [...this.columns,{ label:'Delete', type : 'button-icon', initialWidth: 100,
+            typeAttributes:{
+                title:'Delete file',
+                label: 'Delete',  
+                name: 'Delete',  
+                iconName: 'action:delete'
+            }}]  
         }
     }
     formatBytes(bytes,decimals){
@@ -95,6 +108,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 break;
             case 'Download':
                 this.downloadFile(row);
+                break;
+            case 'Delete':
+                this.deleteFile(row);
                 break;
             default:     
         }
@@ -118,6 +134,24 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             }
         }, false 
     );
+    }
+    deleteFile(file){
+        deleteRecord(file.ContentDocumentId).then(()=>{
+            this.dispatchEvent(new ShowToastEvent({
+                title : 'Success!!',
+                message: 'Record deleted!!',
+                variant: 'success'
+            }))
+        }).then(()=>{
+            this.formattedData=[] ;
+            this.isSpinner = true;
+            setTimeout(() => {
+                this.isSpinner = false;
+            }, 2000);
+    
+            refreshApex(this.wiredList); 
+        })
+       
     }
     handleSearch( event ) {
         const searchKey = event.target.value.toLowerCase();

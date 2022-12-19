@@ -11,6 +11,7 @@
             <property name = "showFileType" description="Click to add File type column in Table" label="File Types" type="Boolean"></property>
             <property name = "showFileSize" description="Click to add File size column in Table" label="File Sizes" type="Boolean"></property>
             <property name = "showPreview" description="Click to add File preview column in Table" label="File Preview" type="Boolean"></property>
+            <property name = "showDelete" description="Click to add File delete button column in Table" label="File Delete" type="Boolean"></property>
         </targetConfig>   
     </targetConfigs>
     <masterLabel>Files Downloader</masterLabel>
