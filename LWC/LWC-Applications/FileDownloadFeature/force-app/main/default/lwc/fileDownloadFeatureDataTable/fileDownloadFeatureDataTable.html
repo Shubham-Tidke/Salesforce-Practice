@@ -8,7 +8,6 @@
         </template>
         <template if:true={count}> 
             <div class="slds-m-around_x-small">
-               
                 <lightning-input
                     class = "slds-float_right" 
                     type="search" 
@@ -38,18 +37,17 @@
                     icon-name="utility:delete" 
                     title="Delete selected files"  
                     style="width: 200px;"
-                    onclick={checkboxHandler}>
-                </lightning-button>
-                          
+                    onclick={checkboxDeleteHandler}>
+                </lightning-button>         
                 <lightning-button  
                     label="Download Files"  
                     variant="brand" 
                     icon-name="utility:download" 
                     title="Download selected files"  
                     style="width: fit-content;"
-                    onclick={checkboxHandler}>
+                    onclick={checkboxDownloadHandler}>
                 </lightning-button>                 
-            </div> 
+            </div>
             <template if:false={isSpinner}>              
             <div class="slds-box" style="height:275px;">
                 <lightning-datatable  
@@ -63,8 +61,7 @@
               </div>
             </template>
             <template if:true={isSpinner}>
-                <lightning-spinner alternative-text="Loading" size="medium">
-
+                <lightning-spinner alternative-text="Loading" size="medium" variant="brand">
                 </lightning-spinner>
             </template> 
         </template>

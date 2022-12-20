@@ -17,4 +17,9 @@ public with sharing class fileDownloadDatatableController {
             throw new AuraHandledException(e.getMessage());
         }
     }
+    @AuraEnabled
+    public static void deleteSelectedFiles(List<String> fileIds) {
+        List<ContentDocument> fileList = [SELECT Id FROM ContentDocument WHERE Id IN :fileIds];
+        delete fileList;
+    }
 }
