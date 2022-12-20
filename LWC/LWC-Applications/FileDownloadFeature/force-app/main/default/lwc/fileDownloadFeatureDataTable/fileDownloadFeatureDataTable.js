@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable no-loop-func */
 /* eslint-disable @lwc/lwc/no-async-operation */
 /* eslint-disable vars-on-top */
 
@@ -7,6 +9,8 @@ import { ShowToastEvent } from'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import { deleteRecord } from 'lightning/uiRecordApi';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
+import deleteSelectedFiles from '@salesforce/apex/fileDownloadDatatableController.deleteSelectedFiles'
+
 const COLUMNS = [
     { label: 'File Name', fieldName : 'Title',wrapText: true},   
     { label:'Download', type : 'button-icon',initialWidth: 100,
@@ -32,6 +36,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     count = false
     receivedData = []
     formattedData = []
+    deleteArr=[]
     isSpinner = false
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
@@ -177,7 +182,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             this.filesList = this.initialRecords;
         }        
     }      
-    checkboxHandler(){
+    checkboxDownloadHandler(){
         var rows = this.template.querySelector("lightning-datatable").getSelectedRows(); 
         var rowArray = Array.from(rows)
         rowArray.forEach(item=>{
@@ -213,6 +218,39 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             variant: 'success'
         });
         this.dispatchEvent(event);  
+    }
+    checkboxDeleteHandler(){
+        var rows = this.template.querySelector("lightning-datatable").getSelectedRows(); 
+        var rowArray = Array.from(rows)
+        rowArray.forEach(item=>{
+            this.deleteArr.push(item.ContentDocumentId);
+        })
+        console.log(this.deleteArr);
+        if(rowArray.length > 0){
+            deleteSelectedFiles({fileIds:this.deleteArr}).then(()=>{
+                this.dispatchEvent(new ShowToastEvent({
+                    title : 'Success!!',
+                    message: rowArray.length +'record(s) deleted!!',
+                    variant: 'success'
+                }))
+            }).then(()=>{
+                this.formattedData=[] ;
+                this.isSpinner = true;
+                setTimeout(() => {
+                    this.isSpinner = false;
+                }, 2000);
+        
+                refreshApex(this.wiredList); 
+            })
+        }
+        else{
+            const evt = new ShowToastEvent({
+                title: 'Error',
+                message:'Please select atleast one file!',
+                variant: 'error'
+            });
+            this.dispatchEvent(evt);
+        }       
     }
     refreshHandler(){
         this.isSpinner = true;
