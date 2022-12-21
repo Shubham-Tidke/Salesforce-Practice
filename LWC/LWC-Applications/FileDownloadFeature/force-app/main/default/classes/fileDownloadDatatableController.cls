@@ -8,7 +8,7 @@ public with sharing class fileDownloadDatatableController {
                 contentDocumentId.add(cdl.ContentDocumentId);
             }
                 List<ContentVersion> docs = [SELECT Id, VersionData, FileType,  FileExtension, ContentDocument.ContentSize,
-                CreatedDate, ContentDocumentId, ContentDocument.FileType,Title
+                CreatedDate, ContentDocumentId,LastModifiedDate,ContentModifiedById, ContentDocument.FileType,Title
                 FROM   ContentVersion 
                 WHERE  ContentDocumentId IN : contentDocumentId WITH SECURITY_ENFORCED LIMIT 50000];
                 return docs;
@@ -19,7 +19,7 @@ public with sharing class fileDownloadDatatableController {
     }
     @AuraEnabled
     public static void deleteSelectedFiles(List<String> fileIds) {
-        List<ContentDocument> fileList = [SELECT Id FROM ContentDocument WHERE Id IN :fileIds];
+        List<ContentDocument> fileList = [SELECT Id FROM ContentDocument WHERE Id IN :fileIds WITH SECURITY_ENFORCED];
         delete fileList;
     }
 }
