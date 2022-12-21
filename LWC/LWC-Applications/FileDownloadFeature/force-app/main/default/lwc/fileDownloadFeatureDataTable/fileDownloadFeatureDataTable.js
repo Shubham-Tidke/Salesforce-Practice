@@ -28,6 +28,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showFileSize = false
     @api showPreview = false
     @api showDelete = false
+    @api showLMD = false
     wiredList = [];
     filesList = []
     columns = COLUMNS
@@ -48,13 +49,16 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             for (let index = 0; index < this.receivedData.length; index++) {
                 this.receivedData[index] = this.receivedData[index][1];
             }
+            console.log(this.receivedData);
             this.receivedData.forEach(file=>{
-            const test = this.formatBytes(file.ContentDocument.ContentSize, 2);
+            const modifiedSize = this.formatBytes(file.ContentDocument.ContentSize, 2);
+            const modifiedDate = this.formatDate(file.LastModifiedDate) ;
                let obj = {
                 Title : file.Title,
-                Size : test,
+                Size : modifiedSize,
                 FileType:file.FileType,
-                ContentDocumentId:file.ContentDocumentId
+                ContentDocumentId:file.ContentDocumentId,
+                LastModifiedDate:modifiedDate
                }
                this.formattedData.push(obj);
              })
@@ -72,13 +76,13 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     }
     connectedCallback(){
         if(this.showFileType === true){
-            this.columns = [...this.columns,{ label: 'File Type', fieldName:'FileType'}]
+            this.columns = [...this.columns,{ label: 'File Type', fieldName:'FileType',initialWidth: 100}]
         }
         if(this.showFileSize === true){
             this.columns = [...this.columns,{ label: 'File Size', fieldName:'Size',type:'String'}]
         }
         if(this.showPreview === true){
-            this.columns = [...this.columns,{ label:'Preview', type : 'button',initialWidth: 150, typeAttributes:{
+            this.columns = [...this.columns,{ label:'Preview', type : 'button',initialWidth: 100, typeAttributes:{
                 label: 'view',  
                 name: 'Preview',  
                 variant: 'brand-outline',
@@ -87,13 +91,16 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             }}]
         }
         if(this.showDelete === true){
-            this.columns = [...this.columns,{ label:'Delete', type : 'button-icon', initialWidth: 100,
+            this.columns = [...this.columns,{ label:'Delete', type : 'button-icon', initialWidth: 80,
             typeAttributes:{
                 title:'Delete file',
                 label: 'Delete',  
                 name: 'Delete',  
                 iconName: 'action:delete'
             }}]  
+        }
+        if (this.showLMD === true) {
+            this.columns = [...this.columns,{ label: 'Last Modified Date', fieldName:'LastModifiedDate'}]
         }
     }
     formatBytes(bytes,decimals){
@@ -103,6 +110,11 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
             i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+    formatDate(str){
+        let temp = str.substring(0,str.length-5);
+        temp = temp.replace(/T/g," , ");
+        return temp;
     }
     handleRowAction(event){
         const actionName = event.detail.action.name;
@@ -225,7 +237,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         rowArray.forEach(item=>{
             this.deleteArr.push(item.ContentDocumentId);
         })
-        console.log(this.deleteArr);
+       // console.log(this.deleteArr);
         if(rowArray.length > 0){
             deleteSelectedFiles({fileIds:this.deleteArr}).then(()=>{
                 this.dispatchEvent(new ShowToastEvent({
