@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-empty */
 /* eslint-disable no-loop-func */
 /* eslint-disable @lwc/lwc/no-async-operation */
@@ -39,6 +40,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     formattedData = []
     deleteArr=[]
     isSpinner = false
+    isModalOpen = false
+    rowToDelete
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
         this.wiredList = result
@@ -119,6 +122,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     handleRowAction(event){
         const actionName = event.detail.action.name;
         const row = event.detail.row;
+        this.rowToDelete = row
         switch (actionName) {
             case 'Preview':
                 this.previewFile(row);
@@ -127,7 +131,11 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 this.downloadFile(row);
                 break;
             case 'Delete':
-                this.deleteFile(row);
+                this.handleModal();
+                
+                //this.deleteFile(row);
+            
+                
                 break;
             default:     
         }
@@ -152,14 +160,22 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }, false 
     );
     }
-    deleteFile(file){
-        deleteRecord(file.ContentDocumentId).then(()=>{
+    handleModal(){
+        this.isModalOpen = true;
+        
+    }
+    closeModal(){
+        this.isModalOpen = false;
+    }
+    deleteFile(){
+        deleteRecord(this.rowToDelete.ContentDocumentId).then(()=>{
             this.dispatchEvent(new ShowToastEvent({
                 title : 'Success!!',
                 message: 'Record deleted!!',
                 variant: 'success'
             }))
         }).then(()=>{
+            this.isModalOpen = false;
             this.formattedData=[] ;
             this.isSpinner = true;
             setTimeout(() => {
@@ -242,7 +258,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             deleteSelectedFiles({fileIds:this.deleteArr}).then(()=>{
                 this.dispatchEvent(new ShowToastEvent({
                     title : 'Success!!',
-                    message: rowArray.length +'record(s) deleted!!',
+                    message: rowArray.length +' record(s) deleted!!',
                     variant: 'success'
                 }))
             }).then(()=>{
