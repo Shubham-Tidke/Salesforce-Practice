@@ -9,6 +9,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import { deleteRecord } from 'lightning/uiRecordApi';
+//import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 import deleteSelectedFiles from '@salesforce/apex/fileDownloadDatatableController.deleteSelectedFiles'
 
@@ -30,6 +31,11 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showPreview = false
     @api showDelete = false
     @api showLMD = false
+    // @api channelName;
+    // subscription = {};
+    // responseMessage;
+    // isDisplayMsg;
+
     wiredList = [];
     filesList = []
     columns = COLUMNS
@@ -42,6 +48,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     isSpinner = false
     isModalOpen = false
     rowToDelete
+
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
         this.wiredList = result
@@ -52,7 +59,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             for (let index = 0; index < this.receivedData.length; index++) {
                 this.receivedData[index] = this.receivedData[index][1];
             }
-            console.log(this.receivedData);
+          //  console.log(this.receivedData);
             this.receivedData.forEach(file=>{
             const modifiedSize = this.formatBytes(file.ContentDocument.ContentSize, 2);
             const modifiedDate = this.formatDate(file.LastModifiedDate) ;
@@ -78,6 +85,10 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }
     }
     connectedCallback(){
+        // this.isDisplayMsg = false;
+        // this.handleSubscribe();
+        // this.registerErrorListener();
+
         if(this.showFileType === true){
             this.columns = [...this.columns,{ label: 'File Type', fieldName:'FileType',initialWidth: 100}]
         }
@@ -304,5 +315,29 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }, 2000);
 
         refreshApex(this.wiredList); 
-    }   
+    } 
+    // handleSubscribe() {
+    //     // Callback invoked whenever a new event message is received
+    //     const messageCallback = (response) => {
+    //         console.log('New message received: ', JSON.stringify(response));
+    //         // Response contains the payload of the new message received
+    //       //  this.handleNotification(response);
+    //     };
+
+    //     // Invoke subscribe method of empApi. Pass reference to messageCallback
+    //     subscribe(this.channelName, -1, messageCallback).then(response => {
+    //         // Response contains the subscription information on subscribe call
+    //         console.log('Subscription request sent to: ', JSON.stringify(response.channel));
+    //         this.subscription = response;
+    //        // this.handleNotification(response);
+    //     });
+    // } 
+    // registerErrorListener() {
+    //     // Invoke onError empApi method
+    //     onError(error => {
+    //         console.log('Received error from server: ', JSON.stringify(error));
+    //         // Error contains the server-side error
+    //     });
+    // } 
+    
 }
