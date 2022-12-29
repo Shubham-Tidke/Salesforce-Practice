@@ -63,6 +63,12 @@
             <template if:true={isSpinner}>
                 <lightning-spinner alternative-text="Loading" size="medium" variant="brand">
                 </lightning-spinner>
+                <!-- <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                    <span class="slds-assistive-text">warning</span>
+                    <lightning-icon icon-name="utility:warning" alternative-text="Warning!" title="Warning">                
+                    </lightning-icon>
+                    <h2>Current record has changed,Refreshing the page!! &nbsp;</h2>            
+                  </div> -->
             </template>
             <template if:true={isModalOpen}>
                 <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">

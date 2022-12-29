@@ -9,7 +9,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import { deleteRecord } from 'lightning/uiRecordApi';
-//import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
+import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 import deleteSelectedFiles from '@salesforce/apex/fileDownloadDatatableController.deleteSelectedFiles'
 
@@ -31,10 +31,10 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showPreview = false
     @api showDelete = false
     @api showLMD = false
-    // @api channelName;
-    // subscription = {};
-    // responseMessage;
-    // isDisplayMsg;
+    @api channelName = "/data/ContentDocumentChangeEvent";
+    subscription = {};
+    responseMessage;
+    isDisplayMsg;
 
     wiredList = [];
     filesList = []
@@ -85,9 +85,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }
     }
     connectedCallback(){
-        // this.isDisplayMsg = false;
-        // this.handleSubscribe();
-        // this.registerErrorListener();
+        this.isDisplayMsg = false;
+        this.handleSubscribe();
+        this.registerErrorListener();
 
         if(this.showFileType === true){
             this.columns = [...this.columns,{ label: 'File Type', fieldName:'FileType',initialWidth: 100}]
@@ -316,28 +316,30 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
 
         refreshApex(this.wiredList); 
     } 
-    // handleSubscribe() {
-    //     // Callback invoked whenever a new event message is received
-    //     const messageCallback = (response) => {
-    //         console.log('New message received: ', JSON.stringify(response));
-    //         // Response contains the payload of the new message received
-    //       //  this.handleNotification(response);
-    //     };
+    handleSubscribe() {
+        // Callback invoked whenever a new event message is received
+        const messageCallback = (response) => {
+            console.log('New message received: ', JSON.stringify(response));
+            // Response contains the payload of the new message received
+          //  this.handleNotification(response);
+          this.refreshHandler();
+        };
 
-    //     // Invoke subscribe method of empApi. Pass reference to messageCallback
-    //     subscribe(this.channelName, -1, messageCallback).then(response => {
-    //         // Response contains the subscription information on subscribe call
-    //         console.log('Subscription request sent to: ', JSON.stringify(response.channel));
-    //         this.subscription = response;
-    //        // this.handleNotification(response);
-    //     });
-    // } 
-    // registerErrorListener() {
-    //     // Invoke onError empApi method
-    //     onError(error => {
-    //         console.log('Received error from server: ', JSON.stringify(error));
-    //         // Error contains the server-side error
-    //     });
-    // } 
+        // Invoke subscribe method of empApi. Pass reference to messageCallback
+        subscribe(this.channelName, -1, messageCallback).then(response => {
+            // Response contains the subscription information on subscribe call
+            console.log('Subscription request sent to: ', JSON.stringify(response.channel));
+            this.subscription = response;
+           // this.handleNotification(response);
+           this.refreshHandler();
+        });
+    } 
+    registerErrorListener() {
+        // Invoke onError empApi method
+        onError(error => {
+            console.log('Received error from server: ', JSON.stringify(error));
+            // Error contains the server-side error
+        });
+    } 
     
 }
