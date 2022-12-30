@@ -31,11 +31,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showPreview = false
     @api showDelete = false
     @api showLMD = false
-    @api channelName = "/data/ContentDocumentChangeEvent";
+    @api channelName = '/data/ContentDocumentChangeEvent';
     subscription = {};
     responseMessage;
-    isDisplayMsg;
-
     wiredList = [];
     filesList = []
     columns = COLUMNS
@@ -48,6 +46,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     isSpinner = false
     isModalOpen = false
     rowToDelete
+    isDisplayMsg = false
 
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
@@ -85,7 +84,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }
     }
     connectedCallback(){
-        this.isDisplayMsg = false;
         this.handleSubscribe();
         this.registerErrorListener();
 
@@ -143,10 +141,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 break;
             case 'Delete':
                 this.handleModal();
-                
-                //this.deleteFile(row);
-            
-                
                 break;
             default:     
         }
@@ -172,8 +166,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     );
     }
     handleModal(){
-        this.isModalOpen = true;
-        
+        this.isModalOpen = true;  
     }
     closeModal(){
         this.isModalOpen = false;
@@ -186,16 +179,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 variant: 'success'
             }))
         }).then(()=>{
-            this.isModalOpen = false;
-            this.formattedData=[] ;
-            this.isSpinner = true;
-            setTimeout(() => {
-                this.isSpinner = false;
-            }, 2000);
-    
-            refreshApex(this.wiredList); 
-        })
-       
+            this.isModalOpen = false; 
+            // refreshApex(this.wiredList); 
+        }) 
     }
     handleSearch( event ) {
         const searchKey = event.target.value.toLowerCase();
@@ -216,10 +202,10 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                     }  
                 }
                 this.filesList = recs;
-             } 
-        }  else {
-            this.filesList = this.initialRecords;
-        }        
+            } 
+        }   else {
+                this.filesList = this.initialRecords;
+            }        
     }      
     checkboxDownloadHandler(){
         var rows = this.template.querySelector("lightning-datatable").getSelectedRows(); 
@@ -272,14 +258,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                     message: rowArray.length +' record(s) deleted!!',
                     variant: 'success'
                 }))
-            }).then(()=>{
-                this.formattedData=[] ;
-                this.isSpinner = true;
-                setTimeout(() => {
-                    this.isSpinner = false;
-                }, 2000);
-        
-                refreshApex(this.wiredList); 
+            }).then(()=>{        
+                // refreshApex(this.wiredList); 
             })
         }
         else{
@@ -294,6 +274,13 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     refreshHandler(){
         this.isSpinner = true;
         this.formattedData=[] ;
+        // if(this.isDisplayMsg === true){
+        //     this.dispatchEvent(new ShowToastEvent({
+        //         message: 'Current record has changed,Refreshing the page!!',
+        //         variant: 'warning'
+        //     }))
+        //     this.isDisplayMsg = false;
+        // }
         setTimeout(() => {
             this.isSpinner = false;
         }, 2000);
@@ -302,44 +289,32 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     }
     handleUploadFinished(event){
         const uploadedFiles = event.detail.files.length;
-        const evt = new ShowToastEvent({
+        this.dispatchEvent(new ShowToastEvent({
             title: 'SUCCESS',
             message: uploadedFiles + ' File(s) uploaded  successfully',
             variant: 'success',
-        });
-        this.dispatchEvent(evt);
-        this.isSpinner = true;
-        this.formattedData=[] ;
-        setTimeout(() => {
-            this.isSpinner = false;
-        }, 2000);
-
-        refreshApex(this.wiredList); 
+        }))  
+       // refreshApex(this.wiredList); 
     } 
     handleSubscribe() {
         // Callback invoked whenever a new event message is received
         const messageCallback = (response) => {
             console.log('New message received: ', JSON.stringify(response));
-            // Response contains the payload of the new message received
-          //  this.handleNotification(response);
-          this.refreshHandler();
+            this.refreshHandler();
         };
-
         // Invoke subscribe method of empApi. Pass reference to messageCallback
         subscribe(this.channelName, -1, messageCallback).then(response => {
             // Response contains the subscription information on subscribe call
             console.log('Subscription request sent to: ', JSON.stringify(response.channel));
             this.subscription = response;
-           // this.handleNotification(response);
-           this.refreshHandler();
+           // this.isDisplayMsg = true
+            this.refreshHandler();
         });
     } 
     registerErrorListener() {
         // Invoke onError empApi method
         onError(error => {
             console.log('Received error from server: ', JSON.stringify(error));
-            // Error contains the server-side error
         });
     } 
-    
 }
