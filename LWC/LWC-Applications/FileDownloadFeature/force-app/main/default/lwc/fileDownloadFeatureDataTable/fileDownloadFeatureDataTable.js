@@ -47,7 +47,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     isModalOpen = false
     rowToDelete
     isDisplayMsg = false
-
+    
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
         this.wiredList = result
@@ -274,13 +274,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     refreshHandler(){
         this.isSpinner = true;
         this.formattedData=[] ;
-        // if(this.isDisplayMsg === true){
-        //     this.dispatchEvent(new ShowToastEvent({
-        //         message: 'Current record has changed,Refreshing the page!!',
-        //         variant: 'warning'
-        //     }))
-        //     this.isDisplayMsg = false;
-        // }
         setTimeout(() => {
             this.isSpinner = false;
         }, 2000);
