@@ -289,10 +289,13 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }))  
        // refreshApex(this.wiredList); 
     } 
-    handleSubscribe() {
+    handleSubscribe() { 
         // Callback invoked whenever a new event message is received
         const messageCallback = (response) => {
             console.log('New message received: ', JSON.stringify(response));
+            console.log(JSON.stringify(response.data.payload.ChangeEventHeader.recordIds));
+            //SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId ='0015i00000BVjGoAAL'
+            //SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId ='0695i000008tfEIAAY'
             this.refreshHandler();
         };
         // Invoke subscribe method of empApi. Pass reference to messageCallback
