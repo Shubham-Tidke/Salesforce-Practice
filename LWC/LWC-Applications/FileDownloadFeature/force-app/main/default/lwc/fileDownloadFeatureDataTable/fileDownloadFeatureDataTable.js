@@ -31,7 +31,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showPreview = false
     @api showDelete = false
     @api showLMD = false
-    @api channelName = '/data/ContentDocumentChangeEvent';
+    @api channelName = '/data/ContentDocumentLinkChangeEvent';
     subscription = {};
     responseMessage;
     wiredList = [];
@@ -172,6 +172,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.isModalOpen = false;
     }
     deleteFile(){
+        //sObject record for fileID.then(deleteMethod)
         deleteRecord(this.rowToDelete.ContentDocumentId).then(()=>{
             this.dispatchEvent(new ShowToastEvent({
                 title : 'Success!!',
@@ -252,6 +253,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         })
        // console.log(this.deleteArr);
         if(rowArray.length > 0){
+            //get Sobject recordID.then(deleteMethod)
             deleteSelectedFiles({fileIds:this.deleteArr}).then(()=>{
                 this.dispatchEvent(new ShowToastEvent({
                     title : 'Success!!',
