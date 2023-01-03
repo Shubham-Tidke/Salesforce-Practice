@@ -22,4 +22,12 @@ public with sharing class fileDownloadDatatableController {
         List<ContentDocument> fileList = [SELECT Id FROM ContentDocument WHERE Id IN :fileIds WITH SECURITY_ENFORCED];
         delete fileList;
     }
+    @AuraEnabled
+    public static Boolean subscriptionHandler(String recordId,List<String> idArr){
+        try {
+            
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
 }

@@ -12,6 +12,7 @@ import { deleteRecord } from 'lightning/uiRecordApi';
 import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 import deleteSelectedFiles from '@salesforce/apex/fileDownloadDatatableController.deleteSelectedFiles'
+import subscriptionHandler from '@salesforce/apex/fileDownloadDatatableController.subscriptionHandler'
 
 const COLUMNS = [
     { label: 'File Name', fieldName : 'Title',wrapText: true},   
@@ -172,6 +173,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.isModalOpen = false;
     }
     deleteFile(){
+        subscriptionHandler({recordId:'$recordId',idArr: this.deleteArr}).then(()=>{
+            console.log();
+        })
         //sObject record for fileID.then(deleteMethod)
         deleteRecord(this.rowToDelete.ContentDocumentId).then(()=>{
             this.dispatchEvent(new ShowToastEvent({
@@ -300,7 +304,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             //SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId ='0695i000008tfEIAAY'
             this.refreshHandler();
         };
-        // Invoke subscribe method of empApi. Pass reference to messageCallback
         subscribe(this.channelName, -1, messageCallback).then(response => {
             // Response contains the subscription information on subscribe call
             console.log('Subscription request sent to: ', JSON.stringify(response.channel));
@@ -310,7 +313,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         });
     } 
     registerErrorListener() {
-        // Invoke onError empApi method
         onError(error => {
             console.log('Received error from server: ', JSON.stringify(error));
         });
