@@ -2,8 +2,18 @@
 <template>   
     <lightning-card title="Download Attachments Component"> 
         <template if:false={count}>
-            <div class="slds-m-around_medium">
-                <h2>No files to download!!</h2>
+            <div class="slds-m-around_x-small">
+            <center>
+                <p><b>No files to download!!</b></p>
+                <lightning-file-upload
+                    name="fileUploader"
+                    class = "slds-p-bottom_x-small" 
+                    record-id={recordId}
+                    title="Click to upload files"
+                    onuploadfinished={handleUploadFinished}
+                    multiple>
+                </lightning-file-upload>
+            </center>
             </div>
         </template>
         <template if:true={count}> 

@@ -12,7 +12,6 @@ import { deleteRecord } from 'lightning/uiRecordApi';
 import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 import deleteSelectedFiles from '@salesforce/apex/fileDownloadDatatableController.deleteSelectedFiles'
-import subscriptionHandler from '@salesforce/apex/fileDownloadDatatableController.subscriptionHandler'
 
 const COLUMNS = [
     { label: 'File Name', fieldName : 'Title',wrapText: true},   
@@ -32,7 +31,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showPreview = false
     @api showDelete = false
     @api showLMD = false
-    @api channelName = '/data/ContentDocumentLinkChangeEvent';
+    @api channelName = '/data/ContentDocumentChangeEvent';
     subscription = {};
     responseMessage;
     wiredList = [];
@@ -173,20 +172,20 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.isModalOpen = false;
     }
     deleteFile(){
-        subscriptionHandler({recordId:'$recordId',idArr: this.deleteArr}).then(()=>{
-            console.log();
-        })
-        //sObject record for fileID.then(deleteMethod)
         deleteRecord(this.rowToDelete.ContentDocumentId).then(()=>{
             this.dispatchEvent(new ShowToastEvent({
-                title : 'Success!!',
-                message: 'Record deleted!!',
-                variant: 'success'
+            title : 'Success!!',
+            message: 'Record deleted!!',
+            variant: 'success'
             }))
         }).then(()=>{
-            this.isModalOpen = false; 
-            // refreshApex(this.wiredList); 
-        }) 
+        if(this.filesList.length === 1)
+        {
+            this.count = false
+        }
+        this.isModalOpen = false; 
+        // refreshApex(this.wiredList); 
+        })    
     }
     handleSearch( event ) {
         const searchKey = event.target.value.toLowerCase();
@@ -264,7 +263,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                     message: rowArray.length +' record(s) deleted!!',
                     variant: 'success'
                 }))
-            }).then(()=>{        
+            }).then(()=>{  
+                if(rowArray.length === this.filesList.length)
+                this.count = false     
                 // refreshApex(this.wiredList); 
             })
         }
@@ -280,10 +281,12 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     refreshHandler(){
         this.isSpinner = true;
         this.formattedData=[] ;
+       
         setTimeout(() => {
             this.isSpinner = false;
         }, 2000);
-        refreshApex(this.wiredList); 
+        
+        refreshApex(this.wiredList);
        // console.log('received data :'+this.wiredList);
     }
     handleUploadFinished(event){
@@ -300,9 +303,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         const messageCallback = (response) => {
             console.log('New message received: ', JSON.stringify(response));
             console.log(JSON.stringify(response.data.payload.ChangeEventHeader.recordIds));
-            //SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId ='0015i00000BVjGoAAL'
             //SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId ='0695i000008tfEIAAY'
-            this.refreshHandler();
+           this.refreshHandler();
         };
         subscribe(this.channelName, -1, messageCallback).then(response => {
             // Response contains the subscription information on subscribe call
