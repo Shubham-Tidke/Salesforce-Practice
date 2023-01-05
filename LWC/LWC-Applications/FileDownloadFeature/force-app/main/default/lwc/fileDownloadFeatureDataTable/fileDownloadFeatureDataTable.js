@@ -31,7 +31,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showPreview = false
     @api showDelete = false
     @api showLMD = false
-    @api channelName = '/data/ContentDocumentChangeEvent';
+    @api channelName = '/data/Files_Platform_Event__e';
     subscription = {};
     responseMessage;
     wiredList = [];
@@ -58,7 +58,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             for (let index = 0; index < this.receivedData.length; index++) {
                 this.receivedData[index] = this.receivedData[index][1];
             }
-          //  console.log(this.receivedData);
             this.receivedData.forEach(file=>{
             const modifiedSize = this.formatBytes(file.ContentDocument.ContentSize, 2);
             const modifiedDate = this.formatDate(file.LastModifiedDate) ;
@@ -72,6 +71,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                this.formattedData.push(obj);
              })
              this.receivedData = this.formattedData;
+            // console.log("formatted data in wire : "+JSON.stringify(this.filesList));
              this.initialRecords = this.receivedData;
              this.filesList = this.receivedData    
              if((this.filesList.length) > 0){
@@ -301,14 +301,14 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     handleSubscribe() { 
         // Callback invoked whenever a new event message is received
         const messageCallback = (response) => {
-            console.log('New message received: ', JSON.stringify(response));
-            console.log(JSON.stringify(response.data.payload.ChangeEventHeader.recordIds));
+          //  console.log('New message received: ', JSON.stringify(response));
+           // console.log(JSON.stringify(response.data.payload.ChangeEventHeader.recordIds));
             //SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId ='0695i000008tfEIAAY'
            this.refreshHandler();
         };
         subscribe(this.channelName, -1, messageCallback).then(response => {
             // Response contains the subscription information on subscribe call
-            console.log('Subscription request sent to: ', JSON.stringify(response.channel));
+          //  console.log('Subscription request sent to: ', JSON.stringify(response.channel));
             this.subscription = response;
            // this.isDisplayMsg = true
             this.refreshHandler();
