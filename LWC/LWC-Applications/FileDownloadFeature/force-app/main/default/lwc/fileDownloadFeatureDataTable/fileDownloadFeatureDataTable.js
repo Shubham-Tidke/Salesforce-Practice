@@ -12,6 +12,8 @@ import { deleteRecord } from 'lightning/uiRecordApi';
 import { subscribe, unsubscribe, onError, setDebugFlag, isEmpEnabled } from 'lightning/empApi';
 import getRelatedFilesByRecordId from '@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId'
 import deleteSelectedFiles from '@salesforce/apex/fileDownloadDatatableController.deleteSelectedFiles'
+import subscriptionHandler from '@salesforce/apex/fileDownloadDatatableController.subscriptionHandler'
+
 
 const COLUMNS = [
     { label: 'File Name', fieldName : 'Title',wrapText: true},   
@@ -31,7 +33,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showPreview = false
     @api showDelete = false
     @api showLMD = false
-    @api channelName = '/data/Files_Platform_Event__e';
+    @api channelName = '/data/ContentDocumentChangeEvent';
     subscription = {};
     responseMessage;
     wiredList = [];
@@ -47,7 +49,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     isModalOpen = false
     rowToDelete
     isDisplayMsg = false
-    
+    refreshRecord = false
+
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
         this.wiredList = result
@@ -84,8 +87,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }
     }
     connectedCallback(){
-        this.handleSubscribe();
-        this.registerErrorListener();
+        // this.handleSubscribe();
+        // this.registerErrorListener();
 
         if(this.showFileType === true){
             this.columns = [...this.columns,{ label: 'File Type', fieldName:'FileType',initialWidth: 100}]
@@ -183,7 +186,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         {
             this.count = false
         }
-        this.isModalOpen = false; 
+        this.isModalOpen = false;
+        this.refreshHandler();
         // refreshApex(this.wiredList); 
         })    
     }
@@ -265,7 +269,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 }))
             }).then(()=>{  
                 if(rowArray.length === this.filesList.length)
-                this.count = false     
+                this.count = false 
+                this.refreshHandler();    
                 // refreshApex(this.wiredList); 
             })
         }
@@ -295,23 +300,32 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             title: 'SUCCESS',
             message: uploadedFiles + ' File(s) uploaded  successfully',
             variant: 'success',
-        }))  
+        })) 
+        this.refreshHandler(); 
        // refreshApex(this.wiredList); 
     } 
     handleSubscribe() { 
         // Callback invoked whenever a new event message is received
         const messageCallback = (response) => {
-          //  console.log('New message received: ', JSON.stringify(response));
-           // console.log(JSON.stringify(response.data.payload.ChangeEventHeader.recordIds));
-            //SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId ='0695i000008tfEIAAY'
-           this.refreshHandler();
+            console.log('New message received: ', JSON.stringify(response));
+            let eventType = JSON.stringify(response.data.payload.ChangeEventHeader.changeType);
+            let eventIds =  JSON.stringify(response.data.payload.ChangeEventHeader.recordIds);
+            console.log(eventIds);
+            // subscriptionHandler({recordId:this.recordId,idArr:eventIds}).then((result)=>{
+            //     this.refreshRecord = result;
+            // })
+            // if(eventType==='"CREATE"' || eventType==='"UPDATE"' && this.refreshRecord === true){
+            //     console.log("current record refresh!!");
+            //     this.refreshHandler();
+            // }
+            //SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId ='0695i000008tfEIAAY'      
         };
         subscribe(this.channelName, -1, messageCallback).then(response => {
             // Response contains the subscription information on subscribe call
-          //  console.log('Subscription request sent to: ', JSON.stringify(response.channel));
+            console.log('Subscription request sent to: ', JSON.stringify(response.channel));
             this.subscription = response;
            // this.isDisplayMsg = true
-            this.refreshHandler();
+           // this.refreshHandler();
         });
     } 
     registerErrorListener() {
