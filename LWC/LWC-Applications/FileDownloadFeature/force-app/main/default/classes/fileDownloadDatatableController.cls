@@ -24,8 +24,15 @@ public with sharing class fileDownloadDatatableController {
     }
     @AuraEnabled
     public static Boolean subscriptionHandler(String recordId,List<String> idArr){
-        try {
-            
+        try{
+            // List<ContentDocumentLink> currentRecord = [SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId IN idArr AND LinkedEntityId =: recordId];
+            // if(currentRecord.size() > 0){
+            //     return true;
+            // }
+            // else {
+            //     return false;
+            // }
+            return true;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
