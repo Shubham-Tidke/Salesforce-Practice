@@ -87,8 +87,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }
     }
     connectedCallback(){
-        // this.handleSubscribe();
-        // this.registerErrorListener();
+        this.handleSubscribe();
+        this.registerErrorListener();
 
         if(this.showFileType === true){
             this.columns = [...this.columns,{ label: 'File Type', fieldName:'FileType',initialWidth: 100}]
@@ -187,8 +187,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             this.count = false
         }
         this.isModalOpen = false;
-        this.refreshHandler();
-        // refreshApex(this.wiredList); 
+        //this.refreshHandler();
+         
         })    
     }
     handleSearch( event ) {
@@ -270,8 +270,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             }).then(()=>{  
                 if(rowArray.length === this.filesList.length)
                 this.count = false 
-                this.refreshHandler();    
-                // refreshApex(this.wiredList); 
+                //this.refreshHandler();    
+                
             })
         }
         else{
@@ -301,31 +301,33 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             message: uploadedFiles + ' File(s) uploaded  successfully',
             variant: 'success',
         })) 
-        this.refreshHandler(); 
-       // refreshApex(this.wiredList); 
+       // this.refreshHandler(); 
+        
     } 
     handleSubscribe() { 
         // Callback invoked whenever a new event message is received
         const messageCallback = (response) => {
             console.log('New message received: ', JSON.stringify(response));
-            let eventType = JSON.stringify(response.data.payload.ChangeEventHeader.changeType);
-            let eventIds =  JSON.stringify(response.data.payload.ChangeEventHeader.recordIds);
-            console.log(eventIds);
-            // subscriptionHandler({recordId:this.recordId,idArr:eventIds}).then((result)=>{
+            // let eventType = JSON.stringify(response.data.payload.ChangeEventHeader.changeType);
+            // let eventIds =  JSON.stringify(response.data.payload.ChangeEventHeader.recordIds);
+            // console.log(eventIds.substring(2,eventIds.lastIndexOf('"')));
+            // subscriptionHandler({recordId:this.recordId,idArr:eventIds.substring(2,eventIds.lastIndexOf('"'))}).then(result=>{
             //     this.refreshRecord = result;
+            //     console.log(result);
             // })
             // if(eventType==='"CREATE"' || eventType==='"UPDATE"' && this.refreshRecord === true){
             //     console.log("current record refresh!!");
-            //     this.refreshHandler();
+                
             // }
+            this.refreshHandler();
             //SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId ='0695i000008tfEIAAY'      
         };
         subscribe(this.channelName, -1, messageCallback).then(response => {
             // Response contains the subscription information on subscribe call
             console.log('Subscription request sent to: ', JSON.stringify(response.channel));
             this.subscription = response;
-           // this.isDisplayMsg = true
-           // this.refreshHandler();
+           
+            this.refreshHandler();
         });
     } 
     registerErrorListener() {
