@@ -49,7 +49,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     isModalOpen = false
     rowToDelete
     isDisplayMsg = false
-    refreshRecord = false
+    
 
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
@@ -187,7 +187,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             this.count = false
         }
         this.isModalOpen = false;
-        //this.refreshHandler();
+        this.refreshHandler();
          
         })    
     }
@@ -270,7 +270,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             }).then(()=>{  
                 if(rowArray.length === this.filesList.length)
                 this.count = false 
-                //this.refreshHandler();    
+                this.refreshHandler();    
                 
             })
         }
@@ -307,24 +307,30 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     handleSubscribe() { 
         // Callback invoked whenever a new event message is received
         const messageCallback = (response) => {
-            console.log('New message received: ', JSON.stringify(response));
-            // let eventType = JSON.stringify(response.data.payload.ChangeEventHeader.changeType);
-            // let eventIds =  JSON.stringify(response.data.payload.ChangeEventHeader.recordIds);
-            // console.log(eventIds.substring(2,eventIds.lastIndexOf('"')));
-            // subscriptionHandler({recordId:this.recordId,idArr:eventIds.substring(2,eventIds.lastIndexOf('"'))}).then(result=>{
-            //     this.refreshRecord = result;
-            //     console.log(result);
-            // })
-            // if(eventType==='"CREATE"' || eventType==='"UPDATE"' && this.refreshRecord === true){
-            //     console.log("current record refresh!!");
-                
-            // }
-            this.refreshHandler();
+            //console.log('New message received: ', JSON.stringify(response));
+            let eventType = JSON.stringify(response.data.payload.ChangeEventHeader.changeType);
+            let eventIds =  JSON.stringify(response.data.payload.ChangeEventHeader.recordIds);
+            //console.log(eventIds.substring(2,eventIds.lastIndexOf('"')));
+            
+                if((eventType==='"CREATE"' || eventType==='"UPDATE"')){
+                    subscriptionHandler({recordId:this.recordId,idArr:eventIds.substring(2,eventIds.lastIndexOf('"'))})
+                    .then(result=>{
+                       // console.log("result "+result); 
+                        if(result){
+                           // console.log("current record refresh!!");
+                            this.refreshHandler();
+                        }
+                    })
+                   
+                }else{
+                    //console.log('delete log');
+                }
+           
             //SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId ='0695i000008tfEIAAY'      
         };
         subscribe(this.channelName, -1, messageCallback).then(response => {
             // Response contains the subscription information on subscribe call
-            console.log('Subscription request sent to: ', JSON.stringify(response.channel));
+            //console.log('Subscription request sent to: ', JSON.stringify(response.channel));
             this.subscription = response;
            
             this.refreshHandler();
