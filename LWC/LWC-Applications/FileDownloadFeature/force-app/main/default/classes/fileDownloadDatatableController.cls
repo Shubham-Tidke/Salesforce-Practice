@@ -25,15 +25,16 @@ public with sharing class fileDownloadDatatableController {
     @AuraEnabled
     public static Boolean subscriptionHandler(String recordId,String idArr){
        try{
-        //     List<ContentDocumentLink> currentRecord = [SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId =: idArr AND LinkedEntityId =: recordId];
-        //     System.debug(currentRecord);
-        //     if(currentRecord.size() > 0){
-        //         return true;
-        //     }
-        //     else {
-        //         return false;
-        //     }
-        return true;
+            List<ContentDocumentLink> currentRecord = [SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId =: idArr AND LinkedEntityId =: recordId];
+            System.debug('recordid: '+currentRecord);
+            System.debug('size: '+currentRecord.size());
+            if(currentRecord.size() > 0){
+                return true;
+            }
+            else {
+                return false;
+            }
+        
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
