@@ -258,9 +258,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         rowArray.forEach(item=>{
             this.deleteArr.push(item.ContentDocumentId);
         })
-       // console.log(this.deleteArr);
         if(rowArray.length > 0){
-            //get Sobject recordID.then(deleteMethod)
             deleteSelectedFiles({fileIds:this.deleteArr}).then(()=>{
                 this.dispatchEvent(new ShowToastEvent({
                     title : 'Success!!',
@@ -309,10 +307,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         const messageCallback = (response) => {
             //console.log('New message received: ', JSON.stringify(response));
             let eventType = JSON.stringify(response.data.payload.ChangeEventHeader.changeType);
-            let eventIds =  JSON.stringify(response.data.payload.ChangeEventHeader.recordIds);
-            //console.log(eventIds.substring(2,eventIds.lastIndexOf('"')));
-            
+            let eventIds =  JSON.stringify(response.data.payload.ChangeEventHeader.recordIds);            
                 if((eventType==='"CREATE"' || eventType==='"UPDATE"')){
+                    this.count = true;
                     subscriptionHandler({recordId:this.recordId,idArr:eventIds.substring(2,eventIds.lastIndexOf('"'))})
                     .then(result=>{
                        // console.log("result "+result); 
@@ -325,15 +322,16 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                 }else{
                     //console.log('delete log');
                 }
-           
-            //SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId ='0695i000008tfEIAAY'      
+            console.log("current record refresh!!");
         };
         subscribe(this.channelName, -1, messageCallback).then(response => {
-            // Response contains the subscription information on subscribe call
-            //console.log('Subscription request sent to: ', JSON.stringify(response.channel));
+            console.log('Subscription request sent to: ', JSON.stringify(response.channel));
             this.subscription = response;
-           
             this.refreshHandler();
+            if(this.filesList.length === 1)
+            {
+                this.count = false
+            }
         });
     } 
     registerErrorListener() {
