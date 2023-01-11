@@ -34,6 +34,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     @api showDelete = false
     @api showLMD = false
     @api channelName = '/data/ContentDocumentChangeEvent';
+    @api platformEventChannel = '/event/Files_Platform_Event__e';
     subscription = {};
     responseMessage;
     wiredList = [];
@@ -51,9 +52,15 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     isDisplayMsg = false
     
 
+
     @wire(getRelatedFilesByRecordId,{recordId:'$recordId'})
     getAttachments(result){
+        this.wiredList = []
+        this.filesList = []
+        this.receivedData = []
+        this.formattedData = []
         this.wiredList = result
+        //console.log("in get attachment wire");
         if(result.data){ 
             let parsedData = result.data;    
             parsedData = Object.assign({}, parsedData);  
@@ -87,7 +94,9 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         }
     }
     connectedCallback(){
+        //console.log("Connnected callback");
         this.handleSubscribe();
+    
         this.registerErrorListener();
 
         if(this.showFileType === true){
@@ -132,6 +141,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         return temp;
     }
     handleRowAction(event){
+        
         const actionName = event.detail.action.name;
         const row = event.detail.row;
         this.rowToDelete = row
@@ -175,6 +185,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.isModalOpen = false;
     }
     deleteFile(){
+        //console.log("in single delete");
         deleteRecord(this.rowToDelete.ContentDocumentId).then(()=>{
             this.dispatchEvent(new ShowToastEvent({
             title : 'Success!!',
@@ -253,6 +264,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
         this.dispatchEvent(event);  
     }
     checkboxDeleteHandler(){
+        console.log("in multiple delete");
         var rows = this.template.querySelector("lightning-datatable").getSelectedRows(); 
         var rowArray = Array.from(rows)
         rowArray.forEach(item=>{
@@ -287,10 +299,10 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
        
         setTimeout(() => {
             this.isSpinner = false;
-        }, 2000);
-        
+        }, 1000);
+        //console.log("in refreshHandler!!");
         refreshApex(this.wiredList);
-       // console.log('received data :'+this.wiredList);
+        //console.log('received data :'+JSON.stringify(this.filesList) );
     }
     handleUploadFinished(event){
         const uploadedFiles = event.detail.files.length;
@@ -305,7 +317,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
     handleSubscribe() { 
         // Callback invoked whenever a new event message is received
         const messageCallback = (response) => {
-            //console.log('New message received: ', JSON.stringify(response));
+          //  console.log('New message received: ', JSON.stringify(response));
+            //console.log("in handle subscribe!");
             let eventType = JSON.stringify(response.data.payload.ChangeEventHeader.changeType);
             let eventIds =  JSON.stringify(response.data.payload.ChangeEventHeader.recordIds);            
                 if((eventType==='"CREATE"' || eventType==='"UPDATE"')){
@@ -320,12 +333,12 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
                     })
                    
                 }else{
-                    //console.log('delete log');
+                    this.handleDeleteSubscribe();
                 }
-            console.log("current record refresh!!");
+            //console.log("current record refresh!!");
         };
         subscribe(this.channelName, -1, messageCallback).then(response => {
-            console.log('Subscription request sent to: ', JSON.stringify(response.channel));
+            //console.log('Subscription request sent to: ', JSON.stringify(response.channel));
             this.subscription = response;
             this.refreshHandler();
             if(this.filesList.length === 1)
@@ -339,4 +352,14 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin(Lightn
             console.log('Received error from server: ', JSON.stringify(error));
         });
     } 
+    handleDeleteSubscribe(){
+        const message = function (response){
+            console.log("message callback : "+JSON.stringify(response) );   
+            console.log("in msg callback");
+        };
+        
+        subscribe(this.platformEventChannel,-1,message).then(response =>{
+            console.log(" subscribed response : "+JSON.stringify(response));
+        })
+    }
 }
