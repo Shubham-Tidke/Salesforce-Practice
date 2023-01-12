@@ -1,0 +1,28 @@
+trigger DocumentBeforeDelete on ContentDocument (before delete) {
+    List<Files_Platform_Event__e> fileObjects = new List<Files_Platform_Event__e>();
+    for(ContentDocument c : Trigger.old ){
+        Files_Platform_Event__e file = new Files_Platform_Event__e();
+        List<ContentDocumentLink> linkList = [SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId =: c.Id] ;
+        if(linkList.size()>1){
+            file.ParentRecordId__c = linkList[0].LinkedEntityId;
+            file.UserId__c = linkList[1].LinkedEntityId;
+            fileObjects.add(file);
+        }
+       // system.debug('recId '+file.ParentRecordId__c);
+       // system.debug('userId '+file.UserId__c);
+    }
+    List<Database.SaveResult> results = EventBus.publish(fileObjects);
+    
+    for (Database.SaveResult sr : results) {
+    if (sr.isSuccess()) {
+        System.debug('Successfully published event.');
+    } else {
+        for(Database.Error err : sr.getErrors()) {
+            System.debug('Error returned: ' +
+                        err.getStatusCode() +
+                        ' - ' +
+                        err.getMessage());
+        }
+    }
+}
+}
