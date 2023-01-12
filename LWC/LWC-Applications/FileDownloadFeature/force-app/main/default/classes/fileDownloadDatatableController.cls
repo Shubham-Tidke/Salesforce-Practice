@@ -22,21 +22,4 @@ public with sharing class fileDownloadDatatableController {
         List<ContentDocument> fileList = [SELECT Id FROM ContentDocument WHERE Id IN :fileIds WITH SECURITY_ENFORCED];
         delete fileList;
     }
-    @AuraEnabled
-    public static Boolean subscriptionHandler(String recordId,String idArr){
-       try{
-            List<ContentDocumentLink> currentRecord = [SELECT LinkedEntityId FROM ContentDocumentLink WHERE ContentDocumentId =: idArr AND LinkedEntityId =: recordId];
-            System.debug('recordid: '+currentRecord);
-            System.debug('size: '+currentRecord.size());
-            if(currentRecord.size() > 0){
-                return true;
-            }
-            else {
-                return false;
-            }
-        
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
-    }
 }
