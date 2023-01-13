@@ -296,7 +296,6 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin( Light
   refreshHandler() {
     this.isSpinner = true;
     this.formattedData = [];
-
     setTimeout(() => {
       this.isSpinner = false;
     }, 1000);
@@ -312,18 +311,15 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin( Light
       })
     );
   }
-
 handleSubscribe() {
     const messageCallback = (response) => {
-      //console.log("New message received: ", JSON.stringify(response));
+      console.log("New message received: ", JSON.stringify(response));
       if(response.data.payload.ParentRecordId__c === this.recordId || response.data.payload.UserId__c === this.recordId){
         this.refreshHandler();
       }
     };
     subscribe(this.channelName, -1, messageCallback).then((response) => {
-        //console.log("Subscription request1 sent to: ",JSON.stringify(response.channel));
         this.subscription = response;
-        //console.log("Subscription response is: ",JSON.stringify(this.subscription));
       });
   }
 }
