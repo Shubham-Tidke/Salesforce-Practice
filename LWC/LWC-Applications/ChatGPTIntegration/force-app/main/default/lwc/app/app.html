@@ -1,0 +1,30 @@
+<template>
+    
+		<header class="slds-card__header slds-grid slds-scrollable">
+			<div class="slds-media slds-media_center slds-has-flexi-truncate">
+				<div class="slds-media__figure">
+					<img src=https://media.wired.com/photos/5a540c008652c3185cff9b4e/master/w_2560%2Cc_limit/Chatbot-TopArt-879128144.jpg width="50" height="50" alt="Avatar" />
+				</div>
+				<div class="slds-media__body">
+					<h2 class="slds-card__header-title">ChatGpt</h2>
+				</div>
+			</div>
+		</header>
+        <template if:false={showSpinner}>
+            <p>{finalValue} </p>
+        </template>
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        </template>
+    <footer class="slds-card__footer">  
+            <div class="slds-form-element">
+                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right slds-float_left">
+                <input type="text" id="text-input-id-46" placeholder="Ask me anything.." onchange={handleInput} class="slds-input" style="width: 240px;" />
+                </div>
+                <div class="slds-float_right">
+                    <lightning-button variant="success" label="Enter" title="Enter" onclick={handleClick}></lightning-button>
+                </div>
+            </div>
+    </footer>
+    
+</template>
