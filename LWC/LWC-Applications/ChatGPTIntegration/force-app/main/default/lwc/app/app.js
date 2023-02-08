@@ -1,7 +1,6 @@
 import { LightningElement, track } from 'lwc';
 import chatgptKey from  '@salesforce/label/c.chatgptKey';
 
-
 export default class App extends LightningElement {
     @track textInput
     @track finalValue
@@ -30,7 +29,9 @@ export default class App extends LightningElement {
         .then(result=> {
             this.showSpinner = false
             this.finalValue = result.choices[0].text
-            console.log("response ::  "+this.finalValue)
+            this.finalValue = this.finalValue.replace(/\n/g, "<br />");
+           
+            //console.log("response ::  "+this.finalValue)
         })
     }
 }
