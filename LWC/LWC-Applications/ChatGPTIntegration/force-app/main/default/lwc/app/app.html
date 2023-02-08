@@ -1,5 +1,5 @@
 <template>
-    
+    <div class="slds-scrollable">
 		<header class="slds-card__header slds-grid slds-scrollable">
 			<div class="slds-media slds-media_center slds-has-flexi-truncate">
 				<div class="slds-media__figure">
@@ -10,12 +10,14 @@
 				</div>
 			</div>
 		</header>
+        <div class="scrollable-content slds-card__body slds-card__body_inner ">
         <template if:false={showSpinner}>
-            <p>{finalValue} </p>
+            <lightning-formatted-rich-text disable-linkify value={finalValue}></lightning-formatted-rich-text>
         </template>
         <template if:true={showSpinner}>
             <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
         </template>
+        </div>
     <footer class="slds-card__footer">  
             <div class="slds-form-element">
                 <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right slds-float_left">
@@ -26,5 +28,5 @@
                 </div>
             </div>
     </footer>
-    
+</div>
 </template>
