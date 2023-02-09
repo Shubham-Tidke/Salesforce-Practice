@@ -16,7 +16,8 @@
             </center>
             </div>
         </template>
-        <template if:true={count}> 
+        <template if:true={count}>
+            <img hidden="hidden" class="image" crossorigin="anonymous" src={image}>
             <div class="slds-m-around_x-small">
                 <lightning-input
                     class = "slds-float_right" 
@@ -25,13 +26,15 @@
                     style="width: 150px;" 
                     onchange={handleSearch}>
                 </lightning-input>
-                <br><lightning-button-icon  
+                <br>
+                <!-- <lightning-button-icon  
                 label="Refresh" 
                 class = "slds-float_right slds-p-horizontal_xx-small" 
                 icon-name="utility:refresh" 
                 alternative-text="Refresh table"  
                 onclick={refreshHandler}>
-            </lightning-button-icon>
+                </lightning-button-icon> -->
+                <lightning-button class = "slds-float_right slds-p-horizontal_xx-small" variant="brand" label="print" title="print" onclick={handlePrint}></lightning-button>
                 <lightning-file-upload
                     name="fileUploader"
                     class = "slds-float_left slds-p-bottom_x-small" 

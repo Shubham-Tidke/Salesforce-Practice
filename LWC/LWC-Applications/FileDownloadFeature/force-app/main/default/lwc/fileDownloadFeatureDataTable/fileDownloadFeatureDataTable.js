@@ -1,3 +1,5 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-empty */
 /* eslint-disable no-loop-func */
@@ -12,6 +14,10 @@ import { deleteRecord } from "lightning/uiRecordApi";
 import {  subscribe,  unsubscribe,  onError,  setDebugFlag,  isEmpEnabled} from "lightning/empApi";
 import getRelatedFilesByRecordId from "@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId";
 import deleteSelectedFiles from "@salesforce/apex/fileDownloadDatatableController.deleteSelectedFiles";
+import JSPDF from '@salesforce/resourceUrl/jsPDF';
+import img from '@salesforce/resourceUrl/user_image';
+import { loadScript } from 'lightning/platformResourceLoader';
+
 const COLUMNS = [
   { label: "File Name", fieldName: "Title", wrapText: true },
   { label: "Download",type: "button-icon",initialWidth: 100,
@@ -47,7 +53,8 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin( Light
   isModalOpen = false;
   rowToDelete;
   isDisplayMsg = false;
-
+  contactList=[]
+  image;
   @wire(getRelatedFilesByRecordId, { recordId: "$recordId" })
   getAttachments(result) {
     this.wiredList = [];
@@ -86,16 +93,17 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin( Light
     }
   }
   connectedCallback() {
+    this.image = img;
     this.handleSubscribe();
     if (this.showFileType === true) {
       this.columns = [...this.columns,{ label: "File Type", fieldName: "FileType", initialWidth: 100 }];
     }
     if (this.showFileSize === true) {
-      this.columns = [...this.columns,{ label: "File Size", fieldName: "Size", type: "String" }];
+      this.columns = [...this.columns,{ label: "File Size", fieldName: "Size", type: "String",initialWidth: 100 }];
     }
     if (this.showPreview === true) {
       this.columns = [...this.columns,
-        { label: "Preview",type: "button", initialWidth: 100,
+        { label: "Preview",type: "button", initialWidth: 120,
           typeAttributes: {
             label: "view",
             name: "Preview",
@@ -122,6 +130,22 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin( Light
       this.columns = [...this.columns,{ label: "Last Modified Date", fieldName: "LastModifiedDate" }];
     }
   }
+
+  headers = this.createHeaders([
+		"ContentDocumentId",
+    "FileType",
+    "LastModifiedDate",
+    "Size",
+    "Title"
+	]);
+
+	renderedCallback() {
+		Promise.all([
+			loadScript(this, JSPDF)
+		]);
+	}
+
+
   formatBytes(bytes, decimals) {
     if (bytes === 0) 
         return "0 Bytes";
@@ -322,4 +346,50 @@ handleSubscribe() {
         this.subscription = response;
       });
   }
+
+  rowArray = []
+  handlePrint(event){
+    var rows = this.template
+    .querySelector("lightning-datatable")
+    .getSelectedRows();
+      this.rowArray = Array.from(rows);
+      this.contactList = this.rowArray;
+      console.log(this.rowArray);
+      this.generate();
+
+  }
+  generate(){
+		const { jsPDF } = window.jspdf;
+    const logo = this.template.querySelector('.image');
+		const doc = new jsPDF('landscape')//{
+        
+			// encryption: {
+			// 	userPassword: "user",
+			// 	ownerPassword: "owner",
+			// 	userPermissions: ["print", "modify", "copy", "annot-forms"]
+			// 	// try changing the user permissions granted
+			// }
+	//	});
+
+	//	doc.text("Hi", 20, 20);
+    doc.setFontSize(20);
+    doc.addImage(img,'PNG',10,10,50,50);
+		doc.table(15, 65, this.contactList, this.headers, { autosize:true });
+		doc.save("demo.pdf");
+	}
+  createHeaders(keys) {
+		  let result = [];
+      for (var i = 0; i < keys.length; i = i+1) {
+       // console.log(keys[i]);
+            result.push({
+              id: keys[i],
+              name: keys[i],
+              prompt: keys[i],
+              width: 65,
+              align: "center",
+              padding: 0
+            });
+		}
+		return result;
+	}
 }
