@@ -361,20 +361,12 @@ handleSubscribe() {
   generate(){
 		const { jsPDF } = window.jspdf;
     const logo = this.template.querySelector('.image');
-		const doc = new jsPDF('landscape')//{
-        
-			// encryption: {
-			// 	userPassword: "user",
-			// 	ownerPassword: "owner",
-			// 	userPermissions: ["print", "modify", "copy", "annot-forms"]
-			// 	// try changing the user permissions granted
-			// }
-	//	});
-
+		const doc = new jsPDF('landscape','mm', [197, 350])//{
+    
 	//	doc.text("Hi", 20, 20);
-    doc.setFontSize(20);
+   // doc.setFontSize(2);
     doc.addImage(img,'PNG',10,10,50,50);
-		doc.table(15, 65, this.contactList, this.headers, { autosize:true });
+		doc.table(35, 65, this.contactList, this.headers, { autosize:true });
 		doc.save("demo.pdf");
 	}
   createHeaders(keys) {
