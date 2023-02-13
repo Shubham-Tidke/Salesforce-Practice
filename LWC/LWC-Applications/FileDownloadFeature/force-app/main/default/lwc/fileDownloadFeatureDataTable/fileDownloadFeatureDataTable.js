@@ -15,7 +15,7 @@ import {  subscribe,  unsubscribe,  onError,  setDebugFlag,  isEmpEnabled} from 
 import getRelatedFilesByRecordId from "@salesforce/apex/fileDownloadDatatableController.getRelatedFilesByRecordId";
 import deleteSelectedFiles from "@salesforce/apex/fileDownloadDatatableController.deleteSelectedFiles";
 import JSPDF from '@salesforce/resourceUrl/jsPDF';
-import img from '@salesforce/resourceUrl/user_image';
+import lakeshirtLogo from '@salesforce/contentAssetUrl/lakeshirtLogo';
 import { loadScript } from 'lightning/platformResourceLoader';
 
 const COLUMNS = [
@@ -93,7 +93,7 @@ export default class FileDownloadFeatureDataTable extends NavigationMixin( Light
     }
   }
   connectedCallback() {
-    this.image = img;
+   
     this.handleSubscribe();
     if (this.showFileType === true) {
       this.columns = [...this.columns,{ label: "File Type", fieldName: "FileType", initialWidth: 100 }];
@@ -360,12 +360,8 @@ handleSubscribe() {
   }
   generate(){
 		const { jsPDF } = window.jspdf;
-    const logo = this.template.querySelector('.image');
 		const doc = new jsPDF('landscape','mm', [197, 350])//{
-    
-	//	doc.text("Hi", 20, 20);
-   // doc.setFontSize(2);
-    doc.addImage(img,'PNG',10,10,50,50);
+    doc.addImage(lakeshirtLogo,'PNG',10,10,50,50);
 		doc.table(35, 65, this.contactList, this.headers, { autosize:true });
 		doc.save("demo.pdf");
 	}
