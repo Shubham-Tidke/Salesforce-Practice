@@ -1,1 +1,1 @@
-If Opportunity Stage is Closed Won,update the account rating to 'hot'
+If Opportunity Stage is 'Closed Won',update the account rating to 'hot'
