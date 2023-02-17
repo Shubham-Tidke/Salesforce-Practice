@@ -1,0 +1,14 @@
+
+<template>
+    <h1>Account Data Table</h1>
+<template if:true={accList}>
+    <lightning-datatable
+        key-field="id"
+        data={accList}
+        columns={columns}>
+    </lightning-datatable>
+</template>
+    <template if:true={error}>
+        Some error occured.
+    </template>
+ </template>
