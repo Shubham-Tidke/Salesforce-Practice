@@ -1,0 +1,27 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div>
+        <template if:true={hasOptionsData}>
+            <lightning-card variant="Narrow" title="Datatable Framework">
+                <lightning-combobox label="Select Object" value={value} placeholder="Select Object for datatable"
+                    variant="label-hidden" options={options} onchange={handleObjectChange}>
+                </lightning-combobox>
+            </lightning-card>
+        </template>
+        <template if:true={hasObjectFields}>
+            <lightning-card variant="Narrow">
+                <lightning-dual-listbox id="selectOptions" label="Select Fields" source-label="Available Fields"
+                    selected-label="Selected Fields" variant="label-hidden" options={fieldOptions}
+                    onchange={handleFieldsChange} value={selectedOptions}>
+                </lightning-dual-listbox>
+                <lightning-button class="slds-align_absolute-center slds-m-around_small" variant="brand"
+                    label="Generate Table" title="titleName" onclick={handleButtonClick}></lightning-button>
+            </lightning-card>
+        </template>
+        <template if:true={showDataTable}>
+            <lightning-datatable key-field="id" data={dataList} show-row-number-column hide-checkbox-column
+                columns={columns} onrowaction={handleRowAction}>
+            </lightning-datatable>
+        </template>
+    </div>
+</template>
