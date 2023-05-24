@@ -1,27 +1,53 @@
 <!-- sldsValidatorIgnore -->
 <template>
-    <div>
-        <template if:true={hasOptionsData}>
-            <lightning-card variant="Narrow" title="Datatable Framework">
-                <lightning-combobox label="Select Object" value={value} placeholder="Select Object for datatable"
-                    variant="label-hidden" options={options} onchange={handleObjectChange}>
-                </lightning-combobox>
-            </lightning-card>
-        </template>
-        <template if:true={hasObjectFields}>
-            <lightning-card variant="Narrow">
-                <lightning-dual-listbox id="selectOptions" label="Select Fields" source-label="Available Fields"
-                    selected-label="Selected Fields" variant="label-hidden" options={fieldOptions}
-                    onchange={handleFieldsChange} value={selectedOptions}>
-                </lightning-dual-listbox>
-                <lightning-button class="slds-align_absolute-center slds-m-around_small" variant="brand"
-                    label="Generate Table" title="titleName" onclick={handleButtonClick}></lightning-button>
-            </lightning-card>
-        </template>
-        <template if:true={showDataTable}>
-            <lightning-datatable key-field="id" data={dataList} show-row-number-column hide-checkbox-column
-                columns={columns} onrowaction={handleRowAction}>
-            </lightning-datatable>
-        </template>
-    </div>
+    <lightning-card variant="Narrow" title="Datatable Generator">
+        <div class="slds-p-around_small">
+            <template if:true={hasOptionsData}>
+                <lightning-card variant="Narrow">
+                    <lightning-combobox label="Select Object" value={value} placeholder="Select Object for datatable"
+                        variant="label-hidden" options={options} onchange={handleObjectChange}>
+                    </lightning-combobox>
+                </lightning-card>
+            </template>
+            <template if:true={hasObjectFields}>
+                <lightning-card variant="Narrow">
+                    <lightning-dual-listbox id="selectOptions" label="Select Fields" source-label="Available Fields"
+                        selected-label="Selected Fields" variant="label-hidden" options={fieldOptions}
+                        onchange={handleFieldsChange} value={selectedOptions}>
+                    </lightning-dual-listbox>
+                    <lightning-button class="slds-align_absolute-center slds-m-around_small" variant="brand"
+                        label="Generate Table" title="titleName" onclick={handleButtonClick}></lightning-button>
+                </lightning-card>
+            </template>
+            <template if:true={showDataTable}>
+                <lightning-datatable key-field="id" data={recordsToDisplay} show-row-number-column hide-checkbox-column
+                    sorted-direction={sortDirection} onsort={handleSort} sorted-by={sortBy} columns={columns}
+                    onrowaction={handleRowAction}>
+                </lightning-datatable>
+                <!--RECORDS PER PAGE-->
+                <div>
+                    <div class="slds-list_inline slds-align_absolute-center slds-p-bottom_xx-small">
+                        <div class="slds-select_container">
+                            <select class="slds-select" id="recordsPerPage" onchange={handleRecordsPerPage}>
+                                <template for:each={pageSizeOptions} for:item="option">
+                                    <option key={option} value={option}>{option}</option>
+                                </template>
+                            </select>
+                        </div>
+                        <label class="slds-text-color_weak slds-p-horizontal_x-small" for="recordsPerPage"> Records Per
+                            Page</label>
+                    </div>
+                    <!--PAGE NAVIGATION-->
+                    <div class="slds-float_right slds-border_left">
+                        <lightning-button variant="base" disabled={bDisableFirst} icon-name="utility:back" label="Previous"
+                            alternative-text="Previous" onclick={previousPage}></lightning-button>
+                        &nbsp;
+                        <lightning-button variant="base" disabled={bDisableLast} icon-name="utility:forward" label="Next"
+                            alternative-text="Next" onclick={nextPage} class="slds-p-horizontal_x-small"
+                            icon-position="right"></lightning-button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
 </template>
