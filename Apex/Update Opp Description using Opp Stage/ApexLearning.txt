@@ -1,0 +1,2 @@
+Update Opportunity Description using Opportunity Stage 
+eg. Stage Closed won - description : Opporutnity is Closed Won
