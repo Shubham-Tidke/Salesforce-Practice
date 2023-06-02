@@ -1,0 +1,2 @@
+Send mail to the managers of user who has not logged in for past 7 days.
+Repeat this process everyday!
