@@ -1,0 +1,51 @@
+trigger ContactTrigger on Contact (before insert,after insert) {
+    Map<String, Contact> firstNameMap = new Map<String, Contact>();
+    Map<String, Contact> lastNameMap = new Map<String, Contact>();
+	Map<Date, Contact> birthDateMap = new Map<Date, Contact>();
+	for(Contact contact : trigger.new) {
+		if(trigger.isInsert) {
+            firstNameMap.put(contact.FirstName, contact);
+			lastNameMap.put(contact.LastName, contact);
+			birthDateMap.put(contact.Birthdate, contact);
+		}
+		if(trigger.isUpdate) {
+            if (trigger.oldMap.get(contact.Id).FirstName != contact.FirstName){
+				firstNameMap.put(contact.FirstName,contact);
+			}
+			if (trigger.oldMap.get(contact.Id).LastName != contact.LastName){
+				lastNameMap.put(contact.LastName,contact);
+			}
+			if(trigger.oldMap.get(contact.Id).Birthdate != contact.Birthdate){
+				birthDateMap.put(contact.Birthdate,contact);
+			}
+		}
+	}
+	String errorMessage ='';
+//geting the Contacts whose LastName or Birthdate already exists
+	List<Contact> existingContactList = [Select Id,FirstName, LastName, Birthdate FROM Contact 
+                                         Where LastName IN:lastNameMap.keySet() 
+                                         OR FirstName IN:firstNameMap.keySet() 
+                                         OR Birthdate IN:birthDateMap.keySet()];
+	if(existingContactList.size()> 0){
+	for(Contact contactRec : existingContactList){
+        if(contactRec.FirstName!=null){
+			if(firstNameMap.get(contactRec.FirstName) != null){
+				errorMessage='FirstName ';
+			}
+		}
+		if(contactRec.LastName!=null){
+			if(lastNameMap.get(contactRec.LastName) != null){
+				errorMessage='LastName ';
+			}
+		}
+		if(contactRec.Birthdate!=null){
+			if(birthDateMap.get(contactRec.Birthdate) != null) {
+				errorMessage = errorMessage + (errorMessage != '' ? 'and Birthdate ' : 'Birthdate ');
+			}
+		}
+		if(errorMessage!=''){
+			trigger.new[0].addError('Your Contact '+errorMessage +' already exists in system.');
+		}
+	}
+}
+}
