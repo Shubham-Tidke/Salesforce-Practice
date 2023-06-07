@@ -1,17 +1,38 @@
-@isTest
-public class setAccountRatingsTest {
-	@isTest
-    public static void testAccountRating(){
-        Account a = new Account(First_Name__c = 'TestFName', Last_Name__c = 'TestLName', Name='TestAccount');
-        insert a;
-        a.AnnualRevenue = 10000;
-        setAccountRatings.setAccountRating(a);
-        System.assertEquals(a.Rating,'Cold'); 
-        a.AnnualRevenue = 300000;
-        setAccountRatings.setAccountRating(a);
-        System.assertEquals(a.Rating,'Warm');
-         a.AnnualRevenue = 600000;
-        setAccountRatings.setAccountRating(a);
-        System.assertEquals(a.Rating,'Hot');
+@IsTest
+private class setAccountRatingsTest {
+    @IsTest
+    static void testSetAccountRating_ColdRating() {
+        // Create a test Account with AnnualRevenue below 100,000
+        Account testAccount = new Account(AnnualRevenue = 50000);
+        
+        // Call the method under test
+        setAccountRatings.setAccountRating(testAccount);
+        
+        // Verify the rating is set to 'Cold'
+        System.assertEquals('Cold', testAccount.Rating);
+    }
+    
+    @IsTest
+    static void testSetAccountRating_WarmRating() {
+        // Create a test Account with AnnualRevenue between 100,000 and 500,000
+        Account testAccount = new Account(AnnualRevenue = 200000);
+        
+        // Call the method under test
+        setAccountRatings.setAccountRating(testAccount);
+        
+        // Verify the rating is set to 'Warm'
+        System.assertEquals('Warm', testAccount.Rating);
+    }
+    
+    @IsTest
+    static void testSetAccountRating_HotRating() {
+        // Create a test Account with AnnualRevenue above 500,000
+        Account testAccount = new Account(AnnualRevenue = 800000);
+        
+        // Call the method under test
+        setAccountRatings.setAccountRating(testAccount);
+        
+        // Verify the rating is set to 'Hot'
+        System.assertEquals('Hot', testAccount.Rating);
     }
 }
