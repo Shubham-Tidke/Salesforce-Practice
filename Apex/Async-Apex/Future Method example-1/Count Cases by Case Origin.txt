@@ -1,0 +1,2 @@
+Create a future method to update cases related to an account by their case origin.
+Create 3 fields on account object to store the count number of cases.
