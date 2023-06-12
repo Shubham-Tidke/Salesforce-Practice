@@ -1,0 +1,5 @@
+trigger ContactTrigger on Contact (before insert,after insert) {
+    if(trigger.isInsert && trigger.isAfter){		       
+        System.enqueueJob(new ContactTriggerHandler(trigger.new));       
+    }	
+}
