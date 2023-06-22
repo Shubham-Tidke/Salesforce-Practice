@@ -1,0 +1,162 @@
+<template>
+    <lightning-card variant="Narrow" title="Find an Expert">
+        <!-- FIRST PAGE TEMPLATE -->
+        <template if:true={firstPage}>
+            <div class="slds-p-around_large">
+            <div class="slds-box slds-p-around_medium slds-m-top_x-small slds-m-bottom_medium slds-text-align_center">
+                <p class="slds-text-align_center slds-p-around_medium slds-text-heading_medium">Are you a Gurobi
+                    existing customer?</p>
+                <!-- <lightning-button class="slds-p-around_medium" variant="Success" label="Yes" title="Yes"
+                    onclick={handleYesClick}></lightning-button> -->
+                <button class="slds-button slds-button_neutral slds-p-around_x-small slds-m-around_small" style="width:5%" onclick={handleYesClick}>Yes</button>
+                <button class="slds-button slds-button_neutral slds-p-around_x-small slds-m-around_small" style="width:5%" onclick={handleNoClick}>No</button>
+                <!-- <lightning-button class="slds-p-around_medium" variant="brand" label="No" title="No"
+                    onclick={handleNoClick}></lightning-button> -->                
+            </div>
+        </div>
+        </template>
+        <!-- SECOND PAGE TEMPLATE IF YES SELECTED -->
+        <template if:true={isYesSelected}>
+            <p class="slds-text-align_center slds-p-around_medium slds-text-heading_medium">What do you need help with?</p>
+            <lightning-layout multiple-rows>
+                <template for:each={existingCustomerOptions} for:item="item">
+                    <lightning-layout-item size="3" padding="around-small" key={item.Id}>
+                        <div class="slds-align_absolute-center">
+                            <div class="slds-visual-picker slds-visual-picker_small ">
+                                <input type="radio" id={item.Id} value={item.Name} name="set1"
+                                    onchange={handleSet1Change} />
+                                <label for={item.Id}>
+                                    <p class=" slds-box slds-visual-picker__text slds-m-bottom_small">
+                                        <span class="slds-visual-picker__body">
+                                            <span class="slds-text-title">{item.Name}</span>
+                                        </span>
+                                    </p>
+                                    <lightning-icon variant="inverse"
+                                        class="slds-icon_container slds-visual-picker__text-check" icon-name="utility:check"
+                                        alternative-text="check" size="x-small" title="small size"></lightning-icon>
+                                </label>
+                            </div>
+                        </div>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+            <!-- BACK AND NO BUTTONS IN SECOND TEMPLATE WHEN YES SELECTED -->
+            <div class="slds-p-around_small slds-align_absolute-center">
+                <lightning-button class=" slds-p-around_medium " variant="neutral" label="Back" title="Back"
+                    onclick={handleYesBackClick}></lightning-button>
+                <lightning-button class=" slds-p-around_medium " variant="neutral" label="Next" title="Next"
+                    onclick={handleYesNextClick} ></lightning-button>
+            </div>
+        </template>
+        <!-- SECOND PAGE TEMPLATE IF NO SELECTED -->
+        <template if:true={isNoSelected}>
+            <p class="slds-text-align_center slds-p-around_medium slds-text-heading_medium">What do you need help with?</p>
+            <lightning-layout multiple-rows>
+                <template for:each={nonExistingCustomerOptions} for:item="item">
+                    <lightning-layout-item size="4" padding="around-small" key={item.Id}>
+                        <div class="slds-align_absolute-center">
+                            <div class="slds-visual-picker slds-visual-picker_small">
+                                <input type="radio" id={item.Id} value={item.Name} name="set1"
+                                    onchange={handleSet1Change} />
+                                <label for={item.Id}>
+                                    <p class=" slds-box slds-visual-picker__text slds-m-bottom_small">
+                                        <span class="slds-visual-picker__body">
+                                            <span class="slds-text-title">{item.Name}</span>
+                                        </span>
+                                    </p>
+                                    <lightning-icon variant="inverse"
+                                        class="slds-icon_container slds-visual-picker__text-check" icon-name="utility:check"
+                                        alternative-text="check" size="x-small" title="small size"></lightning-icon>
+                                </label>
+                            </div>
+                        </div>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+            <!-- BACK AND NO BUTTONS IN SECON TEMPLATE WHEN NO SELECTED -->
+            <div class="slds-p-around_small slds-align_absolute-center">
+                <lightning-button class="slds-p-around_medium" variant="neutral" label="Back" title="Back"
+                    onclick={handleNoBackClick}></lightning-button>
+                <lightning-button class="slds-p-around_medium" variant="neutral" label="Next" title="Next"
+                    onclick={handleNoNextClick} ></lightning-button>
+            </div>
+        </template>
+        <!-- FILTERS TEMPLATE THIRD PAGE-->
+        <template if:true={showFilters}>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="3" padding="around-small">
+                    <lightning-combobox name="Region" label="Region" placeholder="Select Region" options={RegionOptions}
+                        onchange={handleRegionChange}>
+                    </lightning-combobox>
+                </lightning-layout-item>
+                <!-- <lightning-layout-item size="4" padding="around-small">
+                    <lightning-combobox name="Country" label="Country" placeholder="Select Country"
+                        options={CountryOptions} onchange={handleCountryChange} disabled={showCountry}>
+                    </lightning-combobox>
+                </lightning-layout-item> -->
+                <!-- <lightning-layout-item size="4" padding="around-small">
+                    <lightning-combobox name="State" label="State" value={StateValues} placeholder="Select State"
+                        options={StateOptions} onchange={handleStateChange} disabled={showStates}>
+                    </lightning-combobox>
+                </lightning-layout-item> -->
+                <!-- <lightning-layout-item size="4" padding="around-small">
+                    <lightning-combobox name="Industry Vertical" label="Industry Vertical"
+                        placeholder="Select Industry Vertical" options={IndustryOptions}
+                        onchange={handleIndustryChange}>
+                    </lightning-combobox>
+                </lightning-layout-item> -->
+                <!-- <lightning-layout-item size="4" padding="around-small">
+                    <lightning-combobox name="Partner Level" label="Partner Level" placeholder="Select Partner Level"
+                        options={PartnerLevelOptions} onchange={handlePartnerLevelChange}>
+                    </lightning-combobox>
+                </lightning-layout-item> -->
+                <lightning-layout-item size="3" padding="around-small">
+                    <lightning-combobox name="Industry Vertical" label="Industry"
+                        placeholder="Select Industry " options={IndustryOptions}
+                        onchange={handleIndustryMultiSelectChange}>
+                    </lightning-combobox>
+                    <div class="slds-p-around_small">
+                        <template for:each={allIndustryValues} for:item="val">
+                            <lightning-pill key={val} name={val} 
+                                label={val} onremove={handleIndustryRemove}>
+                            </lightning-pill>
+                        </template>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" padding="around-small">
+                    <lightning-combobox name="Partner Type" label="Partner Type" placeholder="Select Partner Type"
+                        options={PartnerTypeOptions} onchange={handlePartnerTypeChange}>
+                    </lightning-combobox>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" padding="around-small">
+                    <lightning-combobox name="Language" label="Language"
+                        placeholder="Select Language " options={LanguageOptions}
+                        onchange={handleLanguageSelectChange}>
+                    </lightning-combobox>
+                    <div class="slds-p-around_small">
+                        <template for:each={allLanguageValues} for:item="val">
+                            <lightning-pill key={val} name={val} label={val} onremove={handleLanguageRemove}></lightning-pill>
+                        </template>
+                    </div>
+                </lightning-layout-item>               
+            </lightning-layout>
+            <!-- BACK AND SEARCH BUTTONS -->
+            <div class="slds-p-around_small slds-align_absolute-center">
+                <lightning-button class="slds-p-around_medium" variant="neutral" label="Back" title="Back"
+                    onclick={handleFilterBackClick}></lightning-button>
+                <lightning-button class="slds-p-around_medium" variant="neutral" label="Search" title="Search"
+                    onclick={handleSearchClick}></lightning-button>
+            </div>
+            <!-- PARTNER DATA LOGIC -->
+            <template if:true={showPartners}>
+                <div class="slds-p-around_medium">
+                    <p class="slds-box slds-align_absolute-center">Data Appears here!!</p>
+                </div>
+            </template>
+        </template>
+        <template if:true={isNoSelected}>
+
+        </template>
+
+    </lightning-card>
+</template>
