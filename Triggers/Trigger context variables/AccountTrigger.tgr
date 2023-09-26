@@ -3,7 +3,9 @@ trigger AccountTrigger on Account (before insert,after insert,before update,afte
        system.debug('INSERT TRIGGER');
        if(trigger.isBefore){
         system.debug('BEFORE INSERT TRIGGER');
-         //Apex handler here to perform before insert logic  
+        system.debug('Trigger.new : '+trigger.new);
+         //Apex handler here to perform before insert logic
+         AccountTriggerHandler.beforeAccInsert(trigger.new);
        }else{
            system.debug('AFTER INSERT TRIGGER');
            system.debug('Trigger.new : '+trigger.new);
