@@ -1,0 +1,33 @@
+trigger AccountTrigger on Account (before insert,after insert,before update,after update) {
+    if(trigger.isInsert){
+       system.debug('INSERT TRIGGER');
+       if(trigger.isBefore){
+        system.debug('BEFORE INSERT TRIGGER');
+         //Apex handler here to perform before insert logic  
+       }else{
+           system.debug('AFTER INSERT TRIGGER');
+           system.debug('Trigger.new : '+trigger.new);
+           system.debug('Trigger.newMap : '+trigger.newMap);
+           //Apex handler here to perform after insert logic
+       }
+    }
+    else if(trigger.isUpdate){
+        system.debug('UPDATE TRIGGER');
+        if(trigger.isBefore){
+         //Apex handler logic to perform before update logic
+        system.debug('BEFORE UPDATE TRIGGER');
+        system.debug('Trigger.old : '+trigger.old);
+        system.debug('Trigger.new : '+trigger.new);
+        system.debug('Trigger.newMap : '+trigger.newMap);
+        system.debug('Trigger.oldMap : '+trigger.oldMap);
+       }else{
+           //Apex handler logic to perform after update logic
+           system.debug('AFTER UPDATE TRIGGER');
+           system.debug('Trigger.old : '+trigger.old);
+           system.debug('Trigger.new : '+trigger.new);
+           system.debug('Trigger.newMap : '+trigger.newMap);
+           system.debug('Trigger.oldMap : '+trigger.oldMap);
+       }
+    }
+    
+}
