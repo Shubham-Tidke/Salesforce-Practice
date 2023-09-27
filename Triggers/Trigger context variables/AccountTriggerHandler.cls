@@ -35,4 +35,42 @@ public class AccountTriggerHandler {
             }
         }
     }
+    public static void beforeAccUpdate(List<Account>accList , Map<Id,Account>accMap){
+        for(Account acc:accList){
+            if(acc.Phone != accMap.get(acc.Id).Phone){
+                acc.Description = 'Acconut Phone is updated.';
+            }
+        }
+    }
+    public static void afterAccUpdate(List<Account>accList , Map<Id,Account>accMap){
+        System.debug('Code Inside');
+        Map<Id,Account>accountMap = new Map<Id,Account>();
+        List<Opportunity>oppList = new List<Opportunity>();
+        for(Account acc:accList){
+            if(acc.Phone != accMap.get(acc.Id).Phone){
+                accountMap.put(acc.Id,acc);
+            }
+        }
+        oppList = [SELECT Id,Description,AccountId FROM opportunity WHERE AccountId IN :accountMap.keySet()];
+        if(!oppList.isEmpty()){
+            for(Opportunity opp : oppList){
+                opp.Description = accountMap.get(opp.AccountId).Phone;
+            }
+        }  
+        try{
+            Database.SaveResult[] result = Database.update(oppList, false);
+            for(Database.SaveResult res : result){
+                if(res.isSuccess()){
+                    system.debug('RECORD UPDATED : '+res.getId());
+                }else{
+                    for(Database.Error err : res.getErrors()){
+                        system.debug('ERROR UPDATING RECORD : '+err);
+                    }
+                }
+            }
+        }
+        Catch(Exception e){
+                system.debug(e);
+        }
+    }
 }
