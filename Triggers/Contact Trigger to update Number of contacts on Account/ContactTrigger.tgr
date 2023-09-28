@@ -1,0 +1,19 @@
+trigger ContactTrigger on Contact (before insert,before update,before delete,after insert,after update,after delete) {
+    if(trigger.isInsert){
+        
+    }
+    else if(trigger.isUpdate){
+        
+    }
+    else if(trigger.isDelete){
+        if(trigger.isBefore){
+            system.debug('BEFORE DELETE TRIGGER');
+            system.debug('OLDMAP : '+trigger.oldMap);
+            system.debug('OLD : '+trigger.old);
+            ContactTriggerHandler.beforeContactDelete(trigger.old,trigger.oldMap);
+        }else{
+            system.debug('AFTER DELETE TRIGGER');
+            ContactTriggerHandler.afterContactDelete(trigger.old);
+        }
+    }
+}
