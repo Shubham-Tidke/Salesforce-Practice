@@ -1,9 +1,8 @@
 trigger ContactTrigger on Contact (before insert,before update,before delete,after insert,after update,after delete) {
-    if(trigger.isInsert){
-        
-    }
-    else if(trigger.isUpdate){
-        
+    if(trigger.isInsert || trigger.isUpdate){
+        if(trigger.isAfter){
+            ContactTriggerHandler.afterContactDelete(trigger.new);
+        }  
     }
     else if(trigger.isDelete){
         if(trigger.isBefore){
