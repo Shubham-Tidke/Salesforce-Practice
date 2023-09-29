@@ -1,4 +1,4 @@
-trigger ContactTrigger on Contact (before insert,before update,before delete,after insert,after update,after delete) {
+trigger ContactTrigger on Contact (before insert,before update,before delete,after insert,after update,after delete,after undelete) {
     if(trigger.isInsert || trigger.isUpdate){
         if(trigger.isAfter){
             ContactTriggerHandler.afterContactDelete(trigger.new);
@@ -13,6 +13,12 @@ trigger ContactTrigger on Contact (before insert,before update,before delete,aft
         }else{
             system.debug('AFTER DELETE TRIGGER');
             ContactTriggerHandler.afterContactDelete(trigger.old);
+        }
+    }
+    else if(trigger.isUndelete){
+        if(trigger.isAfter){
+            system.debug('AFTER UNDELETE TRIGGER : '+trigger.new);
+            ContactTriggerHandler.afterContactUndelete(trigger.new);
         }
     }
 }
