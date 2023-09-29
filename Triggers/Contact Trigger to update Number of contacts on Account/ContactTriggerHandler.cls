@@ -35,4 +35,30 @@ public class ContactTriggerHandler {
             system.debug(e);
         }
     }
+    public static void afterContactUndelete(List<Contact>conList){
+        List<Contact>updatedConList = new List<Contact>();
+        for(Contact con :conList){
+            Contact c = new Contact();
+            c.Id = con.Id;
+            c.Level__c = 'Primary';
+            updatedConList.add(c);
+        }
+        if(!updatedConList.isEmpty()){
+            try{
+                Database.SaveResult[] result = Database.update(updatedConList,true);
+                for(Database.SaveResult res : result){
+                    if(res.isSuccess()){
+                        system.debug('Record Retrieved : '+res.getId());
+                    }else{
+                        for(Database.Error err : res.getErrors()){
+                            System.debug(err);
+                        }
+                    }
+                }
+            }
+            Catch(Exception e){
+                System.debug(e);
+            }
+        }
+    }
 }
