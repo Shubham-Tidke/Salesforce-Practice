@@ -61,4 +61,29 @@ public class ContactTriggerHandler {
             }
         }
     }
+    public static void sendMailToContact(List<Contact> conList){
+        List<Messaging.Email>mailList =new List<Messaging.Email>();
+        if(!conList.isEmpty()){
+            for(Contact con : conList){
+                Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                mail.toAddresses = new String[]{con.Email};
+                mail.setSubject('Welcome To Salesforce');
+                String body = 'Dear '+con.FirstName+',<br/>';
+                body = body+'Your Contact has been created!';
+                mail.setHtmlBody(body);
+                mailList.add(mail);
+            }
+        }
+        if(!mailList.isEmpty()){
+            Messaging.SendEmailResult[] result =  Messaging.sendEmail(mailList);
+            for(Messaging.SendEmailResult res : result){
+                if(res.success){
+                    System.debug('The email was sent successfully.');
+                }else{
+                    System.debug('Error sending mail. : '+res.errors);
+                }
+            }
+        }
+        
+    }
 }
