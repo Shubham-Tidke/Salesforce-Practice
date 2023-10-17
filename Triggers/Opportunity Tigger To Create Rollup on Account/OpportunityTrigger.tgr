@@ -1,0 +1,13 @@
+trigger OpportunityTrigger on Opportunity (after insert, after update, after delete) {
+    if(trigger.isAfter){
+        if(trigger.isInsert){
+            OpportunityTriggerHandler.addRevenueToAccount(trigger.new);
+        }
+        if(trigger.isUpdate){
+            OpportunityTriggerHandler.UpdateRevenueToAccount(trigger.new,trigger.oldMap);
+        }
+        if(trigger.isDelete){
+            OpportunityTriggerHandler.RemoveRevenueFromAccount(trigger.old);
+        }
+    }
+}
