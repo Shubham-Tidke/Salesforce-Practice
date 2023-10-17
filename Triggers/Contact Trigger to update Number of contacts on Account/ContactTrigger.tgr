@@ -1,5 +1,9 @@
 trigger ContactTrigger on Contact (before insert,before update,before delete,after insert,after update,after delete,after undelete) {
     if(trigger.isInsert || trigger.isUpdate){
+        if(trigger.isInsert && trigger.isAfter){
+            system.debug('NEW : '+trigger.new);
+            ContactTriggerHandler.sendMailToContact(trigger.new);
+        }
         if(trigger.isAfter){
             ContactTriggerHandler.afterContactDelete(trigger.new);
         }  
