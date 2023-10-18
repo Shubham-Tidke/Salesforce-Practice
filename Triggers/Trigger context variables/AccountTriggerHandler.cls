@@ -1,7 +1,11 @@
 public class AccountTriggerHandler {
     public static void beforeAccInsert(List<Account> accList){
         for(Account acc : accList){
-            acc.Rating = 'Warm';
+            if(acc.Industry == 'Media'|| acc.Industry == 'Energy')
+            acc.Rating = 'Hot';
+            else{
+                acc.Rating = 'Warm';
+            }
         }
     }
     public static void afterAccInsert(List<Account> accList){
