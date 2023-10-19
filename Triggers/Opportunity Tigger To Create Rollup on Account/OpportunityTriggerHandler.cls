@@ -1,4 +1,11 @@
 public class OpportunityTriggerHandler {
+    public static void updateOppDescription(List<Opportunity>oppList){
+        for(Opportunity opp : oppList){
+            if(opp.Amount >= 100000 && opp.Amount <= 500000){
+                opp.Description = 'Hot Opportunity';
+            }
+        }
+    }
     public static void addRevenueToAccount(List<Opportunity>oppList){
         Set<Id>accIds = new Set<Id>();
         List<Account>accToBeUpdated  = new List<Account>();
