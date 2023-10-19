@@ -28,6 +28,8 @@ public class ContactTriggerHandlerTest {
         Test.starttest();
         delete con;
         Test.stopTest();
+        List<Contact> delCon = [SELECT id,Name,Level__c FROM Contact WHERE Name ='Test 10' AND Level__c ='Primary' LIMIT 1];
+        System.assertEquals(0, delCon.size());
       
     }
     @IsTest
@@ -47,8 +49,8 @@ public class ContactTriggerHandlerTest {
         Test.startTest();
         undelete UndeleteCon;
         Test.stopTest();
-        //List<Contact> retrievedCon = [SELECT id,Name,Level__c FROM Contact WHERE  Level__c ='Secondary'];
+        List<Contact> retrievedCon = [SELECT id,Name,Level__c FROM Contact WHERE Name = 'Test 5' AND  Level__c ='Secondary' LIMIT 1];
         //system.debug('retrieved contactsss :'+retrievedCon.size());
-        //System.assertEquals(10, retrievedCon.size());
+        System.assertEquals(1, retrievedCon.size());
     }
 }

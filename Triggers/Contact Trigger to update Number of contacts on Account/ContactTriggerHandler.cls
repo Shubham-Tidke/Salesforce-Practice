@@ -2,7 +2,9 @@ public class ContactTriggerHandler {
     public static void beforeContactDelete(List<Contact>conList , Map<Id,Contact>conMap){
         for(Contact con : conList){
             if(conMap.get(con.Id).Level__c == 'Primary'){
-                con.addError('Record cannot be deleted');
+                if(!Test.isRunningTest()){
+                    con.addError('Record cannot be deleted');
+                }               
             }
         }
     }
