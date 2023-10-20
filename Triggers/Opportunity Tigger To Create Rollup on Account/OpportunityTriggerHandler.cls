@@ -4,6 +4,12 @@ public class OpportunityTriggerHandler {
             if(opp.Amount >= 100000 && opp.Amount <= 500000){
                 opp.Description = 'Hot Opportunity';
             }
+            if(opp.StageName == 'Closed Won'){
+                opp.Description = 'Opportunity is Closed Won';
+            }else if(opp.StageName == 'Closed Lost'){
+                opp.Description = 'Opportunity is Closed Lost';
+            }
+            
         }
     }
     public static void addRevenueToAccount(List<Opportunity>oppList){
