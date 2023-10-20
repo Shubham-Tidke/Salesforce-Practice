@@ -1,0 +1,5 @@
+trigger CaseTrigger on Case (after insert) {
+    if(trigger.isAfter && trigger.isInsert){
+        CaseTriggerHandler.updateRelatedAccount(trigger.new);
+    }
+}
