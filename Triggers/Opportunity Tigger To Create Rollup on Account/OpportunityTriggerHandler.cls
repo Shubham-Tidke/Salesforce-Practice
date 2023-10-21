@@ -116,4 +116,35 @@ public class OpportunityTriggerHandler {
         }
         return accToBeUpdated;
     }
+    public static void CreateTaskOnOpportunity(List<Opportunity> oppList, Map<Id,Opportunity>oppMap){
+        List<Task>taskList = new List<Task>();
+        for(Opportunity opp : oppList){
+            if(opp.StageName != oppMap.get(opp.Id).StageName){
+                Task tsk = new Task();
+                tsk.OwnerId = opp.OwnerId;
+                tsk.Subject = 'Opportunity Trigger Task';
+                tsk.WhatId = opp.Id;
+                tsk.Status = 'In Progress';
+                taskList.add(tsk);
+            }
+        }
+        if(!taskList.isEmpty()){
+            try{
+                Database.SaveResult[] result = Database.insert(taskList, false);
+                for(Database.SaveResult res : result){
+                    if(res.isSuccess()){
+                        system.debug('Task Created : '+res.getId());
+                    }
+                    else{
+                        for(Database.Error err : res.getErrors()){
+                            system.debug('Error creating task : '+err);
+                        }
+                    }
+                }
+            }
+            catch(Exception e){
+                System.debug(e);
+            }
+        }
+    }
 }
