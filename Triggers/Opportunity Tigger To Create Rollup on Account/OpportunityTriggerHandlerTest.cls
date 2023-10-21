@@ -69,4 +69,14 @@ public class OpportunityTriggerHandlerTest {
         Account updatedAcc = [SELECT Id,Name,AnnualRevenue FROM Account WHERE Name = 'Test Account'];
         System.assertEquals(180000, updatedAcc.AnnualRevenue);
     }
+    @IsTest
+    public static void CreateTaskOnOpportunityTest(){
+        Opportunity oppor  = [SELECT id,StageName,Description,Amount FROM Opportunity WHERE Name = 'Test Opportunity 1' LIMIT 1 ];
+        oppor.StageName = 'Need Analysis';
+        Test.startTest();
+        update oppor;
+        Test.stopTest();
+        List<Task> taskList = [SELECT id,WhatId FROM Task WHERE WhatId =: oppor.Id];
+        System.assertEquals(1, taskList.Size());
+    }
 }
