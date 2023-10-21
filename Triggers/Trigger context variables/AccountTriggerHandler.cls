@@ -16,7 +16,7 @@ public class AccountTriggerHandler {
             opp.Name = acc.Name + ' OPPORTUNITY';
             opp.StageName = 'Qualification';
             opp.CloseDate = date.newInstance(2023, 12, 17);
-            opp.Amount = 12345;
+            //opp.Amount = 12345;
             opps.add(opp);
         }
         if(!opps.isEmpty()){
@@ -24,7 +24,7 @@ public class AccountTriggerHandler {
                 Database.SaveResult[] result = Database.insert(opps, false);
                 for(Database.SaveResult res : result){
                     if(res.isSuccess()){
-                        System.debug('OPPORTUNITY CREATED : '+res.getId());
+                       // System.debug('OPPORTUNITY CREATED : '+res.getId());
                     }
                     else{
                         for(Database.Error err: res.getErrors()){
@@ -47,13 +47,36 @@ public class AccountTriggerHandler {
         }
     }
     public static void afterAccUpdate(List<Account>accList , Map<Id,Account>accMap){
-        System.debug('Code Inside');
+        //System.debug('Code Inside');
         Map<Id,Account>accountMap = new Map<Id,Account>();
         List<Opportunity>oppList = new List<Opportunity>();
+        List<Contact>conList = new List<Contact>();
         for(Account acc:accList){
             if(acc.Phone != accMap.get(acc.Id).Phone){
                 accountMap.put(acc.Id,acc);
             }
+        }
+        for(Contact con : [SELECT id,AccountId,HomePhone FROM Contact WHERE AccountId IN :accountMap.keySet()]){
+            if(accountMap.containsKey(con.AccountId)){
+                con.HomePhone =  accountMap.get(con.AccountId).Phone;
+                conList.add(con);
+            }
+        }
+        try{
+            Database.SaveResult[] result = Database.update(conList);
+            for(Database.SaveResult res : result){
+                if(res.isSuccess()){
+                    System.debug('Contact Updated : '+res.getId());
+                }
+                else{
+                    for(Database.Error err : res.getErrors()){
+                        System.debug('ERROR UPDATING CONTACT :'+err);
+                    }
+                }
+            }
+        }
+        catch(Exception e){
+            system.debug('EXCEPTION '+e);
         }
         oppList = [SELECT Id,Description,AccountId FROM opportunity WHERE AccountId IN :accountMap.keySet()];
         if(!oppList.isEmpty()){
@@ -65,10 +88,10 @@ public class AccountTriggerHandler {
             Database.SaveResult[] result = Database.update(oppList, false);
             for(Database.SaveResult res : result){
                 if(res.isSuccess()){
-                    system.debug('RECORD UPDATED : '+res.getId());
+                   // system.debug('RECORD UPDATED : '+res.getId());
                 }else{
                     for(Database.Error err : res.getErrors()){
-                        system.debug('ERROR UPDATING RECORD : '+err);
+                        //system.debug('ERROR UPDATING RECORD : '+err);
                     }
                 }
             }
