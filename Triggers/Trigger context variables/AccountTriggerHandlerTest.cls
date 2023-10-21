@@ -48,7 +48,12 @@ public class AccountTriggerHandlerTest {
             accList.add(a);
         }
         insert accList;
-        List<Account>updateAccList = [SELECT id,phone,name from Account where phone = '1234567'];
+        List<Account>updateAccList = [SELECT Id,Phone,Name from Account where phone = '1234567'];
+        Contact c = new Contact();
+        c.Lastname = 'Test Contact';
+        c.AccountId = updateAccList[0].Id;
+        c.Email = 'abc@test.com';
+        insert c;
         for(Account acc : updateAccList){
             acc.phone = '99887766';
         }
@@ -56,6 +61,8 @@ public class AccountTriggerHandlerTest {
         update updateAccList;
         Test.stoptest();
         List<Account>updatedAccList = [SELECT id,phone,name from Account where phone = '99887766' ];
+        Contact updatedcon = [SELECT Id,LastName ,HomePhone from Contact where LastName  = 'Test Contact' ];
         System.assertEquals(5, updatedAccList.size());
+        System.assertEquals('99887766',updatedcon.HomePhone);
     }
 }
