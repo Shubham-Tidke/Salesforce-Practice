@@ -39,6 +39,32 @@ public class AccountTriggerHandler {
             }
         }
     }
+    //future method to avoid MIXED DML ERROR
+    @future
+    public static void createUser(){
+        Profile profId = [select Id from Profile where name='Standard Platform User' limit 1];
+        user u = new user();
+        u.Username = 'test@samp.com';
+        u.Email = 'test@samp.com';
+        u.Alias = 'tsamp';
+        u.lastName = 'Kiran';
+        u.EmailEncodingKey = 'ISO-8859-1';
+        u.TimeZoneSidKey = 'America/Los_Angeles';
+        u.LocaleSidKey = 'en_US';
+        u.LanguageLocaleKey = 'en_US';
+        //user.UserRoleId = 'user_role_id_goes_here';
+        u.ProfileId = profId.Id;
+        u.IsActive = false;  // here we are creating inactive user account
+        try
+        {
+            insert u;  // insert the user record
+        }
+        catch(Exception e)
+        {
+            System.debug(e);
+        
+        }
+    }
     public static void beforeAccUpdate(List<Account>accList , Map<Id,Account>accMap){
         for(Account acc:accList){
             if(acc.Phone != accMap.get(acc.Id).Phone){
