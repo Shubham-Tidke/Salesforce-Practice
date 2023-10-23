@@ -30,9 +30,12 @@ public class AccountTriggerHandlerTest {
         Test.startTest();
         insert accList;
         insert accLst;
+        AccountTriggerHandler.createUser();
         Test.stopTest();
         List<Account>accIndustry = [SELECT id,name,Industry,Rating from Account WHERE Industry IN ('Media','Energy') AND Rating =:'Hot'];
         List<Opportunity>oppList = [SELECT id,Name,AccountId FROM Opportunity WHERE AccountId IN : accIndustry];
+        User[] users = [SELECT Id , username from User where username='test@samp.com'];
+        System.assertEquals(1, users.size());
         System.assertEquals(10, accIndustry.size(),'Accounts with hot rating');
         System.assertEquals(10, oppList.size(),'Opportunity related to accounts');
         List<Account>accIndustrylst = [SELECT id,name,Industry,Rating from Account WHERE Industry NOT IN ('Media','Energy') AND Rating =:'Warm'];
