@@ -65,6 +65,21 @@ public class AccountTriggerHandler {
         
         }
     }
+    @future(callout = true)
+    public static void apiCallout(){
+        String endpoint = 'https://api.publicapis.org/random';
+        HttpRequest req = new HttpRequest();
+        req.setHeader('Content-Type', 'application/json');
+        req.setEndpoint(endpoint);
+        req.setMethod('GET');  
+        Http http = new Http();
+        HttpResponse resp = new HttpResponse();
+        if (!Test.isRunningTest()){
+            resp = http.send(req);
+            String response = resp.getBody();
+            System.debug('API RESPONSE : '+response);
+        }
+    }
     public static void beforeAccUpdate(List<Account>accList , Map<Id,Account>accMap){
         for(Account acc:accList){
             if(acc.Phone != accMap.get(acc.Id).Phone){
