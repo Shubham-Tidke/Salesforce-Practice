@@ -1,0 +1,10 @@
+<template>
+    <lightning-card>
+       <p class="slds-text-align_center slds-box slds-m-around_small">Child component - 2 : </p>
+       <template for:each = {colorDataDetails} for:item = 'item'>
+           <div class="slds-text-align_center slds-m-around_small" key = {item.id}>
+              ID : {item.id}, COLOR  : {item.name}
+           </div>
+       </template>   
+    </lightning-card>    
+</template>
