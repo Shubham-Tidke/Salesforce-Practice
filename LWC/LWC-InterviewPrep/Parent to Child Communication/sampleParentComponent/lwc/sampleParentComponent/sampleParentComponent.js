@@ -1,6 +1,8 @@
 import { LightningElement } from 'lwc';
+import getResponse from '@salesforce/apex/ComponentCommunicationHandler.getResponse';
 export default class SampleParentComponent extends LightningElement {
     parentComponentMsg = 'Sample text from parent component';
+    apiResponse;
     dataDetails = [
         {
             "id": 1,
@@ -33,4 +35,12 @@ export default class SampleParentComponent extends LightningElement {
             "year": 2005
         }
     ]
+   
+    handleBtnClick(){
+        getResponse({}).then(result=>{
+            console.log(JSON.parse(result).count);
+            this.apiResponse = JSON.stringify(result);
+            console.log('OUTPUT : ',this.apiResponse);
+        })
+    }
 }
