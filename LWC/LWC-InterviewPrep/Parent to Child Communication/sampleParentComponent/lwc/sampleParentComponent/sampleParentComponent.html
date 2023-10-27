@@ -1,7 +1,9 @@
 <template>
     <lightning-card>
         <p class="slds-text-align_center">{parentComponentMsg}</p>
+        <lightning-button class ="slds-m-around_small" variant="neutral" label="Call API "  onclick={handleBtnClick}></lightning-button>
         <c-sample-child-component-one msg-from-parent="child component Variable updated from parent component!"></c-sample-child-component-one>
         <c-sample-child-component-two color-data-details = {dataDetails}></c-sample-child-component-two>
+        <c-sample-child-component-three response = {apiResponse}></c-sample-child-component-three>
     </lightning-card>
 </template>
