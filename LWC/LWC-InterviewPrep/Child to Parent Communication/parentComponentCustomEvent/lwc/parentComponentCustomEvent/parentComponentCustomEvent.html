@@ -1,0 +1,9 @@
+<template>
+    <lightning-card title="PARENT COMPONENT">
+        <div class="slds-box slds-m-around_small">
+            <lightning-button variant="brand" label="Parent Button" onclick={handleParentClick}></lightning-button>
+            <p>{msg}</p>
+            <c-child-component-one-custom-event  onevent={handleEventClick} ></c-child-component-one-custom-event>
+        </div>
+    </lightning-card>
+</template>
