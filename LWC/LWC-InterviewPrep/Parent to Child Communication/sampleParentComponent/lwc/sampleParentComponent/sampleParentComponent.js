@@ -35,12 +35,14 @@ export default class SampleParentComponent extends LightningElement {
             "year": 2005
         }
     ]
-   
     handleBtnClick(){
         getResponse({}).then(result=>{
             console.log(JSON.parse(result).count);
             this.apiResponse = JSON.stringify(result);
             console.log('OUTPUT : ',this.apiResponse);
         })
+    }
+    handleBackgroundChangeClick(){
+       this.template.querySelector('c-sample-child-component-four').changeBackground();
     }
 }
