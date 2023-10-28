@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Child Component Two">
+        <div class="slds-box slds-m-around_small">            
+            <p class="slds-p-horizontal_small">Click account names to see details in parent component</p>
+        </div>
+        <div class="slds-box slds-m-around_small">            
+            <template for:each={recordList} for:item="acc">
+                <div key = {acc.Id} class="slds-border_bottom slds-m-around_small" data-id={acc.Id} onclick={accClick} >
+                    {acc.Name}
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

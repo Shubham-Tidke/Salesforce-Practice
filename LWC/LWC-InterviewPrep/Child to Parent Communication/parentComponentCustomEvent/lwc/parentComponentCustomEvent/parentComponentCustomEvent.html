@@ -3,7 +3,11 @@
         <div class="slds-box slds-m-around_small">
             <lightning-button variant="brand" label="Parent Button" onclick={handleParentClick}></lightning-button>
             <p>{msg}</p>
+            <template if:true={selectedAccount}>
+                <p class="slds-box slds-m-around_small">SELECTED ACCOUNT IS : {selectedAccount.Name} WITH REVENUE : {selectedAccount.AnnualRevenue} </p>
+            </template>
             <c-child-component-one-custom-event  onevent={handleEventClick} ></c-child-component-one-custom-event>
-        </div>
+            <c-child-component-two-custom-event onaccountclick={getAccountDetails} record-list={accountRecs}></c-child-component-two-custom-event>
+        </div>        
     </lightning-card>
 </template>
