@@ -1,0 +1,14 @@
+<template>
+    <lightning-card>
+            
+            <lightning-modal-header label="LIGHTNING MODAL"></lightning-modal-header>
+                <lightning-modal-body>
+                    <p>STATIC CONTENT IN MODAL</p>
+                    <lightning-input type="text" variant="standard" name="name" label="Input" placeholder="type here..." onchange={handleInput}></lightning-input>
+                </lightning-modal-body>
+                <lightning-modal-footer>
+                    <lightning-button variant="neutral" label="Submit Input" title="titleName" onclick={handleSubmitClick}></lightning-button>
+                </lightning-modal-footer>
+        
+    </lightning-card>
+</template>
