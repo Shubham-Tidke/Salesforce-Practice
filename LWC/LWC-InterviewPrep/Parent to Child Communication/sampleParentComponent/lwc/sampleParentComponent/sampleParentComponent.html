@@ -1,11 +1,16 @@
 <template>
-    <lightning-card>
+    <lightning-card title="PARENT COMPONENT">
+        <div class="slds-box slds-m-around_small">
         <p class="slds-text-align_center">{parentComponentMsg}</p>
         <lightning-button class ="slds-m-around_small" variant="neutral" label="Call API"  onclick={handleBtnClick}></lightning-button>
-        <lightning-button class ="slds-m-around_small" variant="neutral" label="Change comp 4 background to aqua "  onclick={handleBackgroundChangeClick}></lightning-button>
+       
         <c-sample-child-component-one msg-from-parent="child component Variable updated from parent component!"></c-sample-child-component-one>
         <c-sample-child-component-two color-data-details = {dataDetails}></c-sample-child-component-two>
-        <c-sample-child-component-three response = {apiResponse}></c-sample-child-component-three>
+        <template if:true={btnClicked}>
+            <c-sample-child-component-three response = {apiResponse} onclose={handleClose}></c-sample-child-component-three>
+        </template>
+        <lightning-button class ="slds-m-around_small" variant="neutral" label="Change comp 4 background to aqua "  onclick={handleBackgroundChangeClick}></lightning-button>
         <c-sample-child-component-four></c-sample-child-component-four>
+        </div>
     </lightning-card>
 </template>
