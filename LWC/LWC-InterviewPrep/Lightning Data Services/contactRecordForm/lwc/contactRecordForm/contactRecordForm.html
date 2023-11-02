@@ -1,0 +1,19 @@
+<template>
+    <lightning-record-edit-form
+        record-id={recordId}
+        object-api-name="Contact">
+        <div class="slds-box slds-theme_default">
+            <lightning-output-field field-name="Name"></lightning-output-field>
+            <lightning-output-field field-name="Phone"></lightning-output-field>
+            <lightning-output-field field-name="Email"></lightning-output-field>
+        </div>
+    </lightning-record-edit-form>
+    <lightning-card title="Record form">    
+        <lightning-record-form
+            object-api-name="Contact"
+            record-id={recordId}
+            fields={fields}
+        >
+        </lightning-record-form>
+     </lightning-card>
+</template>
