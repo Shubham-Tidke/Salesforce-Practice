@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title="Lightning Record Form to create Contacts">
+       <lightning-record-form
+           object-api-name = {sObject}
+           fields = {fields}
+           onsuccess={handleFormSuccess}>
+       </lightning-record-form>
+    </lightning-card>
+    <template if:true={id}>
+    <lightning-card title="Lightning Record From to view records">
+       <lightning-record-form
+        record-id = {id}
+        object-api-name = {sObject}
+        fields = {fields}
+        mode = 'readonly'>
+       </lightning-record-form>   
+    </lightning-card>
+    </template>
+</template>
