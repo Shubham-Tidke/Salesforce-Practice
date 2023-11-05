@@ -1,0 +1,13 @@
+<template>
+    <lightning-layout multiple-rows>
+        <lightning-layout-item>
+            <lightning-button variant="brand" label="previous" icon-name="utility:chevronleft" onclick={handlePrevClick} disabled={handlePrevDisable}></lightning-button>
+        </lightning-layout-item>
+        <lightning-layout-item flexibility="grow">
+            <div class="custom-box">PAGE NUMBER : {currentPage}</div>
+        </lightning-layout-item>
+        <lightning-layout-item>
+            <lightning-button variant="brand" label="next" icon-name="utility:chevronright" icon-position="right" onclick={handleNextClick} disabled={handleNextDisable}></lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

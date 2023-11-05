@@ -1,0 +1,10 @@
+<template>
+    <lightning-card  title="Pagination on contact">
+        <template for:each={visibleContacts} for:item="con">
+            <p class="slds-p-around_medium" key={con.Id}>{con.Name}</p>
+        </template>
+        <div slot="footer">
+            <c-pagination records={contacts} onupdate={updateContactHanlder}></c-pagination>
+        </div>
+    </lightning-card>
+</template>
