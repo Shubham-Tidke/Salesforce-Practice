@@ -1,0 +1,73 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    
+    <div style="background-color: rgb(37, 2, 52);">
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="4" padding="around-small">
+                <!-- <div class="custom-box">1</div> -->
+            </lightning-layout-item>
+            <lightning-layout-item size="4" padding="around-small" >
+                <template if:false={weatherResponse}>
+                    <div class="slds-box " style="font-weight: bold; background-color: white;">
+                        <!-- <template if:false={weatherResponse}> -->
+                            <div class="slds-align_absolute-center">WEATHER APP</div>
+                            <div class="slds-m-top_medium">
+                                <lightning-input 
+                                type="text"
+                                placeholder = "Enter Your city"
+                                variant="label-hidden"
+                                onchange={handleCityInput}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-text-align_center slds-m-top_medium">
+                                <button 
+                                    class="slds-button slds-text-align_center"
+                                    type="submit" 
+                                    style="color: white; background-color: rgba(255, 4, 4, 0.875); width: 100%; display: flow;" 
+                                    onclick={searchCityHandler}
+                                    >Search
+                                </button>
+                            </div>
+                        <!-- </template>  -->
+                    </div>
+                </template>             
+                
+                <template if:true={weatherResponse}>
+                    <template if:true={statusCode}>
+                        <div class="slds-box " style="font-weight: bold; background-color: white;">
+                            <div class="slds-align_absolute-center">WEATHER APP</div>
+                            <div class="slds-align_absolute-center" style="font-size: x-large;">{cityTempreature} °C</div>
+                            <div class="slds-align_absolute-center"><lightning-icon 
+                              icon-name="utility:checkin" 
+                              size = 'small'
+                            ></lightning-icon>{location}</div>
+                             
+                        </div>
+                    </template>
+                    <template if:false={statusCode}>
+                        <div class="slds-box " style="font-weight: bold; background-color: white;">
+                            <div class="slds-align_absolute-center">WEATHER APP</div>
+                            CITY NOT FOUND!! 
+                        </div>
+                    </template>
+                </template>
+            </lightning-layout-item>
+            <lightning-layout-item size="4" padding="around-small">
+                <!-- <div class="custom-box">3</div> -->
+            </lightning-layout-item>
+            
+        </lightning-layout>
+      
+      <div slot="actions">
+    
+      </div>
+      <div>
+        <!-- Card Body  -->
+        
+      </div>
+      <div slot="footer">
+    
+      </div>
+    </div>
+    
+</template>
