@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="DATATABLE">
+        <lightning-datatable
+            key-field="id"
+            data={visibleData}
+            show-row-number-column
+            columns={columns}
+            onrowaction={handleRowAction}>
+        </lightning-datatable>
+        <div slot="footer">
+            <c-pagination records={accData} onupdate={updateAccountHanlder}></c-pagination>
+        </div>
+    </lightning-card>
+</template>
