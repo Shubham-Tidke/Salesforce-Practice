@@ -1,4 +1,7 @@
 import { LightningElement } from 'lwc';
+import 	rainy from '@salesforce/resourceUrl/rainy';
+import cloud from '@salesforce/resourceUrl/cloud';
+import clearSky from '@salesforce/resourceUrl/clearSky';
 const APPID = 'ab99b6855b103cd8ffa9117873cfae2f';
 const options = {
 	method: 'GET',
@@ -16,6 +19,10 @@ export default class WeatherApp extends LightningElement {
     humidity;
     weatherDescription;
     statusCode = false;
+    clearSkyLogo = clearSky;
+    cloudLogo = cloud;
+    rainyLogo = rainy;
+    weatherLogo;
     //clear,clouds,rain
     handleCityInput(event){
         //console.log("city : ",event.target.value);
@@ -33,15 +40,25 @@ export default class WeatherApp extends LightningElement {
             console.log(data);
             if(data.cod == 200)
                 this.statusCode = true;
-            else
-                this.statusCode = false;
+            else{
+               this.statusCode = false;
+               this.weatherLogo = this.clearSkyLogo; 
+            }
+                
             this.weatherResponse = true;
             this.cityTempreature = Math.ceil(data.main.temp - 273.15);
             this.feelsLike = data.main.feels_like;
             this.location = data.name+','+data.sys.country;
             this.humidity = data.main.humidity;
             this.weatherDescription = data.weather[0].description;
-            console.log(this.weatherResponse.weather[0].main);
+            if(data.weather[0].main === 'Clear'){
+                this.weatherLogo = this.clearSkyLogo;
+            }else if(data.weather[0].main === 'Rain'){
+                this.weatherLogo = this.rainyLogo;
+            }else{
+                this.weatherLogo = this.cloudLogo;
+            }
+
             if(lwcInputFields){
                 lwcInputFields.forEach(field =>{
                     field.value = null;

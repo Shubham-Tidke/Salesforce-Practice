@@ -42,23 +42,41 @@
                                     style="float:left;"
                                     onclick={handleBackClick}>
                                     </lightning-icon>WEATHER APP</div>
+                        <div class="slds-align_absolute-center">
+                                    <img src={weatherLogo} style="width:20%">
+                        </div>
                         <template if:true={statusCode}>
-                            <div class="slds-align_absolute-center" style="font-size: x-large;">{cityTempreature} °C</div>
-                            <div class="slds-align_absolute-center slds-p-around_small">
-                                <lightning-icon 
+                            <!-- <div class="slds-box " style="font-weight: bold; background-color: white;"> -->
+                                <!-- <div class="slds-align_absolute-center">
+                                    <lightning-icon 
+                                    icon-name="utility:back" 
+                                    size = 'x-small'
+                                    class="slds-m-around_medium"
+                                    style="float:left;"
+                                    onclick={handleBackClick}>
+                                    </lightning-icon>WEATHER APP</div> -->
+                                
+                                <div class="slds-align_absolute-center" style="font-size: x-large;">{cityTempreature} °C</div>
+                                <div class="slds-align_absolute-center" style="font-size: large;">{weatherDescription}</div>
+                                <div class="slds-align_absolute-center slds-p-around_small"><lightning-icon 
                                 icon-name="utility:checkin" 
                                 size = 'x-small'
-                                ></lightning-icon>{location}
-                            </div>
+                                ></lightning-icon>{location}</div>
+                                
+                            <!-- </div> -->
                         </template>
                         <template if:false={statusCode}>
-                            <div class="slds-align_absolute-center">CITY NOT FOUND! TRY AGAIN.</div>
+                            <!-- <div class="slds-box " style="font-weight: bold; background-color: white;"> -->
+                            <!-- <div class="slds-align_absolute-center">WEATHER APP</div> -->
+                                <div class="slds-align_absolute-center">CITY NOT FOUND! TRY AGAIN.</div>
+                                
+                            <!-- </div> -->
                         </template>
                     </div>
                 </template>
             </lightning-layout-item>
             <lightning-layout-item size="4" padding="around-small">
-               
+                <!-- <div class="custom-box">3</div> -->
             </lightning-layout-item>
             
         </lightning-layout>
