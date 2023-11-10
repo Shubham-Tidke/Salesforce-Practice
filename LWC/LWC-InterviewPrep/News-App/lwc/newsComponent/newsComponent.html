@@ -1,5 +1,27 @@
 <template>
 <lightning-card  >
-    
+    <!-- <p class="slds-p-around_small">{newsData}</p> -->
+    <lightning-layout multiple-rows>
+            <template for:each={newsData} for:item="news">
+                <lightning-layout-item  key={news.url}   size="12" padding="around-small" small-device-size="12" medium-device-size="4" large-device-size="4" >
+                    <div class="slds-box box-border" data-id={news.url}   onclick={newsClickHandler} style="min-height: 400px;max-height:400px">
+                        <span class="slds-align_absolute-center slds-p-around_small">
+                            <template if:true={news.urlToImage}>
+                                <img src={news.urlToImage}/>
+                            </template>
+                            <template if:false={news.urlToImage}>
+                                <img src={img}/>
+                            </template>
+                        </span>   
+                        <span class="slds-align_absolute-center slds-p-around_small">
+                            {news.title}
+                        </span>
+                        <span class="slds-align_absolute-center slds-p-around_small">
+                            {news.Description}
+                        </span> 
+                    </div>
+                </lightning-layout-item>
+            </template>    
+        </lightning-layout>
 </lightning-card>
 </template>
