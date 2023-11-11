@@ -1,7 +1,25 @@
 trigger ContactTrigger on Contact (before insert,before update,before delete,after insert,after update,after delete,after undelete) {
-    if(trigger.isInsert || trigger.isUpdate){
+   /* if(trigger.isUpdate && trigger.isAfter){
+        system.debug('code here');
+        contactTriggerHandler.updateAccountDescription(trigger.new,trigger.oldMap);
+    }*/
+    if(trigger.isAfter && (trigger.isInsert || trigger.isUndelete)){
+		contactTriggerHandler.rollUpContactsAfterInsert(trigger.new); 
+	}
+    if(trigger.isAfter && trigger.isUpdate){
+		contactTriggerHandler.rollUpContactsAfterUpdate(trigger.new,trigger.oldMap);
+	}
+    if(trigger.isDelete){
+		contactTriggerHandler.rollUpContactsAfterDelete(trigger.old,trigger.oldMap);
+	}
+     // if(trigger.isInsert || trigger.isdelete || trigger.isUndelete){
+     //   ContactTriggerHandler.countContactsToAccount(trigger.new,trigger.old);
+   //     }  
+   
+   
+   /* if(trigger.isInsert || trigger.isUpdate){
         if(trigger.isInsert && trigger.isAfter){
-            system.debug('NEW : '+trigger.new);
+            //system.debug('NEW : '+trigger.new);
             ContactTriggerHandler.sendMailToContact(trigger.new);
         }
         if(trigger.isAfter){
@@ -10,19 +28,19 @@ trigger ContactTrigger on Contact (before insert,before update,before delete,aft
     }
     else if(trigger.isDelete){
         if(trigger.isBefore){
-            system.debug('BEFORE DELETE TRIGGER');
-            system.debug('OLDMAP : '+trigger.oldMap);
-            system.debug('OLD : '+trigger.old);
+            //system.debug('BEFORE DELETE TRIGGER');
+            //system.debug('OLDMAP : '+trigger.oldMap);
+           // system.debug('OLD : '+trigger.old);
             ContactTriggerHandler.beforeContactDelete(trigger.old,trigger.oldMap);
         }else{
-            system.debug('AFTER DELETE TRIGGER');
+            //system.debug('AFTER DELETE TRIGGER');
             ContactTriggerHandler.afterContactDelete(trigger.old);
         }
     }
     else if(trigger.isUndelete){
         if(trigger.isAfter){
-            system.debug('AFTER UNDELETE TRIGGER : '+trigger.new);
+            //system.debug('AFTER UNDELETE TRIGGER : '+trigger.new);
             ContactTriggerHandler.afterContactUndelete(trigger.new);
         }
-    }
+    }*/
 }
