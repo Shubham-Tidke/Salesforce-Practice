@@ -1,0 +1,70 @@
+Deloitte USI
+
+Q.1 Write a Query to get all contacts related to an account 
+	ANS : Select Id,Name ,(Select Id from Contacts) from account]
+	
+	Q.1.1 : What will be the query if we have any custom object instead of contacts (custom_object__r)
+
+Q.2 What kind of relationship does account and contact has ?
+
+Q.3  Consider there are 2 users with same profile,USER A USER B .User A has access to a record, user b has no access to the same, What would be the case?
+
+Q.4 We have a checkbox field on contact.If the field is checked record should be read-only . How to achieve it?
+	ANS : Record type ,Validation Rules,Trigger
+
+Q.5 We have a junction object record for object A,object B. What will happen to the junction object record if we delete record A.
+
+Q.6 Write a trigger to get count of contacts on Account object.
+
+	trigger contactTrigger on Contact(after insert,after update,after delete,after undelete){
+		
+	}
+	public class ContactHandler {
+		set<Id>accs = new Set<Id>();
+		List<Account>accList = new List<Account>();
+		public static updateCount(List<Contact>conList){
+			for(Contact c : conList){
+				if(c.AccountId != null){
+					accs.add(c.AccountId);
+				}
+			}
+			for(Account a :[Select Id (Select Id From Contacts) From Account WHERE Id  IN : accs]){
+				a.countOfContacts__c = a.Contacts.size();
+				accList.add(a);
+			}
+			try{
+				Database.saveResult[] result = database.Update(accList);
+				for(Database.saveResult sr : result){
+					if(!sr.isSuccess()){
+						for(Database.Error er : sr.getErrors()){
+							system.debug(er);
+						}
+					}
+				}
+			}
+			catch(Exception e){
+				system.debug(e);
+			}
+		}
+	}
+	
+Q.7 Difference between '==' and '==='
+
+	JS question
+	123 == '123'
+	123 === '123'
+
+Q.8 X = false, Y = '0', Z = 0  (x==y ??) (x==z ??)
+
+Q.9 arr = [1,2,3,4,5] arr.filter(x => x >= 3) ??
+
+Q.10 Can we call a batch apex inside a batch
+
+Q.11 How to get the failed record ids from the batch apex. (Database.Stateful)
+	AsyncApexjob iD = [SELECT id,no of errors from asysncApex where  id:Bc.getJobId()]
+
+Q.12 We have a Lightning input with 'required' tag. what will happen if we dont submit without giving input to that field?
+
+Q.13 We have lightning record edit form on a object which shows 10 fields. if user has access to 5 field what will user sees on form ? [Does LDS supports sharing rule and FLS ?]
+
+Q.14. When we use test.isRunning
