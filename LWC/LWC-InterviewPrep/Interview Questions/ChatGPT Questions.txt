@@ -1,0 +1,101 @@
+Probable Questions
+Explain the MVC (Model-View-Controller) architecture in Salesforce.
+What is the difference between a Trigger and a Workflow in Salesforce?
+Describe the various types of sandboxes in Salesforce and their use cases.
+Explain the difference between a Role and a Profile in Salesforce.
+What is the purpose of the "Master-Detail" relationship in Salesforce?
+How can you schedule a job in Salesforce?
+What is the difference between SOQL and SOSL?
+Explain the purpose of a governor limit in Salesforce.
+How can you handle bulk data processing in Salesforce?
+What is the significance of the "Lookup Relationship" in Salesforce?
+What is the importance of the "Roll-up Summary" field in Salesforce?
+Explain the use of the Schema Builder in Salesforce.
+What is the difference between a Formula Field and a Roll-up Summary Field?
+Describe the use of the @future annotation in Apex.
+Explain the benefits of using a Salesforce Community.
+How can you deploy code between Salesforce environments?
+What is a Salesforce Lightning Component?
+Explain the concept of governor limits in Salesforce.
+How do you handle security in Salesforce?
+Describe the Salesforce Data Model.
+
+
+
+-> What is Lightning Web Component (LWC)?
+-> Explain the key features and benefits of LWC.
+-> How is LWC different from Aura Components?
+-> Compare the architecture, performance, and development approach of LWC and Aura Components.
+-> What is the lifecycle of an LWC component?
+-> Describe the different phases in the lifecycle of an LWC component.
+-> What are the key decorators in LWC?
+-> Explain the purpose and usage of decorators like @api, @track, @wire, etc.
+-> What is the Shadow DOM, and how does it relate to LWC?
+-> Discuss the concept of Shadow DOM and its role in LWC.
+-> How do you communicate between components in LWC?
+-> Explain the various methods for component communication, such as using events, properties, and the Lightning Message Service.
+-> What are the best practices for LWC development?
+-> Discuss coding standards, performance optimization, and other best practices for LWC development.
+-> Explain the concept of Lightning Data Service (LDS).
+-> Describe how LDS is used for data retrieval and manipulation in LWC.
+-> How do you handle errors in Lightning Web Components?
+-> Discuss error handling techniques and best practices in LWC.
+-> What is the role of Apex in LWC development?
+-> Explain how LWC interacts with Apex classes for server-side actions.
+-> What is the Lightning App Builder, and how can LWC be used in it?
+-> Discuss the integration of LWC components into the Lightning App Builder.
+-> How can you make an LWC component available for use in the Lightning App Builder?
+-> Explain the steps to expose an LWC component to be used in the Lightning App Builder.
+-> Describe the use of the Lightning Design System (SLDS) in LWC.
+-> Discuss how SLDS is utilized for consistent styling in Lightning Web Components.
+-> What is the difference between imperative and declarative programming in LWC?
+-> Compare the use of imperative and declarative programming in LWC and provide examples.
+
+
+How do you handle client-side events in LWC?
+
+Explain the process of handling browser events in LWC, including the use of event listeners.
+What is the purpose of the connectedCallback method in LWC?
+
+Describe when the connectedCallback lifecycle hook is invoked and how it can be used in LWC.
+How can you optimize the performance of LWC components?
+
+Discuss techniques for improving the performance of LWC, including code splitting, lazy loading, and minimizing rendering cycles.
+Explain the role of the Lightning App Builder in LWC development.
+
+Discuss how admins can use the Lightning App Builder to create custom user interfaces using LWC components.
+What is the difference between the lightning-record-edit-form and lightning-record-view-form in LWC?
+
+Compare the use cases and functionality of these two base components for working with Salesforce records.
+How can you implement conditional rendering in LWC?
+
+Discuss the different approaches for conditionally rendering elements or components based on certain criteria.
+What is the significance of the @api decorator in LWC?
+
+Explain how the @api decorator is used to expose properties and methods in LWC for parent-child component communication.
+How do you handle security considerations in LWC development?
+
+Discuss best practices for handling security concerns, such as preventing Cross-Site Scripting (XSS) vulnerabilities.
+What is the role of the Lightning Message Service in LWC?
+
+Explain how the Lightning Message Service facilitates communication between LWC components on different parts of a page or in different tabs.
+Can you provide an example of using wire adapters in LWC?
+
+Give a practical example of using the @wire decorator to fetch data from Salesforce or a custom Apex method.
+How do you deploy LWC components between Salesforce environments?
+
+Discuss the deployment process and tools used to move LWC components from a sandbox to a production environment.
+Explain the concept of local development with LWC.
+
+Discuss how the Salesforce CLI and local development server can be used for developing and testing LWC components locally.
+What is the Locker Service in the context of LWC?
+
+Explain the purpose of Locker Service and how it enhances security by isolating components in the DOM.
+How can you handle errors in Apex methods called from LWC components?
+
+Discuss error handling strategies, including the use of try-catch blocks and displaying error messages in the UI.
+What are the considerations when working with Lightning Web Components for mobile devices?
+
+Discuss responsive design principles and considerations when developing LWC components for mobile users.
+
+
