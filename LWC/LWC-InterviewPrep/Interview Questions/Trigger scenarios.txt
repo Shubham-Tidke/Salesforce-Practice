@@ -1,0 +1,384 @@
+** Account Phone field cannot be empty.
+
+trigger accountTrigger on Account (before insert){
+	if(trigger.isBefore && trigger.isInsert){
+		AccountTriggerHandler.checkPhoneField(trigger.new);
+	}
+}
+
+Public Class AccountTriggerHandler{
+	public static void checkPhoneField(List<Account> accList){
+		if(!accList.isEmpty()){
+			for(Account acc : accList){
+				if(acc.Phone == null){
+					acc.Phone.addError('Phone field is empty.');
+				}
+			}
+		}
+	}
+}
+
+** Account billing address to account shipping address
+
+trigger AccountTrigger on Account(before insert){
+	if(trigger.isBefore && trigger.isInsert && trigger.isUpdate){
+		AccountTriggerHandler.insertShippingAddress(trigger.new);
+	}
+}
+Public Class AccountTriggerHandler{
+	public static void insertShippingAddress(List<Account>accList){
+		if(!accList.isEmpty()){
+			for(Account acc : accList){
+				acc.shippingCity = acc.billingCity;
+				acc.shippingState = acc.billingState;
+				acc.shippingCountry = acc.billingCountry;
+			}
+		}
+	}
+}
+
+**if Account phone updated,update all related contact's phone [UPDATING CHILD RECORD FROM PARENT]
+
+trigger AccountTrigger on Account(after update){
+	if(trigger.isAfter && trigger.isUpdate){
+		AccountTriggerHandler.updateRelatedContactsPhone(trigger.new,trigger.oldMap);
+	}
+}
+public class AccountTriggerHandler{
+	public static void updateRelatedContactsPhone(List<Account> accList,Map<Id,Account>accMap){
+		Map<Id,Account>updatedAccountMap = new Map<Id,Account>();
+		List<Contact>updatedConList = new List<Contact>();
+		if(!accList.isEmpty()){
+			for(Account acc : accList){
+				if(acc.Phone != accMap.get(acc.Id).Phone){
+					updatedAccountMap.put(acc.Id,acc)
+				}
+			}
+			for(Contact c : [SELECT Id,Phone,AccountId FROM Contact WHERE AccountId :accMap.keySet()]){
+				c.Phone = accMap.get(c.AccountId).Phone;
+				updatedConList.add(c);
+			}
+		}
+		try{
+			Database.SaveResult[] result = Database.update(updatedConList);
+			for(Database.SaveResult res : result){
+				if(!res.isSuccess()){
+					for(Database.Error err : res.getErrors()){
+							system.debug(err);
+					}
+				}
+			}
+		}
+		Catch(Exception e){
+			system.debug(e);	
+		}
+	}
+}
+
+*** UPDATE PARENT BY CHILD : UPDATE ACCOUNT'S DESCRIPTION WHEN RELATED CONTACT DESCRIPTION GETS UPDATED
+
+trigger contactTrigger on contact(after update){
+	if(trigger.isUpdate && trigger.isAfter){
+		contactTriggerHandler.updateAccountDescription(trigger.new,trigger.oldMap);
+	}
+}
+public class contactTriggerHandler{
+	public static void updateAccountDescription(List<Contact>conList , Map<Id,Contact>conMap){
+		set<Id>accIds = new Set<Id>();
+		List<Account>accToUpdate = new List<Account>();
+		for(Contact con : conList){
+			if(con.Description != conMap.get(con.Id).Description && con.AccountId != null){
+				accIds.add(con.AccountId);
+			}
+		}
+		Map<Id,Account>accMap = new Map<Id,Account>[SELECT Id,Description FROM Account WHERE Id IN : accIds];
+		for(Contact con : conList){
+			accMap.get(con.AccountId).Description = con.Description;
+			accToUpdate.add(accMap.get(con.AccountId));
+		}
+		try{
+			Database.SaveResult[] result = Database.update(accToUpdate);
+			for(Database.SaveResult res : result){
+				if(!res.isSuccess()){
+					for(Database.Error err : res.getErrors()){
+							system.debug(err);
+					}
+				}
+			}
+		}
+		Catch(Exception e){
+			system.debug(e);	
+		}
+	}
+}
+
+***Rollup Summary Trigger on Account [total contacts assosiated]
+
+trigger contactTrigger on Contact(after insert,after update,after delete,after undelete){
+	if(trigger.isAfter && (trigger.isInsert || trigger.isUndelete)){
+		contactTriggerHandler.rollUpContactsAfterInsert(trigger.new); 
+	}
+	if(trigger.isAfter && trigger.isUpdate){
+		contactTriggerHandler.rollUpContactsAfterUpdate(trigger.new,trigger.oldMap);
+	}
+	if(trigger.isDelete){
+		contactTriggerHandler.rollUpContactsAfterDelete(trigger.old,trigger.oldMap);
+	}	
+}
+Public class contactTriggerHandler{
+	public static void rollUpContactsAfterInsert(List<Contact>conList){
+		Set<Id>accIds = new Set<Id>();
+		for(Contact con :conList){
+			if(con.AccountId != null){
+				accIds.add(con.AccountId);
+			}
+		}
+		updateContactsOnAccount(accIds);
+	}
+	public static void rollUpContactsAfterUpdate(List<Contact>conList,Map<Id,Contact>conMap){
+		Set<Id>accIds = new Set<Id>();
+		for(Contact con : conList){
+			if(con.AccountId != conMap.get(con.Id).AccountId){
+				accIds.add(con.AccountId);
+				accIds.add(conMap.get(con.Id).AccountId);
+			}
+		}
+		if(!accIds.isEmpty()){
+			updateContactsOnAccount(accIds);
+		}
+	}
+	public static void rollUpContactsAfterDelete(List<Contact>conList,Map<Id,Contact>conMap){
+		Set<Id>accIds = new Set<Id>();
+		for(Contact con : conList){
+			if(con.AccountId != null){
+				accIds.add(con.AccountId);
+			}
+		}
+		if(!accIds.isEmpty()){
+			updateContactsOnAccount(accIds);
+		}	
+	}
+	public static void updateContactsOnAccount(Set<Ids>accIds){
+		List<Account>accList =  [SELECT Id,No_of_Contacts__c ,(SELECT Id FROM Contacts) FROM Account WHERE Id IN : accIds];
+		if(!accList.isEmpty()){
+			for(Account acc : accList){
+				acc.No_of_Contacts__c = acc.Contacts.size();
+			}
+		}
+		try{
+			Database.SaveResult[] result = Database.update(accList, TRUE);
+			for(Database.SaveResult res : result){
+				if(res.isSuccess()){
+					system.debug('Contacts updated for : '+res.getId());
+				}
+				else{
+					for(Database.Error err : res.getErrors()){
+						System.debug('Error : '+err);
+					}
+				}
+			}
+		}Catch(Exception e){
+			system.debug(e);
+		}
+	}
+	
+}
+** Duplicate Account Name
+trigger accountTrigger on Account(before insert,before update){
+	if(trigger.isBefore && (trigger.isInsert || trigger.isUpdate)){
+		AccountTriggerHandler.checkDuplicateName(trigger.new);
+	}
+}
+
+public class AccountTriggerHandler{
+	public static void checkDuplicateName(List<Account>accList){
+		List<Account>existingAccs = [SELECT Id,Name FROM Account WHERE Name IN:accList];
+		if(!existingAccs.isEmpty){
+			for(Account acc:existingAccs){
+				acc.addError('Account with same name exists');
+			}
+		}
+	}
+}
+
+** create related contact with same phone on Account when custom checbox is checked.
+
+trigger accountTrigger on Account(after insert,after update){
+	if(trigger.isAfter && (trigger.isInsert || trigger.isUpdate)){
+		AccountTriggerHandler.createContactOnCheckbox(trigger.new);
+	}
+}
+public class AccountTriggerHandler{
+	public static createContactOnCheckbox(List<Account>accList){
+	list<contact> conList = new list<contact>();
+		for(Account acc : accList){
+			if(acc.checbox__c == true){
+				Contact c = new Contact();
+				c.lastName = 'abc';
+				c.AccountId = acc.Id;
+				c.phone = acc.phone;
+				conList.add(c);
+			}
+		}
+		try{
+			Database.SaveResult[] result = Database.insert(conList, TRUE);
+			for(Database.SaveResult res : result){
+				if(res.isSuccess()){
+					system.debug('Contacts updated for : '+res.getId());
+				}
+				else{
+					for(Database.Error err : res.getErrors()){
+						System.debug('Error : '+err);
+					}
+				}
+			}
+		}Catch(Exception e){
+			system.debug(e);
+		}
+	}
+}
+** Opportunity rollup summary on Account 
+
+trigger opportunityTrigger on Opportunity(after insert,after update,after delete,after undelete){
+	if(trigger.isAfter){
+		if(trigger.isInsert || trigger.isUndelete){
+			OpportunityTriggerHandler.updateAmountOnInsert(trigger.new);
+		}
+		if(trigger.isUpdate){
+			OpportunityTriggerHandler.updateAmountOnUpdate(trigger.new,trigger.oldMap);
+		}
+		if(trigger.isDelete){
+			OpportunityTriggerHandler.updateAmountOnDelete(trigger.old);
+		}
+	}
+	public class OpportunityTriggerHandler{
+		Set<Id>accIds = new Set<Id>();
+		public static void updateAmountOnInsert(List<opportunity>oppList){
+			
+			for(Opportunity opp :oppList){
+				accIds.add(opp.AccountId);
+			}
+		}
+		updateAmountOnUpdate(List<opportunity>oppList,Map<Id,Opportunity>oppMap){
+			for(Opportunity opp:oppList){
+				if(opp.AccountId != oppMap.get(opp.Id).AccountId){
+					accIds.add(opp.AccountId);
+					accIds.add(oppMap.get(opp.Id).AccountId));
+				}else{
+					accIds.add(opp.AccountId);
+				}
+			}
+		}
+		updateAmountOnDelete(List<opportunity>oppList){
+			for(Opportunity opp :oppList){
+				accIds.add(opp.AccountId);
+			}
+		}
+		if(!accIds.isEmpty()){
+			List<Account>accToBeUpdated  = new List<Account>();
+			Map<Id, Decimal> IdToRevenue = new Map<Id, Decimal>();
+			for(Opportunity opp : [SELECT Id,Amount,AccountId FROM Opportunity WHERE AccountId IN :accIds]){
+				Decimal total  = 0;
+				if(IdToRevenue.containsKey(opp.AccountId)){
+					total = IdToRevenue.get(opp.AccountId);
+				}
+				if(opp.Amount != null){
+					total = total + opp.Amount;
+				}
+				IdToRevenue.put(opp.AccountId,total);
+			}
+			if(!IdToRevenue.isEmpty()){
+				for(Id i: IdToRevenue.keySet()){
+					Account acc = new Account();
+					acc.id = i;
+					acc.AnnualRevenue = IdToRevenue.get(i);
+					accToBeUpdated.add(acc);
+				}
+			}
+		}
+		
+	}
+}
+
+** If opportunity amount > 10,000 make related account rating hot
+
+trigger OpportunityTrigger on Opportunity(after insert,after update){
+	if(trigger.isAfter && (trigger.isInsert || trigger.isUpdate)){
+		opportunityTriggerHandler.updateAccountRating(trigger.new);
+	}
+}
+public class opportunityTriggerHandler{
+	public static void updateAccountRating(List<Opportunity>oppList){
+	List<Account>accList = new List<Account>();
+		for(Opportunity opp:oppList){
+			if(opp.AccountId !=null && opp.Amount > 10000){
+				Account a = new Account();
+				a.Id = opp.AccountId;
+				a.Rating = 'Hot';
+				accList.add(a);
+			}
+		}
+		try{
+			Database.saveResult[] res = Database.Update(accList);
+			for(Database.SaveResult sr : res){
+				if(!sr.isSuccess()){
+					for(Database.Error er : sr.getErrors()){
+						System.debug(er);
+					}
+				} 
+			}
+		}
+		Catch(Exception e){
+		}
+		
+	}
+}
+
+** UPDATE STAGE OF OPPORTUNITIES RELATED TO AN ACCOUNT CLOSED LOST IF OPPORTUNITY IS NOT CLOSED WON AND CREATED DATE > 30 DAYS
+
+trigger accountTrigger on Account(after update){
+	if(trigger.isAfter && trigger.isUpdate){
+		accountTriggerHandler.updateOpportunityStage(trigger.new);
+	}
+}
+public class accountTriggerHandler{
+	List<Opportunity>oppToUpdate = new List<Opportunity>();
+	public void updateOpportunityStage(list<Account>accList){
+		for(Opportunity opp : [SELECT Id,AccountId FROM Opportunity WHERE AccountId IN :accList]){
+			if(Opp.stage != 'closed Won' && Opp.CreatedDate - System.today() > 30){
+				opp.stage = 'closed lost';
+				oppToUpdate(opp);
+			}
+		}	
+	}
+	try{
+		Database.SaveResult[] result = Database.update(oppToUpdate);
+		for(Database.saveResult sr : result){
+			if(!sr.isSuccess()){
+				for(Database.Error err : sr.getErrors()){
+					debug(err);
+					//error framework record;
+				}
+			}
+		}
+	}
+	catch(Exception e){
+		
+	}
+}
+
+*** PREVENT USER FROM DELETING AN ACCOUNT WITH CONTACT RELATED TO IT
+trigger accountTrigger on Account(before delete){
+	if(trigger.isBefore && trigger.isDelete){
+		accountTriggerHandler.preventAccountDelete(trigger.old);
+	}
+}
+public class accountTriggerHandler{
+	public void preventAccountDelete(List<Account>accList){
+		for(Account acc : accList){
+			if(acc.No_of_Contacts__c > 0 && acc.No_of_Contacts__c != null){
+				acc.addError('Account with related contacts cannot be deleted!');
+			}
+		}
+	}
+}
