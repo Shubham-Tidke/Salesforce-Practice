@@ -7,7 +7,7 @@ Q.1 Write a Query to get all contacts related to an account
 
 Q.2 What kind of relationship does account and contact has ?
 
-Q.3  Consider there are 2 users with same profile,USER A USER B .User A has access to a record, user b has no access to the same, What would be the case?
+Q.3  Consider there are 2 users with same profile,USER A USER B .User A has access to a record, user b has no access to the same, What would be the case?[Manual sharing,sharing rule etc]
 
 Q.4 We have a checkbox field on contact.If the field is checked record should be read-only . How to achieve it?
 	ANS : Record type ,Validation Rules,Trigger
@@ -69,12 +69,45 @@ Q.13 We have lightning record edit form on a object which shows 10 fields. if us
 
 Q.14. When we use test.isRunning
 
+
+
+WIPRO
+
+01. Automation tools in salesforce
+02. scenario where you used the flows,approval process
+03. can you delete a user is salesforce
+04. difference is freezing and deactivating the user
+05. what are the licences ? which licence will be their for admin
+06. explain the sales process in salescloud
+07. If a lead is assigned to a user and user didn't respond to the lead how will you work with that lead [auto response rule,escalation rule]
+08. Lead conversions
+09. Explain a scenario where you faced issues in LWC and you worked and implementd it successfully.
+10. decorators in LWC
+11. Lightning data services in LWC [getRecord,getRecords ,Lightning forms,wire]
+12. Component communication in LWC [parent to child , child to parent , LMS]
+13. Trigger to prevent editing of an account record if it was created 7 days ago
+
+trigger accountTrigger on Account(before update){
+	if(trigger.isUpdate && trigger.isBefore){
+		accountTriggerHandler.preventDelete(trigger.new);
+	}
+}
+public class accountTriggerHandler{
+	public void preventDelete(List<Account>accList){
+		for(Account acc : accList){
+			if((acc.CreatedDate - System.Today())  > 7){
+				acc.Name.addError('Cannot edit this record!');
+			}
+		}
+	}
+}
+
 Questions to ask : what kinds of projects in the pipeline,how project allocation works,What are the expectations from this role in project persoective,kinds of cloud,how delivery works
 ADMIN Questions [Security related, profiles,permission set,sharing rule,manual sharing,OWD,Record type,validation rule,flows]
 
 Role vs Profile
-	Role - not compulsory, defines data vision ,Record level access with OWD,Sharing rule,apex sharing,manual sharing
-	Profile -  Object level access [Permission set]
+	Role - not compulsory ,Record level access with OWD,Sharing rule,apex sharing,manual sharing
+	Profile - compulsory, Object level access [Permission set is field level] can also control other permissions as well
 Platform Events,CDC
 Flows interview questions
 GOVERNER LIMITS
@@ -126,3 +159,37 @@ Why should we hire you [what values you bring to org ]
 	even in previous orgs took up the work as challenge when I was being asked to work and deliver
 	
 
+LMS
+
+import LMSChanel  from '@salesforce/messageChannel/channlName__c';
+import {publish,subscribe,messageContext} from '@lightning/messageService';
+
+@wire(MessageContext)
+msgContext;
+
+handler(event){
+input = {lmsMsg : event.target.value};
+	handlePublish();
+	handleSubscribe();
+}
+handlePublish(){
+	publish(this.msgContext,LMSChannel,this.input);
+}
+handleSubscribe(){
+	subscribe(this.msgContext,LMSChannel,(output)=>{
+		log(output.lmsMsg)
+	})
+}
+
+
+child to parent 
+
+this.dispatchEvent(new CustomEvent('abc',{
+	detail : event.target.value
+}))
+
+<c-child onabc ={childEventHandler}></c-child>
+
+childEventHandler(event){
+	event.detail;
+}
