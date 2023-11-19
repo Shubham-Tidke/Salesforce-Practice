@@ -1,21 +1,94 @@
 Probable Questions
-Explain the MVC (Model-View-Controller) architecture in Salesforce.
-What is the difference between a Trigger and a Workflow in Salesforce?
-Describe the various types of sandboxes in Salesforce and their use cases.
-Explain the difference between a Role and a Profile in Salesforce.
-What is the purpose of the "Master-Detail" relationship in Salesforce?
-How can you schedule a job in Salesforce?
-What is the difference between SOQL and SOSL?
-Explain the purpose of a governor limit in Salesforce.
-How can you handle bulk data processing in Salesforce?
+-> Explain the MVC (Model-View-Controller) architecture in Salesforce?
+	Model view controller (MVC) is a software architecture pattern which separates the representation of information from the user’s interaction with it.
+	A model notifies its associated views and controllers when there has been a change in its state.[sObjects]
+	A controller can send commands to its associated view to change the view’s presentation of the model [Page Layouts,Automation tools like flows,triggers]
+	A view requests from the model the information that it needs to generate an output representation. [Tabs,LWC Components,VF Pages]
+	
+	
+-> What is the difference between a Trigger and a Workflow in Salesforce?
+	Workflow is automated process that fired an action based on Evaluation criteria and rule criteria.
+	We can access a workflow across the object.Trigger is a piece of code that executes before or after a record is inserted or updated.
+	
+	Workflow
+		You cannot create records
+		They currently can only result in a task, email, field update, or outbound message
+		We can not perform Dml operation in workflow
+		We cannot query from database
+
+	Trigger
+		Can do these things, but obviously using code.
+		Often needed for roll-up type scenarios where roll up summary fields cannot be used
+		Often needed when a record needs to be created on a different object
+		We can use 20 Dml operations in trigger
+		Trigger can be used to invoke a webserive	
+	
+-> Describe the various types of sandboxes in Salesforce and their use cases.
+	Developer Sandbox : Only Metadata is copied | Developement and Unit Tests
+	Developer Pro Sandbox : Better version of Dev Sandbox with extra space | QA,Integration
+	Partial Sandbox : Metadata with sample data | UAT
+	Full Sandbox : Production copy | Staging and Performance Testing
+	
+-> Explain the difference between a Role and a Profile in Salesforce.
+	Roles control record level access
+	Profiles control Object level acces
+	We can have users without roles
+	We cannot have users without profiles
+	Roles control what user can see
+	Profiles control what user can do
+		
+-> What is the purpose of the "Master-Detail" relationship in Salesforce?
+	In Salesforce, a "Master-Detail" relationship is a type of relationship between two objects where one object,
+	known as the "master" or "parent," controls certain behaviors of the other object, known as the "detail" or "child." 
+	Purpose and Features :
+		Cascade Delete
+		Roll-Up Summary Fields
+		Security and Access
+		Ownership and Control
+		Required Fields on Detail Records
+
+-> How can you schedule a job in Salesforce?
+	String CRON = 'seconds,minutes,hours,days of month,month,days of week,year(optional)';
+					'0,0,0,?,*,*
+					'0,0-5,15'
+					
+	System.Schedule('msg',CRON,new ScheduleClass())
+	Other way is via UI
+	
+	
+	
+-> What is the difference between SOQL and SOSL?
+	SOQL is designed for querying Salesforce records to retrieve data. It allows you to query specific fields on a single object or related objects to fetch records based on specified conditions.
+	SOSL is designed for searching across multiple objects simultaneously. It allows you to perform text searches across multiple objects and fields to find records that match a search query.
+	Use SOQL when you know in which objects and fields you want to search and retrieve data. It is typically used for querying records within a single object 
+	Use SOSL when you want to perform a full-text search across multiple objects to find records that match a given search term. 
+		It's particularly useful when you don't know which fields or objects contain the data you are looking for.
+		
+-> Explain the purpose of a governor limit in Salesforce.
+	Governor limits in Salesforce are restrictions imposed by the Salesforce platform to ensure fair usage and prevent misuse of shared resources.
+	These limits are in place to guarantee the stability and performance of the multi-tenant environment that Salesforce provides.
+	This also helps maintaining Codde Quality,Performance and stability,Multi-tenancy support.
+	Governer limits are like:
+		no. of DML in onr transaction : 100 Sync,200 async
+		No of records fetched in a transaction : 50,000
+		CPU usage time limit :10 sec sync,60 sec async
+		Email Limits
+		
+-> How can you handle bulk data processing in Salesforce?
+	Data Import Wizards and Data Loader - to insert,update
+	Apex Batch Processing to execute custom logics
+	Queueable
+	
+-> Diiference between data loader and Data Import Wizard ?
+	Data import wizard can insert,update,upser records in bulk.Cannot export data,cannot delete,Cannot schedule data loads,insert upto 50000 records.Handle Duplication
+	Data Loader can insert update,upsert,delete records in bulk,can export,can delete,can schedule,can insert 5 million records,,cannot handle duplication.
+	
 What is the significance of the "Lookup Relationship" in Salesforce?
 What is the importance of the "Roll-up Summary" field in Salesforce?
 Explain the use of the Schema Builder in Salesforce.
 What is the difference between a Formula Field and a Roll-up Summary Field?
 Describe the use of the @future annotation in Apex.
-Explain the benefits of using a Salesforce Community.
 How can you deploy code between Salesforce environments?
-What is a Salesforce Lightning Component?
 Explain the concept of governor limits in Salesforce.
 How do you handle security in Salesforce?
 Describe the Salesforce Data Model.
