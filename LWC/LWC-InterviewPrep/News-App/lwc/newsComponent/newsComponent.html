@@ -1,10 +1,19 @@
 <template>
-<lightning-card  >
-    <!-- <p class="slds-p-around_small">{newsData}</p> -->
+<lightning-card>
+    <div class="slds-p-around_small">
+        <lightning-combobox
+            name="category"
+            label="category"            
+            placeholder="Select News Category"
+            options={options}
+            variant="label-hidden"
+            onchange={handleCategoryChange} >
+        </lightning-combobox>
+    </div>
     <lightning-layout multiple-rows>
-            <template for:each={newsData} for:item="news">
+            <template for:each={visibleNews} for:item="news">
                 <lightning-layout-item  key={news.url}   size="12" padding="around-small" small-device-size="12" medium-device-size="4" large-device-size="4" >
-                    <div class="slds-box box-border" data-id={news.url}   onclick={newsClickHandler} style="min-height: 400px;max-height:400px">
+                    <div class="slds-box box-border" data-id={news.url}   onclick={newsClickHandler} style="min-height: 400px;max-height:300px max-width: 100%; height: 300px;">
                         <span class="slds-align_absolute-center slds-p-around_small">
                             <template if:true={news.urlToImage}>
                                 <img src={news.urlToImage}/>
@@ -23,5 +32,8 @@
                 </lightning-layout-item>
             </template>    
         </lightning-layout>
+        <div slot="footer">
+            <c-pagination records={newsData} onupdate={updateNewsHandler}></c-pagination>
+        </div>
 </lightning-card>
 </template>
