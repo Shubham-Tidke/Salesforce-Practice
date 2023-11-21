@@ -1,8 +1,16 @@
 public class NewsComponentController {
     @AuraEnabled
-    public static Map<String, Object> getNews(){
+    public static Map<String, Object> getNews(String category){
+        newsAPIKey__c keyString = newsAPIKey__c.getOrgDefaults();
+        String apiKey = keyString.key__c;
+        String endpoint = keyString.endpoint__c;
         HttpRequest request = new HttpRequest();
-        request.setEndpoint('https://newsapi.org/v2/top-headlines?country=in&category=sports&apiKey=1ba8790e15da4818a4a5d80ad9875c4c');
+        if(category!=null){
+            endpoint = endpoint+'?country=in&category='+category+'&apiKey='+apiKey;
+        }else{
+            endpoint = endpoint+'&apiKey='+apiKey;
+        }
+        request.setEndpoint(endpoint);
         request.setMethod('GET');
         Map<String, Object> newsJsonData = new Map<String, Object>();
         String strResponse = null;
