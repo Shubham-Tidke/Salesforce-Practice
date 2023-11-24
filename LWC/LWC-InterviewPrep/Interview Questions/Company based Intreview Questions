@@ -5,9 +5,9 @@ Q.1 Write a Query to get all contacts related to an account
 	
 	Q.1.1 : What will be the query if we have any custom object instead of contacts (custom_object__r)
 
-Q.2 What kind of relationship does account and contact has ?
+Q.2 What kind of relationship does account and contact has ? [Special lookup relationship where contact supports on-delete cascade]
 
-Q.3  Consider there are 2 users with same profile,USER A USER B .User A has access to a record, user b has no access to the same, What would be the case?
+Q.3  Consider there are 2 users with same profile,USER A USER B .User A has access to a record, user b has no access to the same, What would be the case?[Role,Hierarchy,Manual sharing,sharing rule etc]
 
 Q.4 We have a checkbox field on contact.If the field is checked record should be read-only . How to achieve it?
 	ANS : Record type ,Validation Rules,Trigger
@@ -17,35 +17,59 @@ Q.5 We have a junction object record for object A,object B. What will happen to 
 Q.6 Write a trigger to get count of contacts on Account object.
 
 	trigger contactTrigger on Contact(after insert,after update,after delete,after undelete){
-		
+		if(trigger.isAfter && (trigger.isInsert || isUndelete)){
+				contactHandler.contactsAfterInsert(trigger.new);
+		}
+		if(trigger.isAfter && trigger.isUpdate){
+			contactHandler.contactsAfterUpdate(trigger.new,trigger.oldMap);
+		}
+		if(trigger.isAfter && trigger.isDelete){
+			contactHandler.contactAfterDelete(trigger.old);
+		}		
 	}
 	public class ContactHandler {
 		set<Id>accs = new Set<Id>();
 		List<Account>accList = new List<Account>();
-		public static updateCount(List<Contact>conList){
+		public static void contactsAfterInsert(List<Contact>conList){
 			for(Contact c : conList){
 				if(c.AccountId != null){
 					accs.add(c.AccountId);
 				}
 			}
-			for(Account a :[Select Id (Select Id From Contacts) From Account WHERE Id  IN : accs]){
-				a.countOfContacts__c = a.Contacts.size();
-				accList.add(a);
+		}
+		public static void contactsAfterUpdate(List<Contact>conList,Map<Id,Contact>conMap){
+			for(contact c : conList){
+				if(c.AccountId != conMap.get(c.Id).AccountId){
+					accs.add(c.AccountId);
+					accs.add(conMap.get(c.Id).AccountId);
+				}
 			}
-			try{
-				Database.saveResult[] result = database.Update(accList);
-				for(Database.saveResult sr : result){
-					if(!sr.isSuccess()){
-						for(Database.Error er : sr.getErrors()){
-							system.debug(er);
-						}
+		}
+		public static void contactAfterDelete(List<Contact>conList){
+			for(Contact c : conList){
+				if(c.AccountId != null){
+					accs.add(c.AccountId);
+				}
+			}
+		}			
+		for(Account a :[Select Id ,countOfContacts__c,(Select Id From Contacts) From Account WHERE Id  IN : accs]){
+			a.countOfContacts__c = a.Contacts.size();
+			accList.add(a);
+		}
+		try{
+			Database.saveResult[] result = database.Update(accList);
+			for(Database.saveResult sr : result){
+				if(!sr.isSuccess()){
+					for(Database.Error er : sr.getErrors()){
+						system.debug(er);
 					}
 				}
 			}
-			catch(Exception e){
-				system.debug(e);
-			}
 		}
+		catch(Exception e){
+			system.debug(e);
+		}
+		
 	}
 	
 Q.7 Difference between '==' and '==='
@@ -68,3 +92,208 @@ Q.12 We have a Lightning input with 'required' tag. what will happen if we dont 
 Q.13 We have lightning record edit form on a object which shows 10 fields. if user has access to 5 field what will user sees on form ? [Does LDS supports sharing rule and FLS ?]
 
 Q.14. When we use test.isRunning
+
+
+-----------------------------------------------------------------------------------------------------
+WIPRO
+
+01. Automation tools in salesforce
+02. scenario where you used the flows,approval process
+03. can you delete a user is salesforce
+04. difference is freezing and deactivating the user
+05. what are the licences ? which licence will be their for admin
+06. explain the sales process in salescloud
+07. If a lead is assigned to a user and user didn't respond to the lead how will you work with that lead [auto response rule,escalation rule]
+08. Lead conversions
+09. Explain a scenario where you faced issues in LWC and you worked and implementd it successfully.
+10. decorators in LWC
+11. Lightning data services in LWC [getRecord,getRecords ,Lightning forms,wire]
+12. Component communication in LWC [parent to child , child to parent , LMS]
+13. Trigger to prevent editing of an account record if it was created 7 days ago
+
+		trigger accountTrigger on Account(before update){
+			if(trigger.isUpdate && trigger.isBefore){
+				accountTriggerHandler.preventDelete(trigger.new);
+			}
+		}
+		public class accountTriggerHandler{
+			public void preventDelete(List<Account>accList){
+				for(Account acc : accList){
+					if((acc.CreatedDate - System.Today())  > 7){
+						acc.Name.addError('Cannot edit this record!');
+					}
+				}
+			}
+		}
+14. Profile vs Permission set
+15. What is use of roles and role hierarchy?
+
+------------------------------------------------------------------------------------------------
+WIPRO MANAGERIAL ROUND 
+
+1. Tell me about your day-to-day role and activities you perform in your project ?
+2. Everyone is capable of what you can do, developement and deployment. What key values you have different from others which can get business to the organization?
+3. What are your views on learning new skills and technology ? will you work on new skills which you had no exposure earlier?
+4. Sometimes while working for projects you have to stretch your workhours.Are you okay with that?
+5. Have you worked on any client facing projects? How did you work with them?
+6. tell me one of the add-ons you did in your projects which added values to the organization
+7. Do you have any experience in leading the team?
+8. Have you worked with multiple vendors?
+9. why do you think we should have you?
+
+Questions to ask : what kinds of projects in the pipeline,how project allocation works,What are the expectations from this role in project persoective,kinds of cloud,how delivery works
+ADMIN Questions [Security related, profiles,permission set,sharing rule,manual sharing,OWD,Record type,validation rule,flows]
+
+Role vs Profile
+	Role - not compulsory ,Record level access with OWD,Sharing rule,apex sharing,manual sharing
+	Profile - compulsory, Object level access [Permission set is field level] can also control other permissions as well
+Platform Events,CDC
+Flows interview questions
+GOVERNER LIMITS
+Async Apex
+	batch in batch
+	calling future in batch
+	
+Sharing and Visibility
+	-> Different Levels of sharing
+		
+		1.Object Level Security : Access to the object.It allows you to perform actions like create,read,delete,update on object.
+			-> Profiles : Profiles are provided to every user created in salesforce.It is manadatory to have profile for a user.One user can have only one profile.
+						Profiles provides obj level access ,apex class access,system permissions,admin permissions etc.
+						
+			-> Permission Sets : Permission sets are used to give extra access to user or group of user above the profiles.Permission set can be used to give object level and field level access.
+								one user may have multiple permission sets.You cannot remove access using permission set.
+								
+			Scenario :: Q.Consider there are 2 users with same profile,USER A USER B .User A can delete the record, user b cannot, What would be the case?
+					==> User A has this extra access via permission set.
+					
+		2.Field Level Security : Access to the Fields on an object
+			Profiles and Permission sets cover FIELD LEVEL SECURITY.
+			
+		3.Record Level Security : Access to records
+			Covered by 
+				OWD : Org wide defaults.OWD is basic level of access given to org user of object records.[public read,public read/write ,private].Most restricted is suggested.
+				Role Hierarchy 
+				Sharing Rules
+				Manual Sharing
+				Apex Sharing
+	
+	-> Implicit sharing : Access provided by default from SF, which cannot be controlled by us.
+			2 types of implicit sharing : parent implicit sharing[If you have access to parent you should see child],child implicit sharing[if you have access to child you should see parent]
+			
+	-> Difference between Queue and Public group
+		Queue used for ownership purpose.[Queue used in case assignment rule]
+		Public group is used for access sharing purpose.[Permission set]
+		Public group can have nested public group.
+		Queue cannot have nested queue.
+	
+	-> Data Skew 
+		When an object has multiple child records,it reduces the SF org performance,this is data skew
+	-> Ownerhip Skew
+		When User owns huge number of records then it is Ownership skew.To avoid it, avoid assigning default owner to any record.
+	
+	** WHENEVER THERE IS CONFLICT BETWEEN RECORD LEVEL ACCESS AND OBJECT LEVEL ACCESS SF PREFERS THE MOST RESTRICTED ONE.
+	Scenario :: we have 2 users,A,B. B has read/write access on account object via profile. Same with user A. User A shared an account record with user B using manual sharing and gave only read access.
+				Can user B edit that record??
+	Answer :: No,since SF prefer the most restricted security and here most restricted is read only via manual sharing.
+	
+	Scenario :: User B has read access at object level and user A tries to give read/write via manual sharing,can B edit the records??
+	Answer :: NO same reason as above.
+	
+	Scenario :: We have 2 record types X-Y,User B has access to only X. Can B access the records created using recordtype Y??
+	Answer :: Yes,Record types doesnot restrict user from accessing any record. It does restrict from creating a record of that record type if record type is not accesible.
+	
+	Scenario :: We have 2 users U1 & U2 . U1 is up in hierarchy of U2. U1 has read permission of object and U2 has read/write.Can U1 edit the records owned by U2 since U1 is up in hierarchy??
+	Answer :: No, U1 doesnot have object level access to edit. And Role hierarchy just allows the visibility.
+	
+	Scenario :: User A has access to User B data but User B cannot see User A data ? What can be the possible reason ??
+	Answer ::  OWD has to be private for the object ,
+				i.then User A can be at higher position in role Hierarchy than User B and hence he can see user B data
+				ii.If both are at same level in roles,then there may be a sharing rule based on criteria or owner which allows user A to see.
+				iii.If no sharing rule,there can be a case where user B has manually shared the records with user A.
+				iv.If even thats not the case, then there can be apex sharing which allows User A to access records. 
+	
+	Scenario :: User A has shared an account record with User B manually. Now if user A leaves the org or get deactivated what will happen? Can User B still access the record?
+	Answer :: No, Once user get deactivated manual sharing ends. User B needs a re-share to work on that record again.
+	
+	Scenario :: We have a apex class mentioned with sharing and we have a nested apex class which has without sharing context, what will be the overall sharing??
+	Answer :: child class does not inherit access from parent class. if parent is without,it will show all records without considering Sharing rules and if child class for the same is wwith sharing,it will cover Sharing rules.
+				
+LWC [LMS,Parent child]
+	code for conditional rendering a list and map [https://salesforce.stackexchange.com/questions/297834/iterate-a-javascript-map-in-lightning-web-component-template]
+	why LWC over AURA
+	when to use LWC when to use AURA
+	Decorators
+	Lifecycle hooks [when to use which hook]
+	Parent to Child[types of data can be passed (primitive/non-primitive),decorator] 
+	Child to Parent[custom event,kebabcase,lowercase,custom event parameters]
+	LMS syntax meta file,publish,subscribe,msg channel
+	Lightning Data Services [Wire [ui/recordApi ,getRecord], record form,record edit form,view form]
+	why we have import statements : LWC is build on top of HTML elementwe need to implement the lightningElement,
+		LWC is built on HTML and on top of that we have SF specific functionalities like LDS,the security etc in the lightningElement hence we import LightingElement
+	And we extend it so that we can leverage LWC features like lifecycle hooks.
+	We export the class to be used by others
+	LWC-Apex Interaction [wire(immutable data.if want to mutate create shallow copy),imperative data]
+	lightning component bundle [html,css,js,meta.xml]
+	Can we put multiple decorators in one property.[execution engine will not decide which one to use first as all decorators have their own features]
+	Can we change the value of a property in child component which was passed by parent component.[@api property can be changed in child or not??]
+		- NO we get the values from parent to child in read-only format.[only way is to clone the property and change the value]
+	Can we put wire inside a method?? - No [decorators should be used inside the class and not inside the method]
+	When does wire property gets value ?? 
+		first runs constructor -> then wire runs and get default value ->
+			execution engine runs and if default values not available it assigns undefined -> when values are avaliable it loads value to wire -> connected callback
+	Difference between Event.StopPropogation vs Event.PreventDefault ??
+		Event.PreventDefault :: Stops the default behaviour of form
+		Event.StopPropogation :: stops propogating nested events [if we have events on div inside div inside div and the innermost div gets clicked but you dont want other div's event to be fired then use StopPropogation]
+		CALLBACK FUNCTION :: if a fuinction is input parameter for another function [Callback functions are not sync or async. Behaviour depends on the function in which we are calling the function]
+	Promise and PromiseAll ::
+	SHADOW DOM :: Inner DOM within a DOM 
+	Can we use LWC in Flows - In screen flow yes,in RTF no
+	
+Trigger scenarios [Order of execution]
+	- prevent contact duplicates based on email,
+	- custom rollup summary,
+	- max-min amount of opportunity on account,
+	- Creation of task on creation of opportunity and send email when task is not completed on due date,
+	- Account should have only one primary contact [selected from linked contacts using a custom checkbox] if one selected other should get un-selected.
+
+Why should we hire you [what values you bring to org ] 
+	Flexible with the learnings and open to work on new technologies.
+	Worked on multiple clouds and done respected certifications
+	even in previous orgs took up the work as challenge when I was being asked to work and deliver
+	
+
+LMS
+
+import LMSChanel  from '@salesforce/messageChannel/channlName__c';
+import {publish,subscribe,messageContext} from '@lightning/messageService';
+
+@wire(MessageContext)
+msgContext;
+
+handler(event){
+input = {lmsMsg : event.target.value};
+	handlePublish();
+	handleSubscribe();
+}
+handlePublish(){
+	publish(this.msgContext,LMSChannel,this.input);
+}
+handleSubscribe(){
+	subscribe(this.msgContext,LMSChannel,(output)=>{
+		log(output.lmsMsg)
+	})
+}
+
+
+child to parent 
+
+this.dispatchEvent(new CustomEvent('abc',{
+	detail : event.target.value
+}))
+
+<c-child onabc ={childEventHandler}></c-child>
+
+childEventHandler(event){
+	event.detail;
+}
