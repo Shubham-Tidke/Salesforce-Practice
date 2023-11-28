@@ -132,10 +132,33 @@ WIPRO
 WIPRO MANAGERIAL ROUND 
 
 1. Tell me about your day-to-day role and activities you perform in your project ?
+
+	"In my day-to-day role as a Salesforce developer, I play a crucial role in designing, implementing, and maintaining Salesforce solutions to meet our organization's business needs. 
+	A typical day involves a combination of coding, problem-solving, and collaboration with various stakeholders.
+	One of my primary responsibilities is to analyze and understand the business requirements provided by different departments.
+	This involves regular communication with end-users and business analysts to gather insights into their processes and challenges. Once the requirements are clear,
+	I translate them into technical specifications and design solutions that align with best practices and Salesforce platform capabilities.
+	
 2. Everyone is capable of what you can do, developement and deployment. What key values you have different from others which can get business to the organization?
+
+	my experience in sales and customer relationship management allows me to bridge the gap between technical capabilities and business objectives.
+	I understand that the ultimate goal of any Salesforce implementation is to enhance the customer experience, streamline operations, and drive revenue. 
+	I bring a customer-centric approach to my work, ensuring that the solutions I implement not only meet technical requirements but also contribute to the overall success of the business.
 3. What are your views on learning new skills and technology ? will you work on new skills which you had no exposure earlier?
+
 4. Sometimes while working for projects you have to stretch your workhours.Are you okay with that?
+	I believe in the continuous pursuit of learning and adapting to new skills and technologies. 
+	In today's dynamic work environment, staying abreast of emerging trends is crucial for personal and professional growth. 
+	I am always open to acquiring new skills, even those I may not have been exposed to before.
+	I see it as an opportunity to broaden my expertise, enhance my problem-solving capabilities, and contribute more effectively to the goals of the team and the organization
+	
 5. Have you worked on any client facing projects? How did you work with them?
+	Yes, I have had the opportunity to work on several client-facing projects throughout my career. In my previous role at [Previous Company], 
+	I was actively involved in projects that required direct interaction with clients. My primary responsibility was to understand their requirements, expectations, and goals. 
+	To ensure a successful collaboration, I established clear lines of communication from the outset.
+	I initiated regular meetings to provide project updates, discuss progress, and address any concerns or feedback they might have had. 
+	I believe that proactive communication is crucial in client-facing projects, as it helps in building a strong relationship based on trust and transparency
+	
 6. tell me one of the add-ons you did in your projects which added values to the organization
 7. Do you have any experience in leading the team?
 8. Have you worked with multiple vendors?
