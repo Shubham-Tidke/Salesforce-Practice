@@ -140,18 +140,25 @@ WIPRO MANAGERIAL ROUND
 	I translate them into technical specifications and design solutions that align with best practices and Salesforce platform capabilities.
 	
 2. Everyone is capable of what you can do, developement and deployment. What key values you have different from others which can get business to the organization?
-
+	Eeven if everyone is doing the same thing,everyone has different way of approach the solution.
 	my experience in sales and customer relationship management allows me to bridge the gap between technical capabilities and business objectives.
 	I understand that the ultimate goal of any Salesforce implementation is to enhance the customer experience, streamline operations, and drive revenue. 
 	I bring a customer-centric approach to my work, ensuring that the solutions I implement not only meet technical requirements but also contribute to the overall success of the business.
-3. What are your views on learning new skills and technology ? will you work on new skills which you had no exposure earlier?
 
-4. Sometimes while working for projects you have to stretch your workhours.Are you okay with that?
+3. What are your views on learning new skills and technology ? will you work on new skills which you had no exposure earlier?
 	I believe in the continuous pursuit of learning and adapting to new skills and technologies. 
-	In today's dynamic work environment, staying abreast of emerging trends is crucial for personal and professional growth. 
+	In today's dynamic work environment, staying on top of emerging trends is crucial for personal and professional growth. 
 	I am always open to acquiring new skills, even those I may not have been exposed to before.
 	I see it as an opportunity to broaden my expertise, enhance my problem-solving capabilities, and contribute more effectively to the goals of the team and the organization
-	
+
+4. Sometimes while working for projects you have to stretch your workhours.Are you okay with that?
+	"I understand that sometimes projects require additional time and effort to meet deadlines, and I am fully committed to ensuring the success of any project I'm involved in.
+	I have a strong work ethic and am willing to put in extra hours when necessary to deliver high-quality results. 
+	However, I also believe in maintaining a healthy work-life balance to sustain long-term productivity and creativity. 
+	I am open to occasional overtime when it's crucial for the project, but I also value efficiency and effective time management to minimize the need for consistent long work hours. 
+	I believe in being proactive and planning ahead to mitigate the need for last-minute rushes.
+	Overall, I am flexible and adaptable to the needs of the team and the project, but I also recognize the importance of maintaining a sustainable and balanced approach to work."
+
 5. Have you worked on any client facing projects? How did you work with them?
 	Yes, I have had the opportunity to work on several client-facing projects throughout my career. In my previous role at [Previous Company], 
 	I was actively involved in projects that required direct interaction with clients. My primary responsibility was to understand their requirements, expectations, and goals. 
@@ -164,12 +171,35 @@ WIPRO MANAGERIAL ROUND
 8. Have you worked with multiple vendors?
 9. why do you think we should have you?
 
+	"I believe I bring a combination of skills, experience, and a strong commitment to contributing to the success of your organization.
+	My background in [mention relevant experience or industry] has equipped me with the necessary expertise to tackle the challenges in this role effectively. 
+	Additionally, my [specific skills, such as problem-solving, communication, or leadership] have consistently allowed me to deliver results and drive positive outcomes in my previous positions.
+	What sets me apart is not just my technical proficiency but also my ability to adapt to new situations quickly and collaborate seamlessly with diverse teams. 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Deloitte USI techno MANAGERIAL
+
+- Tell me about your roles and responsibilites
+- Scenario 1 : we have 2 cutom object shipment and shipping address with parent to child relationship,we can have multiple shipping addresses.
+	We want to restric user from adding not more than 3 shipping address without writing any custom code. How to do it.
+	How will we deal with existing data records which has already more than 3 shipping addresses .How will you process those?
+	
+- Scenario 2 :We have an existing system in salesforce and we have a flow and process builder implemented on an object which gets executed on creation/updation.
+	In Production you see 101 soql error,how will you approach the solution and how will you resolve it?
+	
+- Scenario 3 : Write trigger to get the total sum of opportunities and maximum opportunity on account.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Questions to ask : what kinds of projects in the pipeline,how project allocation works,What are the expectations from this role in project persoective,kinds of cloud,how delivery works
 ADMIN Questions [Security related, profiles,permission set,sharing rule,manual sharing,OWD,Record type,validation rule,flows]
 
 Role vs Profile
 	Role - not compulsory ,Record level access with OWD,Sharing rule,apex sharing,manual sharing
 	Profile - compulsory, Object level access [Permission set is field level] can also control other permissions as well
+	Roles control record level access
+	Profiles control Object level acces
+	We can have users without roles
+	We cannot have users without profiles
+	Roles control what user can see
+	Profiles control what user can do
 Platform Events,CDC
 Flows interview questions
 GOVERNER LIMITS
