@@ -188,6 +188,21 @@ Deloitte USI techno MANAGERIAL
 	
 - Scenario 3 : Write trigger to get the total sum of opportunities and maximum opportunity on account.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Probabale Scenario based questions : You have done a deployment and user abc is not able to see the data,what would be the issue?
+- cross questions : is this only user who is not able to see the data or user with same profiel were not able to see the data?
+	Approach : try to replicate the issue in lower environment like full-copy. If issue gets replicated,we might missed any access related to the profile or that user.
+			if issue has not replicated then we might missed the access related things like permission set,sharing rules etc is changeset.
+- Can we upload null values from dataloader :
+	dataloader has a checkbox which allows the null values,if it checked.otherwise we cannot upload the null values.
+- Is it okay to make changes in PROD 
+	No,it is not ideal to make changes directly on production unless it is some postdeployment steps.We get only one prod cred to work with so it is not suggested either to do such changes.
+	changes like  creating custom label,custom settings can be done,but not related to apex,flows etc
+- When have you used @track decorator and @api decorator?
+- User is not able to see the field on page layout in prod,what can be the issue?
+	First need to check the Field level security for that user, if yes then check page layout
+- What is async apex, tell me a scenario from your project where you used batch apex?[]
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Questions to ask : what kinds of projects in the pipeline,how project allocation works,What are the expectations from this role in project persoective,kinds of cloud,how delivery works
 ADMIN Questions [Security related, profiles,permission set,sharing rule,manual sharing,OWD,Record type,validation rule,flows]
 

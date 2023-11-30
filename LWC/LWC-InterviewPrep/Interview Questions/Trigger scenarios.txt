@@ -1,5 +1,35 @@
-** Account Phone field cannot be empty.
+** IF Email is updated on Account email field,all associated contact emails should get updated.
+trigger accountTrigger on Account(after update){
+	if(trigger.isAfter && trigger.isUpdate){
+		accountTriggerHandler.updateRelatedContactsEmail(trigger.new);
+	}
+}
 
+public class accountTriggerHandler{
+	List<Contact>conList = new List<Contact>();
+	public static void updateRelatedContactsEmail(List<Account>accList){
+		for(Contact c : [SELECT id,accountId FROM Contacts WHERE accountId IN : accList]){
+			c.email = c.Account.website;
+			conList.add(c);
+		}
+	}
+	try{
+		Database.saveResult[] result = Database.update(conList,false);
+		for(Database.saveResult sr : result){
+			if(!sr.isSuccess()){
+				for(Database.Error er : sr.getErrors()){
+					system.debug(er);
+				}
+			}
+		}
+	}
+	catch(Exception e){
+	
+	}
+}
+
+
+** Account Phone field cannot be empty.
 trigger accountTrigger on Account (before insert){
 	if(trigger.isBefore && trigger.isInsert){
 		AccountTriggerHandler.checkPhoneField(trigger.new);
@@ -112,7 +142,7 @@ public class contactTriggerHandler{
 	}
 }
 
-***Rollup Summary Trigger on Account [total contacts assosiated]
+***Rollup Summary Trigger on Account [total contacts associated]
 
 trigger contactTrigger on Contact(after insert,after update,after delete,after undelete){
 	if(trigger.isAfter && (trigger.isInsert || trigger.isUndelete)){
@@ -380,5 +410,144 @@ public class accountTriggerHandler{
 				acc.addError('Account with related contacts cannot be deleted!');
 			}
 		}
+	}
+}
+
+*** PREVENT USER TO ADD MORE THAN 2 CONTACTS ON AN ACCOUNT
+trigger contactTrigger on Contact(before insert){
+	if(trigger.isBefore && trigger.isInsert ){
+		contactTriggerHandler.preventContactAdding(trigger.new,trigger.oldMap);
+	}
+}
+public class contactTriggerHandler{
+	public static void preventContactAdding(List<Contact>conList){
+		Set<Id>accSet = new Set<Id>();
+		for(Contact c: conList){
+			if(c.AccountId != null){
+				accSet.add(c.AccountId);
+			}
+		}
+		for(Account acc : [SELECT Id,(SELECT Id FROM Contacts) FROM Account WHERE Id IN:accSet]){
+			if(acc.Contacts.Size() >= 2){
+				acc.addError('Maximum COntacts limit reached!');
+			}
+		}
+	}
+}
+
+*** UPDATE MAXIMUM AND MINIMUM AMOUNT OF OPPORTUNITIES RELATED TO AN ACCOUNT IN ACCOUNT DESCRIPTION
+
+trigger opportunityTrigger on Opportunity(after insert,after update,after delete,after undelete){
+	if(trigger.isAfter && (trigger.isInsert || trigger.isUndelete)){
+		opportunityTriggerHandler.updateMaxMinAmountOnAccountOnInsert(trigger.new);
+	}
+	if(trigger.isAfter && trigger.isUpdate){
+		opportunityTriggerHandler.updateMaxMinAmountOnAccountOnUpdate(trigger.new,trigger.oldMap);
+	}
+	if(trigger.isDelete){
+		opportunityTriggerHandler.updateMaxMinAmountOnAccountOnDelete(trigger.old);
+	}
+}
+public class opportunityTriggerHandler{
+	Set<Id>accSet = new Set<Id>();
+	public static void updateMaxMinAmountOnAccountOnDelete(List<Opportunity>oppList){
+		for(Opportunity opp : oppList){
+			if(opp.AccountId!=null){
+				accSet.add(opp.AccountId);
+			}
+		}
+	}
+	public static void updateMaxMinAmountOnAccountOnInsert(List<Opportunity>oppList){
+		for(Opportunity opp : oppList){
+			if(opp.AccountId!=null){
+				accSet.add(opp.AccountId);
+			}
+		}
+	}
+	public static void updateMaxMinAmountOnAccountOnUpdate(List<Opportunity>oppList,Map<Id,Opportunity>oppMap){
+		for(Opportunity opp : oppList){
+			if(opp.AccountId != oppMap.get(opp.Id).AccountId){
+				accSet.add(opp.AccountId);
+				accset.add(oppMap.get(opp.Id).AccountId);
+			}else{
+				accSet.add(opp.AccountId);
+			}
+		}
+	}
+	List<Account>accList = new List<Account>();
+	if(!accSet.isEmpty()){
+		for(Opportunity opp : [SELECT Id,AMount,MAX(Amount) maxAMount,MIN(Amount) minAmount  FROM Opportunity WHERE Id AccountId IN:accSet GROUP BY AccountId]){
+			Account a = new Account();
+			a.Id = opp.AccountId;
+			a.Description = opp.MaxAmount +''+opp.minAmount;
+			accList.add(a);
+		}
+		//OR
+		for(Account a : [SELECT Id,(SELECT Id,Amount FROM Opportunities WHERE Amount!=null ORDER BY Amount DESC LIMIT 1) FROM ACCOUNT WHERE Id IN:accSet]){
+			a.description = acc.Opportunities[0].Amount;
+			accList.add(a);
+		}
+	}
+}
+
+*** UPDATE ACCOUNT FIELDS [NEW CASES,WORKING CASE,ESCALATED CASES ]BASED ON THE STATUS OF CASES [NEW,WORKING,ESCALATED]
+trigger caseTrigger on case(after insert,after update,after delete,after undelete){
+	if(trigger.isAfter && (trigger.isInsert || trigger.isUndelete)){
+		caseTriggerHandler.updateAccountStatusOnInsert(trigger.new);
+	}
+	if(trigger.isAfter &&  trigger.isUpdate){
+		caseTriggerHandler.updateAccountStatusOnUpdate(trigger.new,trigger.oldMap);
+	}
+	if(trigger.isAfter && trigger.isDelete ){
+		caseTriggerHandler.updateAccountStatusOnDelete(trigger.old);
+	}
+}
+public class caseTriggerHandler{
+	set<Id>accSet = new Set<Id>();
+	Map<Id,Integer>newStatusCases = new Map<Id,Integer>();
+	Map<Id,Integer>workingStatusCases = new Map<Id,Integer>();
+	Map<Id,Integer>escalatedStatusCases = new Map<Id,Integer>();
+	public static void updateAccountStatusOnInsert(List<Case>caseList){
+		for(Case c : caseList){
+			if(c.AccountId!=null)
+				accSet.add(c.AccountId);
+		}
+	}
+	public static void updateAccountStatusOnUpdate(List<Case>caseList,Map<Id,Case>caseMap){
+		for(Case c : caseList){
+			if(c.AccountId != caseMap.get(c.Id).AccountId){
+				accSet.add(c.AccountId);
+				accSet.add(caseMap.get(c.Id).AccountId);
+			}
+			else{
+				accSet.add(caseMap.get(c.Id).AccountId);
+			}
+		}
+	}
+	public static void updateAccountStatusOnDelete(List<Case>caseList){
+		for(Case c : caseList){
+			if(c.AccountId!=null)
+				accSet.add(c.AccountId);
+		}
+	}
+	if(!accSet.isEmpty()){
+		Integer newCases = 0;
+		Integer esclatedCases = 0;
+		Inteegr workingCases = 0;
+		for(cases c:[SELECT Id, Status,AccountId from Case WHERE AccountId IN:accSet ]){
+			if(c.Status == 'new'){
+				newCases = newCases+1;
+				newStatusCases.put(c.AccountId,newCases);
+			}
+			if(c.Status == 'working'){
+				workingCases = workingCases+1;
+				workingCases.put(c.AccountId,workingCases);
+			}
+			if(c.Status == 'esclated'){
+				esclatedCases = esclatedCases+1;
+				esclatedCases.put(c.AccountId,esclatedCases);
+			}			
+		}
+		
 	}
 }
