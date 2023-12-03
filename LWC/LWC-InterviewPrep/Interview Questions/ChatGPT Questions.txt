@@ -1,11 +1,4 @@
-Probable Questions
--> Explain the MVC (Model-View-Controller) architecture in Salesforce?
-	Model view controller (MVC) is a software architecture pattern which separates the representation of information from the user’s interaction with it.
-	A model notifies its associated views and controllers when there has been a change in its state.[sObjects]
-	A controller can send commands to its associated view to change the view’s presentation of the model [Page Layouts,Automation tools like flows,triggers]
-	A view requests from the model the information that it needs to generate an output representation. [Tabs,LWC Components,VF Pages]
-	
-	
+Probable Questions	
 -> What is the difference between a Trigger and a Workflow in Salesforce?
 	Workflow is automated process that fired an action based on Evaluation criteria and rule criteria.
 	We can access a workflow across the object.Trigger is a piece of code that executes before or after a record is inserted or updated.
@@ -69,7 +62,8 @@ Probable Questions
 	These limits are in place to guarantee the stability and performance of the multi-tenant environment that Salesforce provides.
 	This also helps maintaining Codde Quality,Performance and stability,Multi-tenancy support.
 	Governer limits are like:
-		no. of DML in onr transaction : 100 Sync,200 async
+		no. of SOQL in onr transaction : 100 Sync,200 async
+		No of DML operations : 150
 		No of records fetched in a transaction : 50,000
 		CPU usage time limit :10 sec sync,60 sec async
 		Email Limits
@@ -79,96 +73,199 @@ Probable Questions
 	Apex Batch Processing to execute custom logics
 	Queueable
 	
--> Diiference between data loader and Data Import Wizard ?
+-> Difference between data loader and Data Import Wizard ?
 	Data import wizard can insert,update,upser records in bulk.Cannot export data,cannot delete,Cannot schedule data loads,insert upto 50000 records.Handle Duplication
 	Data Loader can insert update,upsert,delete records in bulk,can export,can delete,can schedule,can insert 5 million records,,cannot handle duplication.
+
+-> Difference between custom setting and custom metadata ?
+	Custom setting is used to create custom data than can be associated with org,user
+	Custom metadata types is also somewhat similar to custom settings but the records of custom metadata are metadata and not data.
+	Custom Setting records cannot be deployed from one org to other
+	Custom metadata types record can be deployed from one org to other.
+	Custom setting cannot support relationship fields
+	Custom metadata supports relationship fields.
 	
-What is the significance of the "Lookup Relationship" in Salesforce?
-What is the importance of the "Roll-up Summary" field in Salesforce?
-Explain the use of the Schema Builder in Salesforce.
-What is the difference between a Formula Field and a Roll-up Summary Field?
-Describe the use of the @future annotation in Apex.
-How can you deploy code between Salesforce environments?
-Explain the concept of governor limits in Salesforce.
-How do you handle security in Salesforce?
-Describe the Salesforce Data Model.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Probabale Scenario based questions : 
+
+	Scenario :: we have 2 users,A,B. B has read/write access on account object via profile. Same with user A. User A shared an account record with user B using manual sharing and gave only read access.
+				Can user B edit that record??
+	Answer :: No,since SF prefer the most restricted security and here most restricted is read only via manual sharing.
+	
+	Scenario :: User B has read access at object level and user A tries to give read/write via manual sharing,can B edit the records??
+	Answer :: 	NO same reason as above.
+	
+	Scenario :: We have 2 record types X-Y,User B has access to only X. Can B access the records created using recordtype Y??
+	Answer :: 	Yes,Record types doesnot restrict user from accessing any record. It does restrict from creating a record of that record type if record type is not accesible.
+	
+	Scenario :: We have 2 users U1 & U2 . U1 is up in hierarchy of U2. U1 has read permission of object and U2 has read/write.Can U1 edit the records owned by U2 since U1 is up in hierarchy??
+	Answer :: 	No, U1 doesnot have object level access to edit. And Role hierarchy just allows the visibility.
+	
+	Scenario :: User A has access to User B data but User B cannot see User A data ? What can be the possible reason ??
+	Answer ::  	OWD has to be private for the object ,
+				i.then User A can be at higher position in role Hierarchy than User B and hence he can see user B data
+				ii.If both are at same level in roles,then there may be a sharing rule based on criteria or owner which allows user A to see.
+				iii.If no sharing rule,there can be a case where user B has manually shared the records with user A.
+				iv.If even thats not the case, then there can be apex sharing which allows User A to access records. 
+	
+	Scenario :: User A has shared an account record with User B manually. Now if user A leaves the org or get deactivated what will happen? Can User B still access the record?
+	Answer :: No, Once user get deactivated manual sharing ends. User B needs a re-share to work on that record again.
+	
+	Scenario :: We have a apex class mentioned with sharing and we have a nested apex class which has without sharing context, what will be the overall sharing??
+	Answer :: child class does not inherit access from parent class. if parent is without,it will show all records without considering Sharing rules and if child class for the same is wwith sharing,it will cover Sharing rules.
+
+
+	Scenario ::	You have done a deployment and user abc is not able to see the data,what would be the issue?
+				cross questions : is this only user who is not able to see the data or user with same profiel were not able to see the data?
+				Approach :	try to replicate the issue in lower environment like full-copy. If issue gets replicated,we might missed any access related to the profile or that user.
+				if issue has not replicated then we might missed the access related things like permission set,sharing rules etc is changeset.
+		
+	Scenario ::	Can we upload null values from dataloader :
+				dataloader has a checkbox which allows the null values,if it checked.otherwise we cannot upload the null values.
+				
+	Scenario ::	Is it okay to make changes in PROD 
+				No,it is not ideal to make changes directly on production unless it is some postdeployment steps.We get only one prod cred to work with so it is not suggested either to do such changes.
+				changes like creating custom label,custom settings can be done,but not related to apex,flows etc
+				
+	Scenario ::	When have you used @track decorator and @api decorator?
+	
+	Scenario ::	User is not able to see the field on page layout in prod,what can be the issue?
+				First need to check the Field level security for that user, if yes then check page layout
+				
+	Scenario ::	What is async apex, tell me a scenario from your project where you used batch apex?
+	Scenario ::	10 users have Create Read Edit permission on object, and later they need to remove create and edit permission for 2 users? what will be the approach?
+				Create a profile with read permission and assign to all 10 users. using permission set assign the create and edit permission to 8 users.
+				
+	Scenario ::	Why we use Test.StartTest() and Test.Stoptest() ? Can we use it multiple times in a method?
+	Scenario ::	There are 10 managed packages and they have a trigger on contact and each of these triggers is using 10 soql queries abd you written 5 SOQL queries using custom triggers.
+				So will you get 101 SOQL error or not?
+			- Managed package gets their own governer limit. So you will not hit SOQL 101 error due to mannaged package.
+			
+	Scenario ::	Create a batch apex and call a queueable apex from batch class
+	Scenario ::	Can we call a future method from trigger. [explain using example]
+	Scenario ::	How to a screen flow from LWC ? can we call a LWC from Screen flow ? How?
+	Scenario ::	Write a SOL query to get accounts with no contacts [SELECT Id FROM Account WHERE Id NOT IN (SELECT AccountId FROM Contacts)]
+	Scenario ::	Can we edit triggers,apex classes in Production ?
+				No,we cannot!
+	Scenario :: How to get current user id without using apex?
+					can be imported directly or schema can be used.
+	Scenario :: How to pass data from grand child component to grandparent?
+				dispacthEvent with event bubbling : true or LMS
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ADMIN Questions 
+
+Question :	Can we convert a Lookup Relationship to Master Detail or vice versa ? how?
+
+Question :	When we convert Master-detail relationship into lookup,we need to delete rollup summary if any.Is there any workaround to have the data also and convert it into look up as well?
+			Data Backup need to be taken and similar functinoality need to be implemented with automation tools like flows or Triggers.
+			
+Question :	How can I achieve cascade delete in lookup relatinship?
+			There is a field 'cascade delete'which on checked makes cascade delete true,but this field is not available for us to change.
+			Account-Contact is the only relationship which is lookup and has cascade delete.
+			Using a validation rule which enforces parent record to every child record and a trigger which will delete all child records on deletion of parent,we can have cascade delete in lookup
+
+
+			
+Role vs Profile
+	Role - not compulsory ,Record level access with OWD,Sharing rule,apex sharing,manual sharing
+	Profile - compulsory, Object level access [Permission set is field level] can also control other permissions as well
+	Roles control record level access
+	Profiles control Object level acces
+	We can have users without roles
+	We cannot have users without profiles
+	Roles control what user can see
+	Profiles control what user can do
+
+	
+Sharing and Visibility
+	-> Different Levels of sharing
+		
+		1.Object Level Security : Access to the object.It allows you to perform actions like create,read,delete,update on object.
+			-> Profiles : Profiles are provided to every user created in salesforce.It is manadatory to have profile for a user.One user can have only one profile.
+						Profiles provides obj level access ,apex class access,system permissions,admin permissions etc.
+						
+			-> Permission Sets : Permission sets are used to give extra access to user or group of user above the profiles.Permission set can be used to give object level and field level access.
+								one user may have multiple permission sets.You cannot remove access using permission set.
+								
+			Scenario :: Q.Consider there are 2 users with same profile,USER A USER B .User A can delete the record, user b cannot, What would be the case?
+					==> User A has this extra access via permission set.
+					
+		2.Field Level Security : Access to the Fields on an object
+			Profiles and Permission sets cover FIELD LEVEL SECURITY.
+			
+		3.Record Level Security : Access to records
+			Covered by 
+				OWD : Org wide defaults.OWD is basic level of access given to org user of object records.[public read,public read/write ,private].Most restricted is suggested.
+				Role Hierarchy 
+				Sharing Rules
+				Manual Sharing
+				Apex Sharing
+	
+	-> Implicit sharing : Access provided by default from SF, which cannot be controlled by us.
+			2 types of implicit sharing : parent implicit sharing[If you have access to parent you should see child],child implicit sharing[if you have access to child you should see parent]
+			
+	-> Difference between Queue and Public group
+		Queue used for ownership purpose.[Queue used in case assignment rule]
+		Public group is used for access sharing purpose.[Permission set]
+		Public group can have nested public group.
+		Queue cannot have nested queue.
+	
+	-> Data Skew 
+		When an object has multiple child records,it reduces the SF org performance,this is data skew
+	-> Ownerhip Skew
+		When User owns huge number of records then it is Ownership skew.To avoid it, avoid assigning default owner to any record.
+	
+	** WHENEVER THERE IS CONFLICT BETWEEN RECORD LEVEL ACCESS AND OBJECT LEVEL ACCESS SF PREFERS THE MOST RESTRICTED ONE.
+					
+LWC [LMS,Parent child]
+	code for conditional rendering a list and map [https://salesforce.stackexchange.com/questions/297834/iterate-a-javascript-map-in-lightning-web-component-template]
+	why LWC over AURA
+	when to use LWC when to use AURA
+	Decorators
+	Lifecycle hooks [when to use which hook]
+	Parent to Child[types of data can be passed (primitive/non-primitive),decorator] 
+	Child to Parent[custom event,kebabcase,lowercase,custom event parameters]
+	LMS syntax meta file,publish,subscribe,msg channel
+	Lightning Data Services [Wire [ui/recordApi ,getRecord], record form,record edit form,view form]
+	why we have import statements : LWC is build on top of HTML elementwe need to implement the lightningElement,
+		LWC is built on HTML and on top of that we have SF specific functionalities like LDS,the security etc in the lightningElement hence we import LightingElement
+	And we extend it so that we can leverage LWC features like lifecycle hooks.
+	We export the class to be used by others
+	LWC-Apex Interaction [wire(immutable data.if want to mutate create shallow copy),imperative data]
+	lightning component bundle [html,css,js,meta.xml]
+	Can we put multiple decorators in one property.[execution engine will not decide which one to use first as all decorators have their own features]
+	Can we change the value of a property in child component which was passed by parent component.[@api property can be changed in child or not??]
+		- NO we get the values from parent to child in read-only format.[only way is to clone the property and change the value]
+	Can we put wire inside a method?? - No [decorators should be used inside the class and not inside the method]
+	When does wire property gets value ?? 
+		first runs constructor -> then wire runs and get default value ->
+			execution engine runs and if default values not available it assigns undefined -> when values are avaliable it loads value to wire -> connected callback
+	Difference between Event.StopPropogation vs Event.PreventDefault ??
+		Event.PreventDefault :: Stops the default behaviour of form
+		Event.StopPropogation :: stops propogating nested events [if we have events on div inside div inside div and the innermost div gets clicked but you dont want other div's event to be fired then use StopPropogation]
+		CALLBACK FUNCTION :: if a fuinction is input parameter for another function [Callback functions are not sync or async. Behaviour depends on the function in which we are calling the function]
+	Promise and PromiseAll ::
+	SHADOW DOM :: Inner DOM within a DOM 
+	Can we use LWC in Flows - In screen flow yes,in RTF no
+	
+Trigger scenarios [Order of execution]
+	- prevent contact duplicates based on email,
+	- custom rollup summary,
+	- max-min amount of opportunity on account,
+	- Creation of task on creation of opportunity and send email when task is not completed on due date,
+	- Account should have only one primary contact [selected from linked contacts using a custom checkbox] if one selected other should get un-selected.
+
+Why should we hire you [what values you bring to org ] 
+	Flexible with the learnings and open to work on new technologies.
+	Worked on multiple clouds and done respected certifications
+	even in previous orgs took up the work as challenge when I was being asked to work and deliver
+	
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+Interview Questions on Dataloader and Import Wizard
 
 
 
--> What is Lightning Web Component (LWC)?
--> Explain the key features and benefits of LWC.
--> How is LWC different from Aura Components?
--> Compare the architecture, performance, and development approach of LWC and Aura Components.
--> What is the lifecycle of an LWC component?
--> Describe the different phases in the lifecycle of an LWC component.
--> What are the key decorators in LWC?
--> Explain the purpose and usage of decorators like @api, @track, @wire, etc.
--> What is the Shadow DOM, and how does it relate to LWC?
--> Discuss the concept of Shadow DOM and its role in LWC.
--> How do you communicate between components in LWC?
--> Explain the various methods for component communication, such as using events, properties, and the Lightning Message Service.
--> What are the best practices for LWC development?
--> Discuss coding standards, performance optimization, and other best practices for LWC development.
--> Explain the concept of Lightning Data Service (LDS).
--> Describe how LDS is used for data retrieval and manipulation in LWC.
--> How do you handle errors in Lightning Web Components?
--> Discuss error handling techniques and best practices in LWC.
--> What is the role of Apex in LWC development?
--> Explain how LWC interacts with Apex classes for server-side actions.
--> What is the Lightning App Builder, and how can LWC be used in it?
--> Discuss the integration of LWC components into the Lightning App Builder.
--> How can you make an LWC component available for use in the Lightning App Builder?
--> Explain the steps to expose an LWC component to be used in the Lightning App Builder.
--> Describe the use of the Lightning Design System (SLDS) in LWC.
--> Discuss how SLDS is utilized for consistent styling in Lightning Web Components.
--> What is the difference between imperative and declarative programming in LWC?
--> Compare the use of imperative and declarative programming in LWC and provide examples.
 
 
-How do you handle client-side events in LWC?
 
-Explain the process of handling browser events in LWC, including the use of event listeners.
-What is the purpose of the connectedCallback method in LWC?
-
-Describe when the connectedCallback lifecycle hook is invoked and how it can be used in LWC.
-How can you optimize the performance of LWC components?
-
-Discuss techniques for improving the performance of LWC, including code splitting, lazy loading, and minimizing rendering cycles.
-Explain the role of the Lightning App Builder in LWC development.
-
-Discuss how admins can use the Lightning App Builder to create custom user interfaces using LWC components.
-What is the difference between the lightning-record-edit-form and lightning-record-view-form in LWC?
-
-Compare the use cases and functionality of these two base components for working with Salesforce records.
-How can you implement conditional rendering in LWC?
-
-Discuss the different approaches for conditionally rendering elements or components based on certain criteria.
-What is the significance of the @api decorator in LWC?
-
-Explain how the @api decorator is used to expose properties and methods in LWC for parent-child component communication.
-How do you handle security considerations in LWC development?
-
-Discuss best practices for handling security concerns, such as preventing Cross-Site Scripting (XSS) vulnerabilities.
-What is the role of the Lightning Message Service in LWC?
-
-Explain how the Lightning Message Service facilitates communication between LWC components on different parts of a page or in different tabs.
-Can you provide an example of using wire adapters in LWC?
-
-Give a practical example of using the @wire decorator to fetch data from Salesforce or a custom Apex method.
-How do you deploy LWC components between Salesforce environments?
-
-Discuss the deployment process and tools used to move LWC components from a sandbox to a production environment.
-Explain the concept of local development with LWC.
-
-Discuss how the Salesforce CLI and local development server can be used for developing and testing LWC components locally.
-What is the Locker Service in the context of LWC?
-
-Explain the purpose of Locker Service and how it enhances security by isolating components in the DOM.
-How can you handle errors in Apex methods called from LWC components?
-
-Discuss error handling strategies, including the use of try-catch blocks and displaying error messages in the UI.
-What are the considerations when working with Lightning Web Components for mobile devices?
-
-Discuss responsive design principles and considerations when developing LWC components for mobile users.
-
-
+---------------------------------------------------------------------------------------------------------------------------------------------------------
