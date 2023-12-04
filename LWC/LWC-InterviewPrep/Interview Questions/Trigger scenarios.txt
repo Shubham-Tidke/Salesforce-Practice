@@ -551,3 +551,137 @@ public class caseTriggerHandler{
 		
 	}
 }
+*** Check a checkbox [custom checkbox : isVIP] on account record whenever the account's annual revenue crosses $100,000
+trigger accountTrigger on Account(before insert, before update){
+	if(trigger.isBefore){
+		if(trigger.isInsert){
+			accountTriggerHandler.checkVIPAccountOnInsert(trigger.new);
+		}
+		else if(trigger.isUpdate){
+			accountTriggerHandler.checkVIPAccountOnUpdate(trigger.new,trigger.oldMap)
+		}
+}
+
+public class accountTriggerHandler{
+	public static void checkVIPAccountOnInsert(List<Account>accList){
+		for(Account acc : accList){
+			if(acc.AnnualRevenue >= 100000){
+				acc.isVIP__c = true;
+			}
+		}
+	}
+	public static void checkVIPAccountOnUpdate(List<Account>accList,Map<Id,Account>accMap){
+		for(Account acc : accList){
+			if(acc.AnnualRevenue != accMap.get(acc.Id).AnnualRevenue){
+				if(acc.AnnualRevenue >= 100000){
+					acc.isVIP__c = true;
+				}
+			}
+		}
+	}
+}
+
+TestClass
+@IsTest
+public class accountTriggerHandlerTest{
+	
+	@TestSetup
+	static void setup(){
+		List<Account>accList = new List<Account>();
+		for(Integer i = 0 ; i < 20 ; i++){
+			Account acc = new Account();
+			acc.Name = 'test account '+i;
+			account.AnnualRevenue = 1000001;
+			accList.add(acc);
+		}
+		insert accList;
+	}
+	@IsTest
+	public static void checkVIPAccountOnInsertTest(){
+		List <Account>accLst = [SELECT id,isVIP__c FROM Account Where isVIP__c = true];
+		Assert.areEqual(10,accLst.size());
+	}
+	@IsTest
+	public static void checkVIPAccountOnUpdateTest(){
+		List <Account>accLst = [SELECT id,AnnualRevenue FROM Account Where AnnualRevenue > 100000 LIMIT 1];
+		accLst[0].AnnualRevenue = 12346;
+		update accLst;
+		List <Account>accList = [SELECT id,isVIP__c FROM Account Where isVIP__c = true];
+		Assert.areEqual(9,accList.size());
+	}
+	
+}
+
+*** Check a custom checkbox field of lead object when status of that lead changes to 'Closed-converted'
+
+trigger LeadTrigger on Lead(before insert,before update){
+	if(trigger.isBefore){
+		if(trigger.isInsert){
+			leadTriggerHandler.updateConvertOnInsert(trigger.new);
+		}
+		if(trigger.isUpdate){
+			leadTriggerHandler.updateConvertOnUpdate(trigger.new,trigger.oldMap);
+		}
+	}
+}
+
+public class leadTriggerHandler{
+	public void updateConvertOnInsert(List<Lead>leadList){
+		for(Lead ld : leadList){
+			if(ld.status == 'closed-converted'){
+				ld.converted__c = true;
+			}
+			else{
+				ld.converted = false;
+			}
+		}
+	}
+	public void updateConvertOnUpdate(List<Lead>leadList,Map<Id,Lead>leadMap){
+		for(lead ld : leadList){
+			if(ld.status != leadMap.get(ld.Id).status){
+				if(ld.status == 'closed-converted'){
+					ld.converted__c = true;
+				}
+				else{
+					ld.converted = false;
+				}
+			}
+		}
+	}
+}
+
+TestClass
+@IsTest
+public class leadTriggerHandlerTest{
+	@TestSetup
+	public void setup(){
+		List<Lead>leadList = new List<Lead>();
+		for(Integer i = 0 ; i < 10 ; i++){
+			Lead ld = new Lead();
+			ld.LastName = 'test'+i;
+			ld.status = 'Closed-converted';
+			ld.company = 'Test Company';
+			leadList.add(ld);
+		}
+		Insert leadList;
+	}
+	@IsTest
+	public static void updateConvertOnInsertTest(){
+		List<Lead>leadList = [SELECT Id FROM Lead WHERE converted__c = true];
+		Test.startTest();
+		Assert.areEqual(10,leadList.size());
+		Test.stopTest();
+	}
+	@IsTest
+	public static void updateConvertOnUpdateTest(){
+		List<Lead>leadList = [SELECT Id,status FROM Lead WHERE status = 'closed-converted' LIMIT 5];
+		for(Lead ld : leadList){
+			ld.status = 'open-Not Connected';
+		}
+		update leadList;
+		List<Lead>newLeadList = [SELECT Id FROM Lead WHERE converted__c = true];
+		Test.startTest();
+		Assert.areEqual(5,newLeadList);
+		Test.stopTest();
+	}
+}

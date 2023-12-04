@@ -154,6 +154,8 @@ Probabale Scenario based questions :
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ADMIN Questions 
 
+	RELATIONSHIPS 
+	
 Question :	Can we convert a Lookup Relationship to Master Detail or vice versa ? how?
 
 Question :	When we convert Master-detail relationship into lookup,we need to delete rollup summary if any.Is there any workaround to have the data also and convert it into look up as well?
@@ -164,20 +166,33 @@ Question :	How can I achieve cascade delete in lookup relatinship?
 			Account-Contact is the only relationship which is lookup and has cascade delete.
 			Using a validation rule which enforces parent record to every child record and a trigger which will delete all child records on deletion of parent,we can have cascade delete in lookup
 
-
-			
-Role vs Profile
-	Role - not compulsory ,Record level access with OWD,Sharing rule,apex sharing,manual sharing
-	Profile - compulsory, Object level access [Permission set is field level] can also control other permissions as well
-	Roles control record level access
-	Profiles control Object level acces
-	We can have users without roles
-	We cannot have users without profiles
-	Roles control what user can see
-	Profiles control what user can do
-
+	USER MANAGEMENT
 	
-Sharing and Visibility
+Question :	Why we cannot delete a user?
+			User may have created records in the org eg opportunities,accounts etc All these records have the stamp/footprint of user as 'createdBy'. if we manage to delete the user
+			It will be difficult to find the record owners. Hence,SF decided to preserve the user by just deactivating 
+
+Question :	Can we re-activate a deactivated user? Will the previous license comes back with it?
+			Yes, if licenses are available you can re-activate with same license.
+
+Question : You have a new user in your team under same manager,How will you share the data to new user which is shared with other teammates?
+			Putting user under the proper role hierarchy will do this.But is not in proper role hierarchy, we have to share the records using sharing rule or manual sahring.
+			
+Question :	Why we have Profile compulsory for a user but not the role ?
+			Profile defines base level access for an object for a user whereas role does record level access but OWD is the base level access.so profile is compulsoryand roles are not.
+	
+	SHARING AND VISIBILITY
+	
+Question :	Role vs Profile
+			Role - not compulsory ,Record level access with OWD,Sharing rule,apex sharing,manual sharing
+			Profile - compulsory, Object level access [Permission set is field level] can also control other permissions as well
+			Roles control record level access
+			Profiles control Object level acces
+			We can have users without roles
+			We cannot have users without profiles
+			Roles control what user can see
+			Profiles control what user can do
+
 	-> Different Levels of sharing
 		
 		1.Object Level Security : Access to the object.It allows you to perform actions like create,read,delete,update on object.
