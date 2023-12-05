@@ -133,24 +133,50 @@ Probabale Scenario based questions :
 				First need to check the Field level security for that user, if yes then check page layout
 				
 	Scenario ::	What is async apex, tell me a scenario from your project where you used batch apex?
+	
 	Scenario ::	10 users have Create Read Edit permission on object, and later they need to remove create and edit permission for 2 users? what will be the approach?
 				Create a profile with read permission and assign to all 10 users. using permission set assign the create and edit permission to 8 users.
 				
 	Scenario ::	Why we use Test.StartTest() and Test.Stoptest() ? Can we use it multiple times in a method?
+	
 	Scenario ::	There are 10 managed packages and they have a trigger on contact and each of these triggers is using 10 soql queries abd you written 5 SOQL queries using custom triggers.
 				So will you get 101 SOQL error or not?
 			- Managed package gets their own governer limit. So you will not hit SOQL 101 error due to mannaged package.
 			
 	Scenario ::	Create a batch apex and call a queueable apex from batch class
+	
 	Scenario ::	Can we call a future method from trigger. [explain using example]
+	
 	Scenario ::	How to a screen flow from LWC ? can we call a LWC from Screen flow ? How?
+	
 	Scenario ::	Write a SOL query to get accounts with no contacts [SELECT Id FROM Account WHERE Id NOT IN (SELECT AccountId FROM Contacts)]
+	
 	Scenario ::	Can we edit triggers,apex classes in Production ?
 				No,we cannot!
+				
 	Scenario :: How to get current user id without using apex?
 					can be imported directly or schema can be used.
+					
 	Scenario :: How to pass data from grand child component to grandparent?
 				dispacthEvent with event bubbling : true or LMS
+				
+	Scenario :: We have a field in contacts. we have a trigger on contacts which checks if field value is <= 50.If yes,it will update to 100. We have a workflow rule which will update the field value
+				to 50 if value is >= 100. What will be the end value once record is saved?
+				- Answer based on order of execution.
+				First before save trigger will run and changes the value to 100,then we have workflow rule which will turn the value to 50.This will fire the trigger again and value will change to 100.
+	
+	Scenario :: We have LWC component A, and AURA component B, both have a parent C. How will you pass data from A to B?
+				We can do it in 2 ways. We can send data from A to C using custom event in LWC and we can send that data from C to B using parent to child communication in AURA
+				Another way would be using LMS, we can create a messaging channel and publish event from A which can be subscribed at B.
+	
+	Scenario :: Consider you have a testsetup method where you created an account.You have two test methods, method A and Method B.Now you have changed the name of account record.
+				What will you get in test method B? original name or Updated name?
+			
+			-	Original name as every test method has the data only in method.
+			
+	Scenario :: You have a condition where you need to make combination of namer,mobile and email field unique. how will you do it.
+				- Creating a unique formula field using these 3 fields. [before insert trigger another option.]
+	
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ADMIN Questions 
 
@@ -231,7 +257,12 @@ Question :	Role vs Profile
 		When User owns huge number of records then it is Ownership skew.To avoid it, avoid assigning default owner to any record.
 	
 	** WHENEVER THERE IS CONFLICT BETWEEN RECORD LEVEL ACCESS AND OBJECT LEVEL ACCESS SF PREFERS THE MOST RESTRICTED ONE.
-					
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DEVELOPER QUESTIONS
+
+	What is SLOT in LWC?
+	When to use Iterable and when to use querylocator
+				
 LWC [LMS,Parent child]
 	code for conditional rendering a list and map [https://salesforce.stackexchange.com/questions/297834/iterate-a-javascript-map-in-lightning-web-component-template]
 	why LWC over AURA

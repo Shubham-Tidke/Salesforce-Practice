@@ -685,3 +685,222 @@ public class leadTriggerHandlerTest{
 		Test.stopTest();
 	}
 }
+
+*** Whenever an opportunity is created,populate manager of opportunity owner on custom field of opportunity record.
+
+trigger opportunityTrigger on opportunity(before insert){
+	if(trigger.isInsert && trigger.isBefore){
+		opportunityTriggerHandler.updateOppOwnerManager(trigger.new);
+	}
+}
+
+public class opportunityTriggerHandler{	 
+	public static void updateOppOwnerManager(List<Opportunity>oppList){
+		Set<Id> ownerId = new Set<Id>();
+		for(Opportunity opp : oppList){
+			if(!isEmpty(opp.OwnerId)){
+				ownerId.add(opp.ownerId);
+			}
+		}
+		List<User>ownerList = [SELECT Manager FROM User Where Manager IN :ownerId];
+		Map<Id,Id>userToManager = new Map<Id,Id>();
+		for(User u : ownerList){
+			userToManager.put(u.id,u.ManagerId);
+		}
+		for(Opportunity opp : oppList){
+			if(userToManager.containsKey(opp.ownerId)){
+				opp.ownerManager__c = userToManager.get(opp.ownerId);
+			}
+		}
+	}
+}
+
+*** Create a task everytime when a new opportunity gets created.
+trigger opportunityTrigger on Opportunity(after insert){
+	if(trigger.isAfter && trigger.isInsert()){
+		opportunityTriggerHandler.createTaskOnOpportunity(trigger.new);
+	}
+}
+public class opportunityTriggerHandler {
+	public static void(List<Opportunity>oppList){
+		List<Task>taskList = new list<Task>();
+		for(Opportunity opp : oppList){
+			Task tsk  = new Task();
+			tsk.WhatId = opp.Id;
+			tsk.status = 'In Progress';
+			tsk.OwnerId = opp.OwnerId;
+			taskList.add(tsk);
+		}
+		try{
+			Database.saveResult[] result = Database.insert(taskList,false);
+			for(Database.SaveResult sr : result){
+				if(!sr.isSuccess()){
+					for(Database.Error er : sr.getErrors()){
+						system.debug(er);
+					}
+				}
+			}
+		}
+		Catch(Exception e){
+			system.debug(e);
+		}
+	}
+}
+
+*** Rollup sumamry trigger for Account to display total number of related opportunities
+
+trigger opportunityTrigger on Opportunity(after insert,after update,after delete,after undelete){
+	if(trigger.isAfter){
+		if(trigger.isInsert || trigger.isUndelete){
+			opportunityTriggerHandler.countOpportunitiesOnInsert(trigger.new);
+		}
+		if(trigger.isUpdate){
+			opportunityTriggerHandler.countOpportunitiesOnUpdate(trigger.new,trigger.oldMap);
+		}
+		if(trigger.isDelete){
+			opportunityTriggerHandler.countOpportunitiesOnDelete(trigger.old);
+		}
+	}
+}
+------------------USING MAP --------------------------
+public class opportunityTriggerHandler{
+	set<Id>accIds = new Set<Id>();
+	public void countOpportunitiesOnInsert(List<Opportunity>oppList){
+		for(Opportunity opp : oppList){
+			if(!isEmpty(opp.AccountId)){
+				accIds.add(opp.AccountId);
+			}
+		}
+	}
+	public void countOpportunitiesOnUpdate(List<Opportunity>oppList,Map<Id,Opportunity>oppMap){
+		for(opportunity opp : oppList){
+			if(!isEmpty(opp.AccountId) && opp.AccountId != oppMap.get(opp.Id).AccountId){
+				accIds.add(opp.AccountId);
+				accIds.add(oppMap.get(opp.Id).AccountId);
+			}
+		}
+	}
+	public void countOpportunitiesOnDelete(List<Opportunity>oppList){
+		for(Opportunity opp : oppList){
+			if(!isEmpty(opp.AccountId)){
+				accIds.add(opp.AccountId);
+			}
+		}
+	}
+	Map<Id,List<Opportunity>>accToOppsMap = new Map<Id,List<Opportunity>>();
+	List<Account>accsToUpdate = new List<Account>();
+	for(Opportunity opp: [SELECT Id,AccountId FROM Opportunity WHERE AccountId IN :accIds]){
+		if(!isEmpty(opp.AccountId)){
+			if(accToOppsMap.containsKey(opp.AccountId)){
+				accToOppsMap.get(opp.AccountId).add(opp);
+			}
+			else{
+				accToOppsMap.add(opp.AccountId,list<opportunity>(opp));
+			}
+		}
+	}
+	for(Id id : accToOppsMap.keySet()){
+		Account acc = new Account();
+		acc.Id = id;
+		acc.totalOpportunities__c = accToOppsMap.get(id).size();
+		accsToUpdate.add(acc);
+	}
+	if(!isEmpty(accsToUpdate)){
+		try{
+			Database.SaveResult[] result = Database.update(accsToUpdate);
+			for(Database.SaveResult res : result){
+				if(!res.isSuccess()){
+					for(Database.Error er : res.getErrors()){
+						system.debug(er);
+					}
+				}
+				
+			}
+		}
+		catch(Exception e){
+		}
+	}
+	Map<Id,Decimal>accToAmount = new Map<Id,Decimal>();
+	List<Account>accsToUpdateWithAmount = new List<Account>();
+	for(Opportunity opp: [SELECT Id,AccountId,Amount FROM Opportunity WHERE AccountId IN :accIds]){
+		Decimal totalAmount = 0;
+		if(!isEmpty(opp.AccountId) && opp.Amount!=null){
+			if(accToAmount.containsKey(opp.AccountId)){
+				totalAmount = accToAmount.get(opp.AccountId);
+			}
+			totalAmount = totalAmount + opp.Amount;
+		}
+		accToAmount.put(opp.AccountId,totalAmount);
+	}
+	for(Id id : accToAmount.keySet()){
+		Account acc = new Account();
+		acc.Id = id;
+		acc.totalAmount__c = accToOppsMap.get(id);
+		accsToUpdateWithAmount.add(acc);
+	}
+	if(!isEmpty(accsToUpdate)){
+		try{
+			Database.SaveResult[] result = Database.update(accsToUpdateWithAmount);
+			for(Database.SaveResult res : result){
+				if(!res.isSuccess()){
+					for(Database.Error er : res.getErrors()){
+						system.debug(er);
+					}
+				}
+				
+			}
+		}
+		catch(Exception e){
+		}
+	}
+
+}
+----------------------------USING NESTED QUERY---------------------------------
+public class opportunityTriggerHandler{
+	set<Id>accIds = new Set<Id>();
+	public void countOpportunitiesOnInsert(List<opportunity>oppList){
+		for(opportunity opp : oppList){
+			if(!isEmpty(opp.AccountId)){
+				accIds.add(opp.AccountId);
+			}
+		}
+	}
+	public void countOpportunitiesOnUpdate(List<opportunity>oppList,Map<Id,opportunity>oppMap){
+		for(Opportunity opp : oppList){
+			if(!isEmpty(opp.AccountId) && (opp.AccountId != oppMap.get(opp.Id).AccountId)){
+				accIds.add(opp.AccountId);
+				accIds.add(oppMap.get(opp.Id).AccountId));
+			}
+		}
+	}
+	public static void countOpportunitiesOnDelete(){
+		for(opportunity opp : oppList){
+			if(!isEmpty(opp.AccountId)){
+				accIds.add(opp.AccountId);
+			}
+		}
+	}
+	List<Account>accountsToUpdate = new List<Account>();
+	for(Account acc: [SELECT Id,(SELECT Id FROM opportunity) FROM Account WHERE Id IN :accIds]){
+		acc.oppCount__c == acc.opportunity.size();
+		accountsToUpdate.add(acc);
+	}
+	Map<Id,Decimal>accIdToRevenue = new Map<Id,Decimal>();
+	for(Opportunity opp : [SELECT Id,Amount from opportunity WHERE AccountId IN :accIds ]){
+		decimal total  = 0;
+		if(accIdToRevenue.containsKey(opp.AccountId)){
+			total = accIdToRevenue.get(opp.AccountId);
+		}
+		if(opp.Amount != null){
+			total = total + opp.Amount;
+		}
+		accIdToRevenue.put(opp.AccountId,total);
+	}
+	for(Id i : accIds.keySet()){
+		Account a = new Account;
+		a.id = i.id;
+		a.oppAmount = accIdToRevenue.get(i);
+		accountsToUpdate.add(a);
+	}
+	
+}
