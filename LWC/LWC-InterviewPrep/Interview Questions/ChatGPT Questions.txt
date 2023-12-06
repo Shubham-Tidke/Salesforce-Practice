@@ -147,8 +147,10 @@ Probabale Scenario based questions :
 	
 	Scenario ::	Can we call a future method from trigger. [explain using example]
 	
-	Scenario ::	How to a screen flow from LWC ? can we call a LWC from Screen flow ? How?
-	
+	Scenario ::	How to call a screen flow from LWC ? can we call a LWC from Screen flow ? How?
+				<lightning-flow if:true={singleAccount} flow-api-name='Update_Account_Triggered_By_LWC'
+					flow-input-variables={inputVariables} onstatuschange={handleStatusChange}>
+				</lightning-flow>
 	Scenario ::	Write a SOL query to get accounts with no contacts [SELECT Id FROM Account WHERE Id NOT IN (SELECT AccountId FROM Contacts)]
 	
 	Scenario ::	Can we edit triggers,apex classes in Production ?
@@ -156,6 +158,7 @@ Probabale Scenario based questions :
 				
 	Scenario :: How to get current user id without using apex?
 					can be imported directly or schema can be used.
+					import USER_ID from '@salesforce/user/Id';
 					
 	Scenario :: How to pass data from grand child component to grandparent?
 				dispacthEvent with event bubbling : true or LMS
