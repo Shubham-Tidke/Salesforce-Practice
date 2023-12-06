@@ -189,3 +189,72 @@ Deloitte USI techno MANAGERIAL
 	
 - Scenario 3 : Write trigger to get the total sum of opportunities and maximum opportunity on account.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Persistent Systems
+
+-	SOQL LIMIT for sync and async
+-	how many records in one SOQL
+-	Apex best practices
+-	With Sharing without sharing
+- 	with security enforced
+-	future in trigger?
+-	batch in trigger?
+	You can call a batch from a trigger, but you need to be aware of potential limits you could hit. You can only have 5 batch jobs queued or executing at once.
+	If your trigger calls batch jobs each time, then you could quickly exceed that limit
+-	heap size?
+-	Write LWC and apex to fetch account and its related contact details when account name is provided from UI
+<template>
+	<lightning-input type = text required placeholder = 'enter account name here' onchange={AccountDetailsHandler}> </lightning-input>
+	<lightning-button label="get account details" onSubmit = {getAccountDetailsHandler}></lightning-button>
+	<template if:true ={accountDetails}>
+		<template for:each ={accountDetails} for:id={account}>
+			<div
+		</template>
+	</template>
+</template>
+
+
+import methodName form '@salesforce/apex/clasname.methodName';
+export jsFilename extends lightningElement{
+	accountName;
+	accountDetails;
+	AccountDetailsHandler(event){
+		this.accountName = event.target.value;
+	}
+	getAccountDetailsHandler(){
+		fetchAccountDetails({accName:this.accountName}).then((result)=>{
+			this.accountDetails = result;
+			
+		})
+		.catch()
+	}
+}
+
+
+- fix the given apex with best practices
+
+	sharing class PMDTestClass {
+   @AuraEnabled
+   public void insertAccount(List<String> accountNames){
+    
+	List<Account> acts = new List<Account>();
+       for (string acctName: accountNames){
+           Account act = new Account();
+           act.name = acctName;
+               acts.add(act);
+       }
+	    }
+	if(Schema.sObjectType.Account.isCreateable()  && Schema.SObjectType.Account.fields.Name.isCreatable() ) {
+      //         insert acts ;
+	  //fixerd part.
+		if(!isEmpty(acts)){
+			try{
+				Database.SaveResult[] result = Databse.insert(acts);
+			}
+			catch(Exception e){
+			
+			}
+			
+		}
+     }	
+   }
