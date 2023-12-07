@@ -962,3 +962,65 @@ public class accountTriggerHandler{
 		}
 	}
 }
+*** On click of a custom checkbox on Case record create task on primary contact of account related to that case.
+
+trigger caseTrigger on Case(After insert,after update){
+	if(trigger.isAfter){
+		if(trigger.isInsert){
+			caseTriggerHandler.createTaskOnPrimaryContactOnInsert(trigger.new);
+		}
+		if(trigger.isUpdate){
+			caseTriggerHandler.createTaskOnPrimaryContactOnUpdate(trigger.new,trigger.oldMap);
+		}
+	}
+}
+public class caseTriggerHandler{
+	public static void createTaskOnPrimaryContactOnInsert(List<Case>caseList){
+        set<Id>accIds = new Set<Id>();
+		for(Case cs : caseList){
+			if(cs.AccountId != null && cs.create_Task__c == true){
+				accIds.add(cs.AccountId);
+			}
+		}
+		createTaskOnPrimaryContacts(accIds);
+	}
+	public static void createTaskOnPrimaryContactOnUpdate(List<Case>caseList,Map<Id,Case>caseMap){
+        set<Id>accIds = new Set<Id>();
+		for(Case cs: CaseList){
+			if(cs.AccountId != null ){
+				if(cs.create_Task__c == true && ( cs.create_Task__c != caseMap.get(cs.Id).create_Task__c)){
+					accIds.add(cs.AccountId);
+				}
+			}
+		}
+		createTaskOnPrimaryContacts(accIds);
+	}
+	public static void createTaskOnPrimaryContacts(set<Id>accIds){
+        List<Task>taskList = new list<Task>();
+        List<Contact>conList = [SELECT Id,Primary_Contact__c,OwnerId,AccountId  FROM Contact WHERE AccountId IN :accIds AND Primary_Contact__c = true  ];
+		for(Contact c : conList ){
+			Task t = new Task();
+			t.whatId = c.AccountId;
+			t.whoId = c.Id ;
+			t.status = 'In Progress';
+            t.OwnerId = c.OwnerId;
+			taskList.add(t);
+		}
+		try{
+			Database.SaveResult[] result = Database.Insert(taskList,false);
+			for(Database.SaveResult sr : result){
+				if(!sr.isSuccess()){
+					for(Database.Error er : sr.getErrors()){
+						system.debug(er);
+					}
+				}
+                else{
+
+                }
+			}
+		}
+		Catch(Exception e){
+			System.debug(e);
+		}
+	}
+}
