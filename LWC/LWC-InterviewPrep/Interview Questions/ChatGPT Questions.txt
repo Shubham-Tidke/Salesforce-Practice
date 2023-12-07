@@ -264,6 +264,7 @@ Question :	Role vs Profile
 DEVELOPER QUESTIONS
 
 	What is SLOT in LWC?
+		https://blog.salesforcecasts.com/slots-in-lwc/
 	When to use Iterable and when to use querylocator
 				
 LWC [LMS,Parent child]

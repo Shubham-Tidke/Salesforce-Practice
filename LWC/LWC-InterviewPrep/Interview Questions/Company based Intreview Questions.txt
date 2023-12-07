@@ -140,7 +140,7 @@ WIPRO MANAGERIAL ROUND
 	I translate them into technical specifications and design solutions that align with best practices and Salesforce platform capabilities.
 	
 2. Everyone is capable of what you can do, developement and deployment. What key values you have different from others which can get business to the organization?
-	Eeven if everyone is doing the same thing,everyone has different way of approach the solution.
+	Eeven if everyone is doing the same thing,everyone has different process and way of approach the solution.
 	my experience in sales and customer relationship management allows me to bridge the gap between technical capabilities and business objectives.
 	I understand that the ultimate goal of any Salesforce implementation is to enhance the customer experience, streamline operations, and drive revenue. 
 	I bring a customer-centric approach to my work, ensuring that the solutions I implement not only meet technical requirements but also contribute to the overall success of the business.
@@ -185,7 +185,7 @@ Deloitte USI techno MANAGERIAL
 	
 - Scenario 2 :We have an existing system in salesforce and we have a flow and process builder implemented on an object which gets executed on creation/updation.
 	In Production you see 101 soql error,how will you approach the solution and how will you resolve it?
-		expected : https://www.apexhours.com/how-to-avoid-recursion-in-trigger/
+		expected : check debug logs to check the whole transaction[replicating issue in fullcopy].Check if there is any code which has DML in loop.Check if resursion is happening,if yes : https://www.apexhours.com/how-to-avoid-recursion-in-trigger/
 	
 - Scenario 3 : Write trigger to get the total sum of opportunities and maximum opportunity on account.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -193,22 +193,47 @@ Deloitte USI techno MANAGERIAL
 Persistent Systems
 
 -	SOQL LIMIT for sync and async
+	- 100 for Sync 200 for async
+	
 -	how many records in one SOQL
+	- 50000 records in one SOQL and one transaction.
+	
 -	Apex best practices
+	- Code Bulkification [No SOQL queries in loops,DML operations on list of sObjects,Null checks]
+	- Using try catch for error handling
+	- Using Database class for DML operations.
+	
+-	LWC BEST PRACTICES
+	- Use UI API wire Adaptors whenever possible [getRecord,createRecord,getPicklistValues,deleteRecord]
+	- use @wire decoraator to fetch immutable data
+	- avoid static references [use custom settings/custom labels instead]
+	- Using conditional rendering which can improve performance by minimizing DOM updates.
+	- minimizing use of global variables
+	- error handling using try-catch.
+	
 -	With Sharing without sharing
+	- With Sharing enforce Sharing rules [record level access] by default apex class runs in system context.
+	
 - 	with security enforced
--	future in trigger?
+	- Enforces Field level security on SOQL query. If user queries and doesnot have access to field,he will not be able to get the records.
+	
+-	can we call future in trigger?
+	- Yes, possible.Used to avoid Mixed DML error.working with setup object(User) and non-setup object(Account,contact)
+	
 -	batch in trigger?
-	You can call a batch from a trigger, but you need to be aware of potential limits you could hit. You can only have 5 batch jobs queued or executing at once.
-	If your trigger calls batch jobs each time, then you could quickly exceed that limit
+	- You can call a batch from a trigger, but you need to be aware of potential limits you could hit. You can only have 5 batch jobs queued or executing at once.
+		If your trigger calls batch jobs each time, then you could quickly exceed that limit and have CPU timeout error.
+		
 -	heap size?
+	- 6MB Synchronuos 12MB AsyncApexjob
+	
 -	Write LWC and apex to fetch account and its related contact details when account name is provided from UI
 <template>
 	<lightning-input type = text required placeholder = 'enter account name here' onchange={AccountDetailsHandler}> </lightning-input>
 	<lightning-button label="get account details" onSubmit = {getAccountDetailsHandler}></lightning-button>
 	<template if:true ={accountDetails}>
 		<template for:each ={accountDetails} for:id={account}>
-			<div
+			<div >
 		</template>
 	</template>
 </template>
@@ -258,3 +283,12 @@ export jsFilename extends lightningElement{
 		}
      }	
    }
+---------------------------------------------------------------------------------------------------------------------------
+EY - Round 1
+- What are apex Best Practices
+- What are events in LWC
+- Future vs Queueable
+- What are batch apex
+- What are governer limits ? why we have them?
+- What are lifecycle hooks
+----------------------------------------------------------------------------------------------------------------------------
