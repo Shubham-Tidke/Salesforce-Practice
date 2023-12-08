@@ -292,3 +292,26 @@ EY - Round 1
 - What are governer limits ? why we have them?
 - What are lifecycle hooks
 ----------------------------------------------------------------------------------------------------------------------------
+VOLVO
+
+- What is Batch Apex
+- Can we call batch withing Batch
+- Batch vs Queueable vs Schedulable
+- CRON Expression?
+- Decorators in LWC
+- Write apex class and return type Map<Id,Map<Id,List<sObject>>>
+- How can you have section inside sections in LWC [Accordian,LWC treegrid(expected)]
+- Write a LWC component which will show random string which is returned from APEX handler [time in milis]
+- We have a LWC datatable,we have link as one of the column on click of the link we want to open a popup modal.How to do that?
+- How can we have a quickaction which opens LWC component on click,on exp cloud [Aura is needed to do this]
+- How can we have a LWC component inside a screen flow.
+
+
+
+
+Please accept my resignation from my position as Senior Software Engineer (Digital Engineering Engineer) with Apisero(a NTT Data Company).
+The support and opportunities I received here over the last 2 years have been great, and I appreciate what you guys did for me.
+Today i.e 11/12/2023 shall be considered as formal commencement of my notice period.
+In addition, I would appreciate an early release by December Feb 1, 2023.
+
+Resignation | Shubham Tidke
