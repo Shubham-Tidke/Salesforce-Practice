@@ -1024,3 +1024,69 @@ public class caseTriggerHandler{
 		}
 	}
 }
+*****Update Parent Account field with Opportunity name which has highest amount.
+
+Trigger opportunityTrigger on Opportunity{
+	if(trigger.isAfter){
+		if(trigger.isInsert || trigger.isUndelete){
+			getMaxOppOnInsert(trigger.new);
+		}
+		if(trigger.isUpdate){
+			getMaxOppOnUpdate(trigger.new,trigger.oldMap);
+		}
+		if(trigger.isDelete){
+			getMaxOppOnDelete(trigger.old);
+		}
+	}
+}
+public class opportunityTriggerHandler{
+
+	public void getMaxOppOnInsert(List<Opportunity>oppList){
+		Set<Id>accIds = new Set<Id>();
+		for(Opportunity opp : oppList){
+			accIds.add(opp.AccountId);
+		}
+		getMaximumAmountOpp(accIds);
+	}
+	public void getMaxOppOnUpdate(List<Opportunity>oppList,Map<Id,Opportunity>oppMap){
+		Set<Id>accIds = new Set<Id>();
+		for(Opportunity opp : oppList){
+			if(opp.Amount != oppMap.get(opp.Id).Amount){
+				accIds.add(opp.Amount);
+			}
+		}
+		getMaximumAmountOpp(accIds);
+	}
+	public void getMaxOppOnDelete(List<Opportunity>oppList){
+		Set<Id>accIds = new Set<Id>();
+		for(Opportunity opp : oppList){
+			accIds.add(opp.AccountId);
+		}
+		getMaximumAmountOpp(accIds);
+	}
+	public static getMaximumAmountOpp(Set<Id>accIds){
+		List<Account>accList = new List<Account>();
+		for(Opportunity opp : [SELECT Id,MAX(Amount)maxAmount FROM Opportunity WHERE AccountId IN : accIds GROUP BY AccountId]){
+			Account acc = new Account();
+			acc.Id = opp.AccountId;
+			acc.maxOpp__c = opp.maxAmount;
+			accList.add(acc);
+		}
+		if(!isEmpty(accList)){
+			try{
+				Database.SaveResult[] result  = Database.update(accList);
+				for(Database.SaveResult sr : result){
+					if(!sr.isSuccess()){
+						for(Database.Error er : sr.getErrors()){
+							system.debug(er);
+						}
+					}
+				}
+			}
+			Catch(Exception e){
+				throw new Exception();
+			}
+		}
+	}
+}
+
