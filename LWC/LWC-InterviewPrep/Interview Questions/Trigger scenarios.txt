@@ -1089,4 +1089,36 @@ public class opportunityTriggerHandler{
 		}
 	}
 }
+*****update the task description whenever there is a change in opportunity status.if task is not present on opp,create one and update the description
+trigger opportunityTrigger on opportunity(after update){
 
+	if(trigger.isAfter && trigger.isUpdate){
+		opportunityTriggerHandler.updateTaskDescription(trigger.new,trigger.oldMap);
+	}
+}
+public class opportunityTriggerHandler{
+	List<Task>taskList = new List<Task>();
+	Set<opportunity>oppSet = new Set<opportunity>();
+	Map<Id,Task>taskMap = new Map<Id,Task>();
+	public static void updateTaskDescription(List<Opportunity>oppList,Map<Id,Opportunity>oppMap){
+		for(Opportunity opp:oppList){
+			if(opp.status != oppMap.get(opp.Id).Status){
+				oppSet.add(opp.Id);
+			}
+		}
+		for(Task t : [SELECT Id,WhatId FROM TASK WHERE whatId IN :oppSet]){
+			taskMap.put(t.whatId,t);
+		}
+		for(Opportunity opp : oppList){
+			if(taskMap.containsKey(opp.Id)){
+				taskMap.get(opp.Id).description= opp.stageName;
+				taskList.add(taskMap.get(opp.Id));
+			}else{
+				Task tsk = new Task();
+				task.WhatId(opp.Id);
+				task.description = opp.stageName;
+				taskList.add(task);
+			}
+		}
+	}
+}
