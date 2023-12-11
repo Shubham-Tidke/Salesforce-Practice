@@ -292,7 +292,7 @@ EY - Round 1
 - What are governer limits ? why we have them?
 - What are lifecycle hooks
 ----------------------------------------------------------------------------------------------------------------------------
-VOLVO
+VOLVO R-1
 
 - What is Batch Apex
 - Can we call batch withing Batch
@@ -306,8 +306,22 @@ VOLVO
 - How can we have a quickaction which opens LWC component on click,on exp cloud [Aura is needed to do this]
 - How can we have a LWC component inside a screen flow.
 
+---------------------------------------------------------------------------------------------------------------------------------
+TCS R-1 
 
-
+- I have 30,000 records which I want to delete so that no one can recover those records,how can I achieve it? 
+	Delete records,fetch those records using ALL ROWS and then Database.emptyRecycleBin(List<>)
+- Communicate from Child to parent
+- How to get 15 digit ID to 18 digit [CaseSafeID()]
+- Unique Component Event ?
+- I have an external JS library which I want to use in my LWC. How can I use it ?
+	Static resource and then import it in JS file
+- Basic requirement of integration ?
+	connected app,callback url,auth server
+- How will you test the integration?
+- You have a form in LWC which has 2 fields. One is name field piclist,on selection of which we will show second field with their value,how to do it
+	conditional rendering with imperative call from event handler.
+--------------------------------------------------------------------------------------------------------------------------------------------
 
 Please accept my resignation from my position as Senior Software Engineer (Digital Engineering Engineer) with Apisero(a NTT Data Company).
 The support and opportunities I received here over the last 2 years have been great, and I appreciate what you guys did for me.
