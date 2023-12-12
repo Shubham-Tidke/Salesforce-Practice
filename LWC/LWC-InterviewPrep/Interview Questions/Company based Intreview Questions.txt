@@ -322,10 +322,25 @@ TCS R-1
 - You have a form in LWC which has 2 fields. One is name field piclist,on selection of which we will show second field with their value,how to do it
 	conditional rendering with imperative call from event handler.
 --------------------------------------------------------------------------------------------------------------------------------------------
+Capgemini
 
+What is batch apex?
+What if I remove finish method from batch apex?
+I have a scenario where I need to work with contact and user record together.What issues I can face?
+What is with sharing and without sharing?
+I have class A with sharing,class B without sharing and if we call a method from class A inside B,which context will they follow?
+What are flows?
+What are triggers?
+What is recursive trigger?
+what are before triggers and after triggers?
+what are decorators?
+what are lifecycle hooks?
+which one runs first @wire or connected callback?
+
+--------------------------------------------------------------------------------------------------------------------------------------------
 Please accept my resignation from my position as Senior Software Engineer (Digital Engineering Engineer) with Apisero(a NTT Data Company).
 The support and opportunities I received here over the last 2 years have been great, and I appreciate what you guys did for me.
-Today i.e 11/12/2023 shall be considered as formal commencement of my notice period.
+Today i.e 12/12/2023 shall be considered as formal commencement of my notice period.
 In addition, I would appreciate an early release by December Feb 1, 2023.
 
 Resignation | Shubham Tidke
