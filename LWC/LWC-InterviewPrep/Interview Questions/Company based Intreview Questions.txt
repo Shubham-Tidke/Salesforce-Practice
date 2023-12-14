@@ -1,4 +1,4 @@
-Deloitte USI
+Deloitte USI [Cleared]
 
 Q.1 Write a Query to get all contacts related to an account 
 	ANS : Select Id,Name ,(Select Id from Contacts) from account]
@@ -95,7 +95,7 @@ Q.14. When we use test.isRunning
 
 
 -----------------------------------------------------------------------------------------------------
-WIPRO
+WIPRO [Cleared]
 
 01. Automation tools in salesforce
 02. scenario where you used the flows,approval process
@@ -190,7 +190,7 @@ Deloitte USI techno MANAGERIAL
 - Scenario 3 : Write trigger to get the total sum of opportunities and maximum opportunity on account.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Persistent Systems
+Persistent Systems [Cleared]
 
 -	SOQL LIMIT for sync and async
 	- 100 for Sync 200 for async
@@ -292,7 +292,7 @@ EY - Round 1
 - What are governer limits ? why we have them?
 - What are lifecycle hooks
 ----------------------------------------------------------------------------------------------------------------------------
-VOLVO R-1
+VOLVO R-1 [Cleared]
 
 - What is Batch Apex
 - Can we call batch withing Batch
@@ -307,7 +307,7 @@ VOLVO R-1
 - How can we have a LWC component inside a screen flow.
 
 ---------------------------------------------------------------------------------------------------------------------------------
-TCS R-1 
+TCS R-1 [Cleared]
 
 - I have 30,000 records which I want to delete so that no one can recover those records,how can I achieve it? 
 	Delete records,fetch those records using ALL ROWS and then Database.emptyRecycleBin(List<>)
@@ -322,7 +322,7 @@ TCS R-1
 - You have a form in LWC which has 2 fields. One is name field piclist,on selection of which we will show second field with their value,how to do it
 	conditional rendering with imperative call from event handler.
 --------------------------------------------------------------------------------------------------------------------------------------------
-Capgemini
+Capgemini [Cleared]
 
 What is batch apex?
 What if I remove finish method from batch apex?
@@ -336,6 +336,71 @@ what are before triggers and after triggers?
 what are decorators?
 what are lifecycle hooks?
 which one runs first @wire or connected callback?
+--------------------------------------------------------------------------------------------------------------------------------------------
+Cognizant
+
+Trigger to add 2 contacts as soon as we create any account
+
+Trigger AccountTrigger on Account(after insert){
+	if(trigger.isInsert && trigger.isAfter){
+		accountTriggerHandler.createContacts(trigger.new);
+	}
+}
+
+public class accountTriggerHandler{
+	public static void createContacts(List<Accounts>accList){
+		List<Contact>conList = new List<Contact>();
+		for(Account acc : accList){
+			for(Integer i = 0 ; i < 2 ; i++){
+				Contact c1 = new contact();
+				c.LastName = acc.Name+i;
+				c.AccountId = acc.Id;5t5
+				conList.add(c1);
+			}
+		}
+		if(!isEmpty(conList)){
+			try{
+				Database.SaveResult[] result = Database.insert(conList,false);
+				for(Database.saveResult sr : result){
+					if(!sr.isSuccess()){
+						for(Database.Error er : sr.getErrors()){
+							system.debug(er);
+						}
+					}
+				}
+			}
+			catch(Exception e)
+		
+		}
+		
+	}
+}
+--------------------------------------------------------------------------------------------------------------------------------------------
+Volvo Round-2
+
+Why do you think SF has moved from VF to Aura and now to LWC?
+How will you communicate between two unrelated componenet on DOM?
+What is batch apex?
+how many times does start,execute,finish method runs in bacth apex?
+what is min and max batch size?
+what will happen if I put batch size more than max limit?
+Difference between batch and Queueable?
+Give any realtime example for queueable?
+calling batch in batch?
+calling queueable in queueable? what is the limit of job chaining?
+how can I callout from Batchable?
+If I have 2000 batch size and I add callout in execute method,what will happer?
+What is the limit of callouts in a transaction?
+Maximum active btach jobs possible transaction?
+Maximum queueable jobs possible in a transaction?
+How many types of flows?
+what is before save and after save flows?
+What will happen if I add update record action in before save flow?
+How to add LWC in flows?
+how to add flows in LWC?
+How to schedule apex?
+I want to Schedule apex for every minute? how to do it?
+
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 Please accept my resignation from my position as Senior Software Engineer (Digital Engineering Engineer) with Apisero(a NTT Data Company).
