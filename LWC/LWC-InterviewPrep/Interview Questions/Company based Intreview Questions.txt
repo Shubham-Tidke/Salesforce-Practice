@@ -402,10 +402,4 @@ How to schedule apex?
 I want to Schedule apex for every minute? how to do it?
 
 
---------------------------------------------------------------------------------------------------------------------------------------------
-Please accept my resignation from my position as Senior Software Engineer (Digital Engineering Engineer) with Apisero(a NTT Data Company).
-The support and opportunities I received here over the last 2 years have been great, and I appreciate what you guys did for me.
-Today i.e 12/12/2023 shall be considered as formal commencement of my notice period.
-In addition, I would appreciate an early release by December Feb 1, 2023.
-
-Resignation | Shubham Tidke
+---------------------------------------------------------------------------------------------------------------------
